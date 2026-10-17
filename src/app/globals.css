@@ -1079,6 +1079,267 @@ body.rd header .race {
   font-weight: 700;
 }
 
+/* ── STEP HEADERS & NEW INTERACTIVE BOOKING ELEMENTS ── */
+.stp {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 28px 0 12px;
+  font-weight: 700;
+}
+
+.stp i {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--bg);
+  display: grid;
+  place-items: center;
+  font: 700 .8rem inherit;
+  font-family: inherit;
+  font-style: normal;
+}
+
+.sc2 {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  align-items: start;
+  text-align: start;
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 14px;
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s, background .25s;
+}
+
+.sc2:hover {
+  transform: translateY(-2px);
+}
+
+.sc2[aria-checked=true] {
+  transform: translate(3px, -3px);
+  box-shadow: -6px 6px 0 var(--go);
+  background: var(--bg);
+}
+
+.ic {
+  grid-row: 1/3;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--bg);
+  display: grid;
+  place-items: center;
+  transition: background .25s;
+}
+
+.sc2[aria-checked=true] .ic {
+  background: var(--go);
+  color: #fff;
+}
+
+.tt2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.pl {
+  font-size: .75rem;
+  font-weight: 600;
+  border: 2px solid currentColor;
+  border-radius: 99px;
+  padding: 0 10px;
+  white-space: nowrap;
+}
+
+.ds {
+  grid-column: 2;
+  font-size: .88rem;
+  line-height: 1.8;
+  opacity: .8;
+}
+
+.ck {
+  position: absolute;
+  top: -11px;
+  inset-inline-end: -11px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--go);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: .8rem;
+  transform: scale(0);
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1);
+}
+
+.sc2[aria-checked=true] .ck {
+  transform: scale(1);
+}
+
+.seg {
+  position: relative;
+  display: flex;
+  border: 3px solid var(--ink);
+  border-radius: 99px;
+  padding: 3px;
+}
+
+.seg i {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: calc((100% - 6px)/3);
+  inset-inline-start: calc(3px + var(--x, 0)*((100% - 6px)/3));
+  background: var(--ink);
+  border-radius: 99px;
+  transition: inset-inline-start .35s cubic-bezier(.2, .8, .2, 1);
+}
+
+.seg button {
+  position: relative;
+  flex: 1;
+  background: none;
+  border: 0;
+  padding: 10px 6px;
+  font: 600 .88rem inherit;
+  font-family: inherit;
+  color: var(--ink);
+  cursor: pointer;
+  transition: color .25s;
+}
+
+.seg button[aria-pressed=true] {
+  color: var(--bg);
+}
+
+.wp {
+  border: 3px solid var(--ink);
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.wh {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.wh small {
+  display: block;
+  font-size: .75rem;
+  opacity: .7;
+  line-height: 1.4;
+}
+
+.wh b {
+  font-size: .95rem;
+}
+
+.wa {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #0E1814;
+  border: 2px solid #0B9A5B;
+  display: grid;
+  place-items: center;
+}
+
+.wc {
+  padding: 16px;
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wd {
+  align-self: center;
+  font-size: .72rem;
+  background: var(--card);
+  padding: 2px 12px;
+  border-radius: 99px;
+  color: var(--mut);
+}
+
+.wc .bub {
+  max-width: 92%;
+  margin-inline-start: auto;
+}
+
+.mt {
+  align-self: flex-end;
+  font-size: .72rem;
+  color: var(--mut);
+}
+
+.typ {
+  display: inline-flex;
+  gap: 4px;
+  align-self: flex-end;
+  background: var(--bub);
+  padding: 12px 14px;
+  border-radius: 16px;
+}
+
+.typ i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--bubt);
+  opacity: .4;
+  animation: tp 1s infinite;
+}
+
+.typ i:nth-child(2) {
+  animation-delay: .15s;
+}
+
+.typ i:nth-child(3) {
+  animation-delay: .3s;
+}
+
+@keyframes tp {
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.wf {
+  padding: 12px;
+  background: var(--card);
+}
+
+.wf .send {
+  margin-top: 0;
+}
+
+.note {
+  font-size: .82rem;
+  color: var(--mut);
+  margin-top: 12px;
+}
+
 @media(prefers-reduced-motion:reduce) {
   * {
     animation: none !important;

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useId } from "react";
 
-// Ali's real WhatsApp number with Iraq country code 964
+// Ali's verified WhatsApp phone number
 const WA_PHONE = "9647700683686";
 const formatWAUrl = (text: string) =>
   `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(text)}`;
@@ -10,8 +10,8 @@ const formatWAUrl = (text: string) =>
 const formatNumber = (num: number) => num.toLocaleString("en-US");
 
 export default function Home() {
-  const customSpendId = useId();
   const websiteUrlId = useId();
+  const customSpendId = useId();
 
   // Booking Services & Options
   const SERVICES = [
@@ -20,18 +20,31 @@ export default function Home() {
       duration: "2–4 أيام",
       desc: "Next.js يفتح فوراً على الموبايل، نص إقناعي بالعربي، Meta Pixel وConversion API، وكل زبون يصلك على واتساب مباشرة.",
       hot: true,
+      iconPath: <path d="M13 2 4 14h7l-1 8 9-12h-7z" />,
     },
     {
       name: "موقع شركة أو عيادة (عربي/إنجليزي)",
       duration: "5–10 أيام",
       desc: "موقع متعدد الصفحات بهوية خاصة، حركات راقية، تبديل RTL/LTR سلس، وSEO من أول يوم.",
       hot: false,
+      iconPath: (
+        <>
+          <rect x="3" y="4" width="18" height="16" rx="2" />
+          <path d="M3 9h18M9 9v11" />
+        </>
+      ),
     },
     {
       name: "إنقاذ سرعة موقعي الحالي",
       duration: "48 ساعة",
       desc: "ضغط الصور WebP، تنظيف الكود، وإصلاح تتبّع البيكسل دون الحاجة لإعادة البناء من الصفر.",
       hot: false,
+      iconPath: (
+        <>
+          <path d="M4 16a8 8 0 1 1 16 0" />
+          <path d="m12 16 4-5" />
+        </>
+      ),
     },
   ];
 
@@ -43,6 +56,11 @@ export default function Home() {
   const [selectedSector, setSelectedSector] = useState(SECTORS[0]);
   const [selectedTiming, setSelectedTiming] = useState(TIMINGS[1]);
   const [currentUrl, setCurrentUrl] = useState("");
+
+  // Simulated Typing State in Chat
+  const [isTyping, setIsTyping] = useState(false);
+  const [displayedMessage, setDisplayedMessage] = useState("");
+  const [messageTime, setMessageTime] = useState("");
 
   // Leak Calculator State
   const [spend, setSpend] = useState(2000);
@@ -70,10 +88,61 @@ export default function Home() {
   const trackRef = useRef<HTMLDivElement>(null);
   const scrollBarRef = useRef<HTMLElement>(null);
   const workProgressRef = useRef<HTMLElement>(null);
+  const bookRef = useRef<HTMLElement>(null);
   const raceRafRef = useRef<number | null>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // WhatsApp Message Composer
+  const compiledWhatsAppMessage = [
+    "السلام عليكم علي 👋",
+    `أريد طلب: ${selectedService}`,
+    `مجال شغلي: ${selectedSector}`,
+    currentUrl.trim() && `موقعي الحالي: ${currentUrl.trim()}`,
+    `وقت البدء: ${selectedTiming}`,
+    "أرسل لي التفاصيل والتدقيق المجاني.",
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   /* ─────────────────────────────────────────────────────────────
-     1. IMMEDIATE LOAD & REAL METRICS (NO INTRO BLOCKER)
+     1. TYPING ANIMATION IN CHAT MOCKUP
+  ───────────────────────────────────────────────────────────── */
+  const triggerTyping = (fullText: string) => {
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    setIsTyping(true);
+
+    const nowStr =
+      new Date().toLocaleTimeString("ar-IQ", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }) + " ✓✓";
+    setMessageTime(nowStr);
+
+    let charIndex = 0;
+    typingTimeoutRef.current = setTimeout(() => {
+      setIsTyping(false);
+      setDisplayedMessage("");
+
+      const stepTyping = () => {
+        charIndex = Math.min(charIndex + 4, fullText.length);
+        setDisplayedMessage(fullText.slice(0, charIndex));
+        if (charIndex < fullText.length) {
+          typingTimeoutRef.current = setTimeout(stepTyping, 16);
+        }
+      };
+      stepTyping();
+    }, 350);
+  };
+
+  useEffect(() => {
+    triggerTyping(compiledWhatsAppMessage);
+    return () => {
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    };
+  }, [selectedService, selectedSector, selectedTiming, currentUrl]);
+
+  /* ─────────────────────────────────────────────────────────────
+     2. IMMEDIATE LOAD & REAL METRICS (NO INTRO BLOCKER)
   ───────────────────────────────────────────────────────────── */
   useEffect(() => {
     document.body.classList.add("rd");
@@ -100,7 +169,6 @@ export default function Home() {
       });
       observer.observe({ type: "paint", buffered: true });
     } catch {
-      // Fallback if paint timing not supported
       setFcpTime(140);
     }
 
@@ -131,7 +199,7 @@ export default function Home() {
   }, []);
 
   /* ─────────────────────────────────────────────────────────────
-     2. SPEED RACE ANIMATION
+     3. SPEED RACE ANIMATION
   ───────────────────────────────────────────────────────────── */
   const startRace = () => {
     if (raceRafRef.current) cancelAnimationFrame(raceRafRef.current);
@@ -160,7 +228,7 @@ export default function Home() {
   };
 
   /* ─────────────────────────────────────────────────────────────
-     3. HEADER SPEED STREAKS CANVAS (#fx)
+     4. HEADER SPEED STREAKS CANVAS (#fx)
   ───────────────────────────────────────────────────────────── */
   useEffect(() => {
     const canvas = fxCanvasRef.current;
@@ -264,8 +332,7 @@ export default function Home() {
   }, []);
 
   /* ─────────────────────────────────────────────────────────────
-     4. UPGRADED AD LEAK PHYSICS CANVAS SIMULATION (#leak)
-     With Dollar Coins, Negative Tags, Splashes, Waves & Pipe Break
+     5. UPGRADED AD LEAK PHYSICS CANVAS SIMULATION (#leak)
   ───────────────────────────────────────────────────────────── */
   useEffect(() => {
     const canvas = leakCanvasRef.current;
@@ -557,7 +624,7 @@ export default function Home() {
   }, [spend, isFixed]);
 
   /* ─────────────────────────────────────────────────────────────
-     5. SCORE RING INTERSECTION ANIMATION
+     6. SCORE RING INTERSECTION ANIMATION
   ───────────────────────────────────────────────────────────── */
   useEffect(() => {
     const ring = ringRef.current;
@@ -593,7 +660,7 @@ export default function Home() {
   }, []);
 
   /* ─────────────────────────────────────────────────────────────
-     6. BILINGUAL CARD AUTOMATIC FLIP
+     7. BILINGUAL CARD AUTOMATIC FLIP
   ───────────────────────────────────────────────────────────── */
   useEffect(() => {
     const isReduced = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
@@ -607,8 +674,7 @@ export default function Home() {
   }, []);
 
   /* ─────────────────────────────────────────────────────────────
-     7. PINNED HORIZONTAL GALLERY SCROLL & PROGRESS
-     direction: ltr with translateX formula: - (1 - p) * (track.offsetWidth - innerWidth)
+     8. PINNED HORIZONTAL GALLERY SCROLL & PROGRESS
   ───────────────────────────────────────────────────────────── */
   useEffect(() => {
     const work = workRef.current;
@@ -654,18 +720,6 @@ export default function Home() {
       window.removeEventListener("resize", handleScroll);
     };
   }, []);
-
-  // WhatsApp Message Composer
-  const compiledWhatsAppMessage = [
-    "السلام عليكم علي 👋",
-    `أريد طلب: ${selectedService}`,
-    `مجال شغلي: ${selectedSector}`,
-    currentUrl.trim() && `موقعي الحالي: ${currentUrl.trim()}`,
-    `وقت البدء: ${selectedTiming}`,
-    "أرسل لي التفاصيل والتدقيق المجاني.",
-  ]
-    .filter(Boolean)
-    .join("\n");
 
   const leakRatio = isFixed ? 0.1 : 0.5;
   const monthlyLoss = Math.round(spend * leakRatio);
@@ -898,7 +952,7 @@ export default function Home() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          WORK SECTION (PINNED 3D HORIZONTAL GALLERY WITH UPGRADED CARDS)
+          WORK SECTION (PINNED 3D HORIZONTAL GALLERY)
       ───────────────────────────────────────────────────────────── */}
       <section id="work" ref={workRef}>
         <div className="pin">
@@ -906,7 +960,7 @@ export default function Home() {
             <h2>أعمال يمكنك تجربتها.</h2>
           </div>
           <div id="track" ref={trackRef}>
-            {/* Card 1: Clinic / Bilingual Platform with Browser Bar */}
+            {/* Card 1: Clinic / Bilingual Platform */}
             <article className="cd" dir="rtl">
               <div className="dv">
                 <div className="b3">
@@ -1050,45 +1104,66 @@ export default function Home() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          BOOKING & WHATSAPP CONFIGURATOR SECTION
+          BOOKING & WHATSAPP CONFIGURATOR SECTION (UPGRADED WITH STEPS, SC2 CARDS, SEGMENTED CONTROL & CHAT MOCKUP)
       ───────────────────────────────────────────────────────────── */}
-      <section className="book" id="book">
+      <section className="book" id="book" ref={bookRef}>
         <div className="w two">
           <div>
             <h2>اختر طلبك، ورسالتك جاهزة على واتساب.</h2>
 
-            {/* Service Selection */}
+            {/* Step 1: Service Selection with .sc2 cards and icons */}
+            <p className="stp">
+              <i>1</i>ماذا تحتاج؟
+            </p>
             <div id="svcs" role="radiogroup" aria-label="الخدمة">
-              {SERVICES.map((s) => (
-                <button
-                  key={s.name}
-                  type="button"
-                  className="sv"
-                  role="radio"
-                  aria-checked={selectedService === s.name}
-                  onClick={() => setSelectedService(s.name)}
-                >
-                  <span className="h">
-                    <span>
-                      {s.name}
-                      {s.hot && (
-                        <em className="hot" style={{ fontStyle: "normal" }}>
-                          الأكثر طلباً
-                        </em>
-                      )}
+              {SERVICES.map((s) => {
+                const isChecked = selectedService === s.name;
+                return (
+                  <button
+                    key={s.name}
+                    type="button"
+                    className="sc2"
+                    role="radio"
+                    aria-checked={isChecked}
+                    onClick={() => setSelectedService(s.name)}
+                  >
+                    <span className="ic">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="22"
+                        height="22"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        {s.iconPath}
+                      </svg>
                     </span>
-                    <span style={{ fontSize: "0.88rem", whiteSpace: "nowrap" }}>
-                      {s.duration}
+                    <span className="tt2">
+                      <span>
+                        {s.name}
+                        {s.hot && (
+                          <em className="hot" style={{ fontStyle: "normal" }}>
+                            الأكثر طلباً
+                          </em>
+                        )}
+                      </span>
+                      <span className="pl">{s.duration}</span>
                     </span>
-                  </span>
-                  <small>{s.desc}</small>
-                </button>
-              ))}
+                    <span className="ds">{s.desc}</span>
+                    <span className="ck">✓</span>
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Sector / Industry */}
-            <p className="q">مجال شغلك</p>
-            <div className="chips">
+            {/* Step 2: Sector / Industry */}
+            <p className="stp">
+              <i>2</i>مجال عملك
+            </p>
+            <div className="chips" id="secs">
               {SECTORS.map((sec) => (
                 <button
                   key={sec}
@@ -1102,14 +1177,20 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Timeline */}
-            <p className="q">متى تريد أن نبدأ؟</p>
-            <div className="chips">
+            {/* Step 3: Segmented Timeline Control */}
+            <p className="stp">
+              <i>3</i>متى تريد أن نبدأ؟
+            </p>
+            <div
+              className="seg"
+              id="whn"
+              style={{ "--x": TIMINGS.indexOf(selectedTiming) } as React.CSSProperties}
+            >
+              <i />
               {TIMINGS.map((tm) => (
                 <button
                   key={tm}
                   type="button"
-                  className="chip"
                   aria-pressed={selectedTiming === tm}
                   onClick={() => setSelectedTiming(tm)}
                 >
@@ -1118,36 +1199,80 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Optional URL */}
-            <label htmlFor={websiteUrlId} className="q" style={{ display: "block" }}>
-              رابط موقعك الحالي (اختياري)
-              <input
-                id={websiteUrlId}
-                type="url"
-                placeholder="https://"
-                value={currentUrl}
-                onChange={(e) => setCurrentUrl(e.target.value)}
-              />
-            </label>
+            {/* Step 4: Optional Website URL */}
+            <p className="stp">
+              <i>4</i>رابط موقعك الحالي (اختياري)
+            </p>
+            <input
+              id={websiteUrlId}
+              type="url"
+              placeholder="https://"
+              value={currentUrl}
+              onChange={(e) => setCurrentUrl(e.target.value)}
+            />
           </div>
 
-          {/* Sticky WhatsApp Chat Preview */}
+          {/* Sticky WhatsApp Chat Phone Mockup */}
           <div className="sticky">
-            <p className="q" style={{ marginTop: 0 }}>
-              هذه الرسالة التي ستصلني
-            </p>
-            <div className="bub" id="msg">
-              {compiledWhatsAppMessage}
+            <div className="wp">
+              {/* WhatsApp Chat Header */}
+              <div className="wh">
+                <span className="wa">
+                  <svg viewBox="0 0 64 64" width="24" height="24">
+                    <path
+                      d="M30 12 10 32l20 20"
+                      fill="none"
+                      stroke="#E4E8E3"
+                      strokeWidth="9"
+                      strokeLinecap="square"
+                    />
+                    <path
+                      d="M40 32h20"
+                      stroke="#0B9A5B"
+                      strokeWidth="6"
+                      strokeLinecap="square"
+                    />
+                  </svg>
+                </span>
+                <div>
+                  <b>علي · CodeWithAli</b>
+                  <small>متصل الآن</small>
+                </div>
+              </div>
+
+              {/* Chat Message Body */}
+              <div className="wc">
+                <p className="wd">اليوم</p>
+                <div className="bub" id="msg" hidden={isTyping}>
+                  {displayedMessage}
+                </div>
+                <div className="typ" id="typ" hidden={!isTyping}>
+                  <i />
+                  <i />
+                  <i />
+                </div>
+                <small className="mt" id="mt">
+                  {messageTime}
+                </small>
+              </div>
+
+              {/* Chat Action Footer */}
+              <div className="wf">
+                <a
+                  className="send"
+                  id="send"
+                  href={formatWAUrl(compiledWhatsAppMessage)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  أرسلها على واتساب
+                </a>
+              </div>
             </div>
-            <a
-              className="send"
-              id="send"
-              href={formatWAUrl(compiledWhatsAppMessage)}
-              target="_blank"
-              rel="noreferrer"
-            >
-              أرسلها على واتساب
-            </a>
+
+            <p className="note" style={{ textAlign: "center" }}>
+              ستفتح محادثة جاهزة على واتساب، وما عليك إلا الضغط على إرسال.
+            </p>
           </div>
         </div>
       </section>

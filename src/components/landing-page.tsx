@@ -31,7 +31,7 @@ import {
    PRESET DATA & CONSTANTS
    ═══════════════════════════════════════════════════════════════════ */
 
-const WHATSAPP_NUMBER = "9647700000000"; // Can be replaced by user
+const WHATSAPP_NUMBER = "9647700683686"; // Ali's WhatsApp number
 const WHATSAPP_BASE_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 interface ServicePackage {

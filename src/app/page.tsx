@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef, useState, useId } from "react";
 
-// Replace with your real WhatsApp number
-const WA_PHONE = "9647700000000";
+// Ali's real WhatsApp number with Iraq country code 964
+const WA_PHONE = "9647700683686";
 const formatWAUrl = (text: string) =>
   `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(text)}`;
 

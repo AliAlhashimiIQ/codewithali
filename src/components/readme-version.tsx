@@ -30,7 +30,7 @@ import {
 // ==========================================
 // إعدادات الروابط والتواصل (عدّل رقمك هنا فقط)
 // ==========================================
-const WHATSAPP_NUMBER = "9647700000000"; // ضع رقمك الحقيقي هنا مع مفتاح العراق 964 بدون +
+const WHATSAPP_NUMBER = "9647700683686"; // Ali's WhatsApp number
 const NEXAFLOW_URL = "https://nexa-flow-gamma.vercel.app";
 const BILINGUAL_SITE_URL = "https://nexa-flow-gamma.vercel.app"; // ضع رابط الموقع الثنائي اللغة بعد رفعه
 const TRADETRACKR_URL = "https://nexa-flow-gamma.vercel.app"; // ضع رابط TradeTrackr بعد رفعه

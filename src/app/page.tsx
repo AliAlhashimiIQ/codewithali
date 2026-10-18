@@ -51,7 +51,7 @@ export default function Home() {
     },
   ];
 
-  const HELP_OPT = "ساعدني أختار الباقة المناسبة";
+  const HELP_OPT = "ما حددت باقة، أريد أستشيرك رأساً بمشروعي";
   const SE = ["عيادة", "متجر إلكتروني", "عقارات", "خدمات"];
   const WH = ["خلال 48 ساعة", "هذا الأسبوع", "مرن"];
   const PRESET_SPENDS = [500, 1000, 2000, 5000, 10000];
@@ -118,7 +118,7 @@ export default function Home() {
 
   // Composed WhatsApp message for Booking
   const compiledWhatsAppMessage = [
-    "السلام عليكم علي 👋",
+    "السلام عليكم علي،",
     `أريد: ${selectedService}`,
     currentUrl.trim() && `رابط موقعي: ${currentUrl.trim()}`,
     selectedSector && `مجال شغلي: ${selectedSector}`,
@@ -714,7 +714,8 @@ export default function Home() {
               أوضّح عرضك، أحسّن سرعة الموبايل، وأسهّل وصول الزبون لواتساب.
             </p>
             <a className="btn" id="cta" href="#book">
-              أرسل موقعك للتدقيق المجاني
+              <span>أرسل موقعك للتدقيق المجاني</span>
+              <span className="btn-arr">←</span>
             </a>
           </div>
 
@@ -758,7 +759,7 @@ export default function Home() {
 
               {/* Fast Site Card */}
               <div className="ph" style={{ "--c": "var(--go)" } as React.CSSProperties}>
-                <div className="scr">
+                <div className="scr relative">
                   <i
                     className="bar"
                     style={{ width: `${(raceElapsed.ali / 900) * 100}%` }}
@@ -775,6 +776,26 @@ export default function Home() {
                       تواصل واتساب
                     </div>
                   </div>
+                  {raceFinished.ali && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "10px",
+                        insetInlineEnd: "10px",
+                        padding: "3px 8px",
+                        borderRadius: "999px",
+                        background: "var(--go)",
+                        color: "#fff",
+                        fontSize: "0.7rem",
+                        fontWeight: 700,
+                        boxShadow: "0 4px 12px rgba(11,154,91,0.4)",
+                        animation: "pop 0.3s ease-out",
+                        zIndex: 10,
+                      }}
+                    >
+                      أسرع بـ 5.7 أضعاف
+                    </div>
+                  )}
                 </div>
                 <p className="nm">موقع سريع</p>
                 <p
@@ -902,7 +923,10 @@ export default function Home() {
                     key={i}
                     type="button"
                     aria-pressed={simIndex === i}
-                    onClick={() => scrollToPhase(i)}
+                    onClick={() => {
+                      setSimIndex(i);
+                      scrollToPhase(i);
+                    }}
                   >
                     {p.n}
                   </button>
@@ -921,58 +945,207 @@ export default function Home() {
               <div className="vp" id="vp">
                 {/* Phase 0: Offer View */}
                 <div className={`pg p-sim ${simIndex === 0 ? "on" : ""}`} dir="rtl">
-                  <div className="sim-nav">
-                    <b>+ عيادة الابتسامة</b>
-                    <span>نموذج تفاعلي · المرحلة 1 من 3</span>
+                  <div className="sim-brand-row">
+                    <div className="sim-brand-title">
+                      <span className="brand-cross">+</span>
+                      <span>عيادة الابتسامة التخصصية</span>
+                    </div>
+                    <span className="sim-rating-pill">4.9 / 5 (420+ تقييم)</span>
                   </div>
-                  <div className="sim-hero">
-                    <h4>ابتسامتك أنقى خلال جلسة واحدة</h4>
+
+                  <div className="sim-hero-banner">
+                    <div className="sim-hero-top-badge">
+                      <span className="sim-offer-badge">خصم 35% لزوار الإعلان</span>
+                      <span className="sim-live-pulse">
+                        <i /> متبقي 4 مقاعد اليوم
+                      </span>
+                    </div>
+
+                    <h4>ابتسامة ناصعة وثقة كاملة خلال جلسة واحدة</h4>
                     <p>
-                      عرض خاص لزوار الإعلان: فحص شامل مع خطة علاج واضحة بدون انتظار على الهاتف.
+                      كشف ديجيتال 3D مجاني + تنظيف وتلميع فوري بدون ألم على يد أطباء اختصاص معتمدين في بغداد.
                     </p>
-                    <div className="sim-feats">
-                      <div>تنظيف أسنان</div>
-                      <div>تبييض بالليزر</div>
-                      <div>تقويم شفاف</div>
+
+                    <div className="sim-feats-row">
+                      <div className="sim-feat-card">
+                        <b>تبييض ليزري</b>
+                        <small>جلسة 45 دقيقة</small>
+                      </div>
+                      <div className="sim-feat-card">
+                        <b>تنظيف عميق</b>
+                        <small>إزالة التكلسات</small>
+                      </div>
+                      <div className="sim-feat-card">
+                        <b>تقويم شفاف</b>
+                        <small>استشارة مجانية</small>
+                      </div>
+                    </div>
+
+                    <div className="sim-trust-strip">
+                      <span>✓ بدون انتظار</span>
+                      <span>✓ ليزر ألماني بارد</span>
+                      <span>✓ ضمان الجودة</span>
                     </div>
                   </div>
+
                   <button
                     type="button"
                     className="sim-cta"
-                    onClick={() => scrollToPhase(1)}
+                    onClick={() => {
+                      setSimIndex(1);
+                      scrollToPhase(1);
+                    }}
                   >
-                    اطلب موعد ←
+                    <span>احجز موعد العرض الآن ←</span>
+                    <span className="sim-cta-sub">تثبيت فوري عبر واتساب بدون أي دفع مسبق</span>
                   </button>
                 </div>
 
                 {/* Phase 1: Service & Time Selection */}
                 <div className={`pg p-sim ${simIndex === 1 ? "on" : ""}`} dir="rtl">
-                  <div className="sim-nav">
-                    <b>+ عيادة الابتسامة</b>
-                    <span>نموذج تفاعلي · المرحلة 2 من 3</span>
+                  <div className="sim-brand-row">
+                    <div className="sim-brand-title">
+                      <span className="brand-cross">+</span>
+                      <span>عيادة الابتسامة التخصصية</span>
+                    </div>
+                    <span className="sim-step-badge">المرحلة 2 من 3</span>
                   </div>
-                  <div>
-                    <span className="sim-lbl">1. اختَر الخدمة المطلوبة (جرّب الضغط):</span>
-                    <div className="sim-opts" id="simSvcs">
+
+                  <div className="sim-selector-wrap">
+                    <div className="sim-step-header">
+                      <span className="sim-step-title">1. اختَر الخدمة المطلوبة:</span>
+                      <span className="sim-hint">اضغط للتجربة</span>
+                    </div>
+
+                    <div className="sim-opts-grid" id="simSvcs">
+                      {[
+                        { id: "تنظيف أسنان", title: "تنظيف وتلميع", sub: "35,000 د.ع" },
+                        { id: "تبييض أسنان", title: "تبييض بالليزر", sub: "95,000 د.ع" },
+                        { id: "تقويم أسنان", title: "تقويم شفاف", sub: "استشارة مجانية" },
+                      ].map((svc) => (
+                        <button
+                          key={svc.id}
+                          type="button"
+                          className="sim-opt-card"
+                          aria-pressed={simSvc === svc.id}
+                          onClick={() => setSimSvc(svc.id)}
+                        >
+                          <span className="sim-opt-card-title">{svc.title}</span>
+                          <span className="sim-opt-card-sub">{svc.sub}</span>
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="sim-step-header">
+                      <span className="sim-step-title">2. حدّد الوقت المفضّل:</span>
+                    </div>
+
+                    <div className="sim-times-grid" id="simTimes">
+                      {[
+                        { id: "صباحاً", title: "فترة صباحية", sub: "10:00 ص - 1:00 ظ" },
+                        { id: "مساءً", title: "فترة مسائية", sub: "4:00 ع - 9:00 م" },
+                      ].map((t) => (
+                        <button
+                          key={t.id}
+                          type="button"
+                          className="sim-time-card"
+                          aria-pressed={simTime === t.id}
+                          onClick={() => setSimTime(t.id)}
+                        >
+                          <span className="sim-time-title">{t.title}</span>
+                          <span className="sim-time-sub">{t.sub}</span>
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="sim-summary-pill">
+                      <span>✓ المحدد: <b>{simSvc}</b> ({simTime})</span>
+                      <span className="sim-save-tag">خصم العرض مفعّل</span>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="sim-cta"
+                    onClick={() => {
+                      setSimIndex(2);
+                      scrollToPhase(2);
+                    }}
+                  >
+                    <span>تجهيز رسالة واتساب المباشرة ←</span>
+                    <span className="sim-cta-sub">تنتقل للمحادثة ومحدد فيها كل التفاصيل</span>
+                  </button>
+                </div>
+
+                {/* Phase 2: Live WhatsApp Message */}
+                <div className={`pg p-sim ${simIndex === 2 ? "on" : ""}`} dir="rtl">
+                  <div className="sim-brand-row">
+                    <div className="sim-brand-title">
+                      <span className="brand-cross">+</span>
+                      <span>محادثة واتساب المباشرة</span>
+                    </div>
+                    <span className="sim-step-badge">المرحلة 3 من 3</span>
+                  </div>
+
+                  <div className="sim-wa-frame">
+                    <div className="sim-wa-header-bar">
+                      <div className="sim-wa-avatar">ع</div>
+                      <div className="sim-wa-info">
+                        <b>عيادة الابتسامة التخصصية</b>
+                        <small>متصل الآن · حساب واتساب بزنس موثق</small>
+                      </div>
+                    </div>
+
+                    <div className="sim-wa-bubbles">
+                      <div className="sim-wa-security-pill">
+                        رسائل مشفرة بنظام طرف إلى طرف
+                      </div>
+
+                      <div className="sim-bubble-msg sim-bubble-client">
+                        <div className="sim-client-text">
+                          {`السلام عليكم دكتور، شفت إعلان العرض وأريد أحجز:
+• الخدمة: ${simSvc}
+• الوقت المفضّل: ${simTime}
+شنو أقرب موعد متوفر باچر بالعيادة؟`}
+                        </div>
+                        <div className="sim-bubble-meta">
+                          <span>21:24</span>
+                          <span className="sim-checks">✓✓</span>
+                        </div>
+                      </div>
+
+                      <div className="sim-bubble-msg sim-bubble-doctor">
+                        <div className="sim-doctor-text">
+                          {`أهلاً وسهلاً بحضرتك.
+تم استلام طلبك لـ (${simSvc}) بالفترة الـ (${simTime}).
+الشاغر المتوفر باچر:
+1. الساعة 5:30 عصراً
+2. الساعة 7:15 مساءً
+تحب نثبتلك أي موعد منهم بالجدول؟`}
+                        </div>
+                        <div className="sim-bubble-meta">
+                          <span>21:24</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="sim-mini-bar">
+                      <span>جرّب تغيّر الطلب:</span>
                       {["تنظيف أسنان", "تبييض أسنان", "تقويم أسنان"].map((svcName) => (
                         <button
                           key={svcName}
                           type="button"
-                          className="sim-opt"
                           aria-pressed={simSvc === svcName}
                           onClick={() => setSimSvc(svcName)}
                         >
                           {svcName.replace(" أسنان", "")}
                         </button>
                       ))}
-                    </div>
-                    <span className="sim-lbl">2. حدّد الوقت المفضّل:</span>
-                    <div className="sim-times" id="simTimes">
+                      <span>·</span>
                       {["صباحاً", "مساءً"].map((tName) => (
                         <button
                           key={tName}
                           type="button"
-                          className="sim-opt"
                           aria-pressed={simTime === tName}
                           onClick={() => setSimTime(tName)}
                         >
@@ -981,54 +1154,11 @@ export default function Home() {
                       ))}
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    className="sim-cta"
-                    onClick={() => scrollToPhase(2)}
-                  >
-                    تجهيز رسالة واتساب ←
-                  </button>
-                </div>
 
-                {/* Phase 2: Live WhatsApp Message */}
-                <div className={`pg p-sim ${simIndex === 2 ? "on" : ""}`} dir="rtl">
-                  <div className="sim-nav">
-                    <b>تحويل مباشر إلى واتساب</b>
-                    <span>نموذج تفاعلي · المرحلة 3 من 3</span>
-                  </div>
-                  <div className="sim-wa-box">
-                    <div className="sim-wa-top">
-                      <span>رسالة الزبون الجاهزة لعيادتك:</span>
-                      <span style={{ color: "var(--go)" }}>جاهزة للإرسال ✓</span>
-                    </div>
-                    <div className="sim-wa-bub" id="simWaText">
-                      {`السلام عليكم، أريد أطلب موعد ${simSvc}. الوقت المفضّل: ${simTime}. شنو المواعيد المتوفرة؟`}
-                    </div>
-                  </div>
-                  <div className="sim-mini-bar">
-                    <span>جرّب تغيير الاختيار:</span>
-                    {["تنظيف أسنان", "تبييض أسنان", "تقويم أسنان"].map((svcName) => (
-                      <button
-                        key={svcName}
-                        type="button"
-                        aria-pressed={simSvc === svcName}
-                        onClick={() => setSimSvc(svcName)}
-                      >
-                        {svcName.replace(" أسنان", "")}
-                      </button>
-                    ))}
-                    <span>·</span>
-                    {["صباحاً", "مساءً"].map((tName) => (
-                      <button
-                        key={tName}
-                        type="button"
-                        aria-pressed={simTime === tName}
-                        onClick={() => setSimTime(tName)}
-                      >
-                        {tName}
-                      </button>
-                    ))}
-                  </div>
+                  <a className="sim-cta" href="#book" style={{ textDecoration: "none", display: "block" }}>
+                    <span>أريد موقع يحوّل زبائن إعلاناتي بهيچ وضوح ←</span>
+                    <span className="sim-cta-sub">اضغط للانتقال لباقات العمل</span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -1039,7 +1169,8 @@ export default function Home() {
               <h3 className="disp">{currentPhase.n}</h3>
               <p>{currentPhase.d}</p>
               <a className="btn" href="#book">
-                أريد هيچ تجربة لبزنسي
+                <span>أريد هيچ تجربة لبزنسي</span>
+                <span className="btn-arr">←</span>
               </a>
             </div>
           </div>
@@ -1118,7 +1249,8 @@ export default function Home() {
                 el?.focus();
               }}
             >
-              مو متأكد؟ أرسل موقعك وأساعدك تختار.
+              <span>ما تريد تختار وتدوخ؟ اضغط هنا وراسلني رأساً</span>
+              <span className="btn-arr">←</span>
             </button>
 
             {/* Step 2: Website URL */}
@@ -1235,7 +1367,8 @@ export default function Home() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  ناقش مشروعك ويا علي
+                  <span>راسلني رأساً على واتساب وخلّينا نبدأ</span>
+                  <span className="btn-arr">←</span>
                 </a>
               </div>
             </div>
@@ -1252,7 +1385,8 @@ export default function Home() {
       ───────────────────────────────────────────────────────────── */}
       <footer className="w">© 2026 CodeWithAli. مصمَّم ومبرمج يدوياً.</footer>
       <a className="fix" href="#book">
-        ناقش مشروعك ويا علي
+        <span>راسلني رأساً على واتساب وخلّينا نبدأ</span>
+        <span className="btn-arr">←</span>
       </a>
     </>
   );

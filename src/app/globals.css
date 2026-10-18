@@ -80,23 +80,74 @@ h2 { font-size: 1.75rem; }
 }
 
 .btn {
-  display: inline-block;
-  background: var(--ink);
-  color: var(--bg);
-  padding: 16px 24px;
-  font-weight: 600;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(180deg, #0EA864 0%, #08824C 100%);
+  color: #fff;
+  padding: 14px 26px;
+  font-weight: 700;
+  font-size: 1.02rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--go) 35%, transparent), 0 3px 0 #055C36;
   text-decoration: none;
-  transition: background .2s;
-  border: 0;
+  transition: transform .2s cubic-bezier(.2, .8, .2, 1), box-shadow .2s, border-color .2s;
   font-family: inherit;
-  font-size: 1rem;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.32) 50%,
+    transparent 100%
+  );
+  transform: skewX(-25deg);
+  animation: btnShineSweep 3.6s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes btnShineSweep {
+  0%, 60% {
+    left: -130%;
+  }
+  80%, 100% {
+    left: 170%;
+  }
 }
 
 .btn:hover {
-  background: var(--go);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--go) 55%, transparent), 0 4px 0 #055C36;
+  border-color: rgba(255, 255, 255, 0.45);
   color: #fff;
+}
+
+.btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--go) 30%, transparent), 0 1px 0 #055C36;
+}
+
+.btn-arr {
+  display: inline-block;
+  transition: transform .2s ease;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.btn:hover .btn-arr {
+  transform: translateX(-4px);
 }
 
 .go {
@@ -424,9 +475,11 @@ body.rd header .race {
   height: 440px;
 }
 
-/* قسم التجربة التفاعلية: من ضغطة إعلان إلى طلب واضح */
+/* ─────────────────────────────────────────────────────────────
+   3. قسم التجربة التفاعلية: من ضغطة إعلان إلى طلب واضح
+───────────────────────────────────────────────────────────── */
 #work {
-  height: 340vh;
+  height: 320vh;
 }
 
 .pin {
@@ -446,7 +499,7 @@ body.rd header .race {
 
 .wk {
   display: grid;
-  gap: 14px;
+  gap: 16px;
   align-items: center;
   grid-template-areas: "a" "d" "c";
 }
@@ -465,38 +518,45 @@ body.rd header .race {
 
 .sim-tag {
   display: inline-block;
-  font-size: .78rem;
+  font-size: .8rem;
   font-weight: 700;
   color: var(--go);
   margin-bottom: 6px;
 }
 
+/* أزرار المراحل الثلاثية النظيفة */
 .wt {
   display: flex;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 14px;
   flex-wrap: wrap;
 }
 
 .wt button {
-  padding: 6px 14px;
-  border-radius: 99px;
+  padding: 8px 16px;
+  border-radius: 999px;
   border: 2px solid var(--ink);
   background: none;
   color: var(--ink);
-  font: 600 .85rem inherit;
+  font: 600 .88rem inherit;
   font-family: inherit;
   cursor: pointer;
-  transition: background .25s, color .25s;
+  transition: all .2s cubic-bezier(.2, .8, .2, 1);
+}
+
+.wt button:hover {
+  border-color: var(--go);
+  transform: translateY(-2px);
 }
 
 .wt button[aria-pressed=true] {
   background: var(--ink);
   color: var(--bg);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--ink) 25%, transparent);
 }
 
 .wc1 {
-  min-height: 155px;
+  min-height: 145px;
 }
 
 .wc1 h3 {
@@ -521,29 +581,31 @@ body.rd header .race {
 }
 
 .wc1 > * {
-  animation: pop .4s;
+  animation: pop .35s ease-out;
 }
 
+/* شاشة المحاكاة الاحترافية */
 .dev {
-  border: 3px solid var(--ink);
-  border-radius: 14px;
+  border: 3.5px solid var(--ink);
+  border-radius: 28px;
   overflow: hidden;
   background: var(--card);
-  box-shadow: -8px 8px 0 var(--go);
+  box-shadow: -8px 8px 0 var(--go), 0 20px 40px -12px rgba(0,0,0,.45);
+  transition: box-shadow .25s, transform .25s;
 }
 
 .dbar {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 9px 12px;
-  border-bottom: 3px solid var(--ink);
-  background: var(--card);
+  padding: 8px 14px;
+  border-bottom: 2px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  background: color-mix(in srgb, var(--card) 95%, transparent);
 }
 
 .dbar i {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--ink);
   opacity: .35;
@@ -558,19 +620,24 @@ body.rd header .race {
   background: var(--bg);
   color: var(--ink);
   border-radius: 99px;
-  padding: 2px 10px;
+  padding: 3px 12px;
   margin-inline-start: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 
 .vp {
   position: relative;
-  height: min(44svh, 350px);
+  height: min(52svh, 430px);
   overflow: hidden;
+  background: var(--card);
 }
 
 @media(min-width: 900px) {
   .vp {
-    height: min(56svh, 430px);
+    height: min(60svh, 470px);
   }
 }
 
@@ -579,20 +646,21 @@ body.rd header .race {
   inset: 0;
   opacity: 0;
   pointer-events: none;
-  transition: opacity .4s, transform .4s cubic-bezier(.2, .8, .2, 1);
-  transform: translateY(14px);
-  padding: 18px;
+  transition: opacity .35s ease, transform .35s cubic-bezier(.2, .8, .2, 1);
+  transform: translateY(12px);
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 8px;
   font-size: 13.5px;
-  line-height: 1.55;
+  line-height: 1.5;
+  overflow-y: auto;
 }
 
 .pg.on {
   opacity: 1;
   pointer-events: auto;
-  transform: none;
+  transform: translateY(0);
 }
 
 /* داخل شاشة التجربة التفاعلية (مثال عيادة أسنان) */
@@ -602,169 +670,483 @@ body.rd header .race {
 }
 
 :root[data-theme="dark"] .p-sim {
-  background: #11221C;
+  background: #10211A;
   color: #E4E8E3;
 }
 
 @media(prefers-color-scheme:dark) {
   :root:not([data-theme="light"]) .p-sim {
-    background: #11221C;
+    background: #10211A;
     color: #E4E8E3;
   }
 }
 
-.sim-nav {
+/* شريط رأس العيادة */
+.sim-brand-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 10px;
-  border-bottom: 1px solid currentColor;
-  opacity: .85;
-  font-size: .8rem;
+  padding-bottom: 6px;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
 }
 
-.sim-nav b {
+.sim-brand-title {
   font-family: "Noto Kufi Arabic", sans-serif;
   font-weight: 800;
   color: var(--go);
-  font-size: .92rem;
+  font-size: .86rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.sim-hero {
-  background: color-mix(in srgb, var(--go) 10%, transparent);
-  border: 2px solid var(--go);
-  border-radius: 12px;
-  padding: 16px;
-  margin: 10px 0;
+.brand-cross {
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--go);
+  line-height: 1;
 }
 
-.sim-hero h4 {
-  font: 800 1.35rem/1.35 "Noto Kufi Arabic", sans-serif;
-  margin-bottom: 6px;
-}
-
-.sim-hero p {
-  font-size: .85rem;
-  opacity: .85;
-  margin-bottom: 12px;
-}
-
-.sim-feats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  text-align: center;
-  font-size: .78rem;
-  font-weight: 600;
-}
-
-.sim-feats div {
-  background: var(--card);
-  color: var(--ink);
-  border: 1.5px solid var(--ink);
-  border-radius: 8px;
-  padding: 8px 6px;
-}
-
-.sim-cta {
-  width: 100%;
-  padding: 11px;
-  border-radius: 8px;
-  background: var(--go);
-  color: #fff;
-  border: 0;
-  font: 700 .9rem inherit;
-  cursor: pointer;
-  text-align: center;
-}
-
-.sim-lbl {
+.sim-rating-pill {
+  font-size: .68rem;
   font-weight: 700;
-  font-size: .82rem;
-  margin-bottom: 6px;
-  display: block;
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
+  padding: 2px 8px;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 
-.sim-opts {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 12px;
+.sim-step-badge {
+  font-size: .68rem;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--go) 18%, transparent);
+  color: var(--go);
+  padding: 2px 8px;
+  border-radius: 99px;
 }
 
-.sim-opt {
-  padding: 10px 6px;
-  border-radius: 8px;
-  border: 2px solid currentColor;
-  background: transparent;
-  color: inherit;
-  font: 700 .8rem inherit;
-  cursor: pointer;
-  text-align: center;
-  transition: background .2s, color .2s;
-}
-
-.sim-opt[aria-pressed=true] {
-  background: var(--go);
-  border-color: var(--go);
-  color: #fff;
-}
-
-.sim-times {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.sim-wa-box {
-  background: var(--bg);
-  color: var(--ink);
-  border: 2px solid var(--ink);
+/* بطاقة العرض البصرية الفخمة */
+.sim-hero-banner {
+  background: linear-gradient(145deg, color-mix(in srgb, var(--go) 14%, var(--card)), var(--card));
+  border: 1.5px solid color-mix(in srgb, var(--go) 35%, transparent);
   border-radius: 14px;
-  padding: 12px;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--go) 12%, transparent);
 }
 
-.sim-wa-top {
+.sim-hero-top-badge {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: .78rem;
-  font-weight: 700;
-  padding-bottom: 8px;
-  border-bottom: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  gap: 6px;
 }
 
-.sim-wa-bub {
-  background: var(--bub);
-  color: var(--bubt);
-  padding: 12px 14px;
-  border-radius: 12px;
+.sim-offer-badge {
+  font-size: .66rem;
+  font-weight: 700;
+  color: var(--go);
+  background: color-mix(in srgb, var(--go) 16%, transparent);
+  padding: 2px 8px;
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sim-live-pulse {
+  font-size: .62rem;
+  font-weight: 700;
+  color: var(--bad);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sim-live-pulse i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--bad);
+  display: inline-block;
+  animation: pulse 1.5s infinite;
+}
+
+.sim-hero-banner h4 {
+  font: 800 1.05rem/1.3 "Noto Kufi Arabic", sans-serif;
+  margin: 0;
+  color: inherit;
+}
+
+.sim-hero-banner p {
+  font-size: .74rem;
+  color: var(--mut);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.sim-feats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  text-align: center;
+  margin: 2px 0;
+}
+
+.sim-feat-card {
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  border-radius: 8px;
+  padding: 8px 5px;
+  font-size: .76rem;
+  font-weight: 700;
+  line-height: 1.35;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.sim-feat-card small {
+  display: block;
+  font-size: .62rem;
+  color: var(--mut);
+  font-weight: 500;
+}
+
+.sim-trust-strip {
+  display: flex;
+  justify-content: space-between;
+  font-size: .65rem;
+  font-weight: 600;
+  color: var(--mut);
+  border-top: 1px dashed color-mix(in srgb, var(--ink) 16%, transparent);
+  padding-top: 5px;
+}
+
+/* زر الحجز الرئيسي الفخم */
+.sim-cta {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--go);
+  color: #fff;
+  border: 0;
+  font: 700 .86rem inherit;
+  cursor: pointer;
+  text-align: center;
+  transition: transform .2s, background .2s, box-shadow .2s;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--go) 35%, transparent);
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+
+.sim-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--go) 50%, transparent);
+}
+
+.sim-cta:active {
+  transform: scale(.98);
+}
+
+.sim-cta-sub {
+  display: block;
+  font-size: .62rem;
+  opacity: .88;
+  font-weight: 500;
+}
+
+/* بطاقات الاختيارات التفاعلية في المرحلة 2 */
+.sim-selector-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sim-step-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.sim-step-title {
+  font-weight: 700;
+  font-size: .78rem;
+}
+
+.sim-hint {
+  font-size: .62rem;
+  color: var(--mut);
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.sim-opts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.sim-opt-card {
+  padding: 10px 5px;
+  border-radius: 8px;
+  border: 2px solid color-mix(in srgb, var(--ink) 25%, transparent);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: center;
+  transition: all .2s cubic-bezier(.2, .8, .2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.sim-opt-card:hover {
+  border-color: var(--go);
+  transform: translateY(-2px);
+}
+
+.sim-opt-card[aria-pressed=true] {
+  background: var(--go);
+  border-color: var(--go);
+  color: #fff;
+  font-weight: 700;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--go) 35%, transparent);
+}
+
+.sim-opt-card-title {
+  font-size: .8rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.sim-opt-card-sub {
+  font-size: .64rem;
+  opacity: .85;
+}
+
+.sim-times-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.sim-time-card {
+  padding: 10px 8px;
+  border-radius: 8px;
+  border: 2px solid color-mix(in srgb, var(--ink) 25%, transparent);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: center;
+  transition: all .2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.sim-time-title {
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.sim-time-sub {
+  font-size: .64rem;
+  opacity: .8;
+}
+
+.sim-time-card[aria-pressed=true] {
+  background: var(--go);
+  border-color: var(--go);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--go) 35%, transparent);
+}
+
+.sim-summary-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--go) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--go) 30%, transparent);
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--go);
+  margin: 2px 0 4px;
+}
+
+.sim-save-tag {
+  font-size: .62rem;
+  background: var(--go);
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 99px;
+}
+
+/* شاشة المحادثة الواقعية في المرحلة 3 */
+.sim-wa-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sim-wa-header-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: #075E54;
+  color: #fff;
+  border-radius: 8px;
+  font-size: .74rem;
+}
+
+.sim-wa-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #14231D;
+  border: 2px solid #25D366;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: .85rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sim-wa-info b {
+  display: block;
+  font-size: .76rem;
+}
+
+.sim-wa-info small {
+  display: block;
+  font-size: .62rem;
+  opacity: .88;
+}
+
+.sim-wa-bubbles {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+.sim-wa-security-pill {
+  align-self: center;
+  font-size: .6rem;
+  color: var(--mut);
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  padding: 2px 8px;
+  border-radius: 99px;
+  text-align: center;
+}
+
+.sim-bubble-msg {
+  max-width: 92%;
+  padding: 7px 10px;
+  border-radius: 10px;
+  font-size: .74rem;
+  line-height: 1.5;
+  position: relative;
+  animation: pop .3s ease-out;
+}
+
+.sim-bubble-client {
+  align-self: flex-end;
+  background: #DCF8C6;
+  color: #075E54;
   border-bottom-right-radius: 2px;
-  font-size: .88rem;
-  line-height: 1.8;
+}
+
+:root[data-theme="dark"] .sim-bubble-client {
+  background: #005C4B;
+  color: #E9EDEF;
+}
+
+@media(prefers-color-scheme:dark) {
+  :root:not([data-theme="light"]) .sim-bubble-client {
+    background: #005C4B;
+    color: #E9EDEF;
+  }
+}
+
+.sim-bubble-doctor {
+  align-self: flex-start;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  border-bottom-left-radius: 2px;
+}
+
+.sim-bubble-meta {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+  font-size: .6rem;
+  color: var(--mut);
+  margin-top: 2px;
+}
+
+.sim-checks {
+  color: #34B7F1;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.sim-client-text,
+.sim-doctor-text {
   white-space: pre-line;
 }
 
 .sim-mini-bar {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   flex-wrap: wrap;
   align-items: center;
-  font-size: .74rem;
+  font-size: .7rem;
+  margin-top: 2px;
 }
 
 .sim-mini-bar button {
-  padding: 3px 9px;
+  padding: 3px 8px;
   border-radius: 99px;
   border: 1.5px solid currentColor;
   background: none;
   color: inherit;
-  font: 600 .72rem inherit;
+  font: 600 .68rem inherit;
   cursor: pointer;
+  transition: all .2s;
+}
+
+.sim-mini-bar button:hover {
+  border-color: var(--go);
 }
 
 .sim-mini-bar button[aria-pressed=true] {
@@ -922,21 +1304,32 @@ body.rd header .race {
 }
 
 .help-pick {
-  display: inline-block;
-  background: none;
-  border: 0;
-  color: var(--ink);
-  font: 600 .9rem inherit;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: color-mix(in srgb, var(--go) 10%, transparent);
+  border: 1.5px dashed color-mix(in srgb, var(--go) 45%, transparent);
+  border-radius: 8px;
+  color: var(--go);
+  font: 700 .88rem inherit;
   cursor: pointer;
-  padding: 4px 0;
-  margin-bottom: 8px;
+  padding: 8px 14px;
+  margin: 4px 0 12px;
+  transition: all .2s;
+  text-decoration: none;
+}
+
+.help-pick:hover {
+  background: color-mix(in srgb, var(--go) 18%, transparent);
+  border-color: var(--go);
+  transform: translateY(-1px);
 }
 
 .help-pick[aria-pressed=true] {
-  color: var(--go);
-  font-weight: 700;
+  background: var(--go);
+  color: #fff;
+  border-style: solid;
+  border-color: var(--go);
 }
 
 input[type=url], input[type=text] {
@@ -1142,14 +1535,57 @@ input[type=url], input[type=text] {
 }
 
 .send {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   text-align: center;
-  padding: 16px;
-  border-radius: 6px;
+  padding: 15px 20px;
+  border-radius: 10px;
   font-weight: 700;
+  font-size: 1.05rem;
   color: #fff;
-  background: var(--go);
+  background: linear-gradient(180deg, #0EA864 0%, #08824C 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--go) 40%, transparent), 0 3px 0 #055C36;
   text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .2s cubic-bezier(.2, .8, .2, 1), box-shadow .2s, border-color .2s;
+}
+
+.send::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%
+  );
+  transform: skewX(-25deg);
+  animation: btnShineSweep 3.4s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.send:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--go) 55%, transparent), 0 4px 0 #055C36;
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.send:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--go) 30%, transparent), 0 1px 0 #055C36;
+}
+
+.send:hover .btn-arr {
+  transform: translateX(-4px);
 }
 
 .note {
@@ -1170,14 +1606,51 @@ footer {
   inset-inline: 16px;
   bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   text-align: center;
   color: #fff;
-  background: var(--go);
+  background: linear-gradient(180deg, #0EA864 0%, #08824C 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   font-weight: 700;
-  padding: 14px;
-  border-radius: 6px;
+  font-size: 1rem;
+  padding: 14px 20px;
+  border-radius: 12px;
   text-decoration: none;
-  box-shadow: 0 4px 16px #0004;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45), 0 3px 0 #055C36;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.fix::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%
+  );
+  transform: skewX(-25deg);
+  animation: btnShineSweep 3.4s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.fix:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55), 0 4px 0 #055C36;
+}
+
+.fix:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 0 #055C36;
 }
 
 #sp {

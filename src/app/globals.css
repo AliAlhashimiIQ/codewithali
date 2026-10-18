@@ -65,8 +65,8 @@ h1, h2, h3, .disp {
   line-height: 1.3;
 }
 
-h1 { font-size: 2.1rem; }
-h2 { font-size: 1.75rem; }
+h1 { font-size: clamp(1.65rem, 5.5vw, 3rem); }
+h2 { font-size: clamp(1.35rem, 4.5vw, 2rem); }
 
 :focus-visible {
   outline: 3px solid var(--ink);
@@ -513,6 +513,152 @@ body.rd header .race {
     grid-template-columns: .85fr 1.35fr;
     grid-template-areas: "a d" "c d";
     gap: 20px 48px;
+  }
+}
+
+@media(max-width: 899px) {
+  .pin {
+    padding: 8px 0;
+    justify-content: space-evenly;
+  }
+
+  .wk {
+    gap: 8px;
+  }
+
+  .wa1 .sim-tag {
+    font-size: .7rem;
+    margin-bottom: 2px;
+  }
+
+  .wa1 h2 {
+    font-size: clamp(1.15rem, 4vw, 1.45rem);
+    margin: 0;
+  }
+
+  .wt {
+    margin-top: 6px;
+    gap: 6px;
+  }
+
+  .wt button {
+    padding: 4px 10px;
+    font-size: .74rem;
+  }
+
+  .dev {
+    max-width: 440px;
+    margin: 0 auto;
+    width: 100%;
+    border-width: 2.5px;
+    border-radius: 20px;
+    box-shadow: -4px 4px 0 var(--go), 0 12px 28px -8px rgba(0,0,0,.45);
+  }
+
+  .vp {
+    height: clamp(280px, 42svh, 350px);
+  }
+
+  .pg {
+    padding: 10px 12px;
+    gap: 6px;
+  }
+
+  .sim-hero-banner {
+    padding: 8px 10px;
+    gap: 4px;
+  }
+
+  .sim-hero-banner h4 {
+    font-size: .95rem;
+  }
+
+  .sim-hero-banner p {
+    font-size: .7rem;
+  }
+
+  .sim-feat-card {
+    padding: 6px 3px;
+    font-size: .7rem;
+  }
+
+  .sim-feat-card small {
+    font-size: .58rem;
+  }
+
+  .sim-trust-strip {
+    font-size: .6rem;
+    padding-top: 4px;
+  }
+
+  .sim-cta {
+    padding: 8px;
+    font-size: .8rem;
+  }
+
+  .sim-cta-sub {
+    font-size: .58rem;
+  }
+
+  .sim-opt-card {
+    padding: 8px 4px;
+  }
+
+  .sim-opt-card-title {
+    font-size: .75rem;
+  }
+
+  .sim-opt-card-sub {
+    font-size: .6rem;
+  }
+
+  .sim-time-card {
+    padding: 8px 6px;
+  }
+
+  .sim-time-title {
+    font-size: .75rem;
+  }
+
+  .sim-time-sub {
+    font-size: .6rem;
+  }
+
+  .sim-summary-pill {
+    padding: 4px 8px;
+    font-size: .68rem;
+  }
+
+  .wc1 {
+    min-height: auto;
+    text-align: center;
+  }
+
+  .wc1 .k2 {
+    font-size: .68rem;
+  }
+
+  .wc1 h3 {
+    font-size: 1.15rem;
+    margin: 2px 0;
+  }
+
+  .wc1 p {
+    font-size: .82rem;
+    line-height: 1.45;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .wc1 .btn {
+    padding: 10px 20px;
+    font-size: .92rem;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
   }
 }
 

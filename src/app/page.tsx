@@ -809,7 +809,8 @@ export default function Home() {
             </div>
 
             <button type="button" className="lnk" id="again" onClick={startRace}>
-              أعد السباق
+              <span style={{ fontSize: "1rem", lineHeight: 1 }}>↺</span>
+              <span>أعد المقارنة</span>
             </button>
 
             {/* Live Navigation Readout */}

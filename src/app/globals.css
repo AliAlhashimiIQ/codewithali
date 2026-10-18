@@ -309,15 +309,30 @@ body.rd header .race {
 }
 
 .lnk {
-  background: none;
-  border: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  border-radius: 99px;
+  padding: 6px 14px;
   color: var(--ink);
-  font: 600 .9rem inherit;
+  font: 700 .86rem inherit;
   font-family: inherit;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  margin-top: 16px;
+  text-decoration: none;
+  margin-top: 14px;
   cursor: pointer;
+  transition: all .2s ease;
+}
+
+.lnk:hover {
+  background: color-mix(in srgb, var(--go) 12%, transparent);
+  border-color: var(--go);
+  color: var(--go);
+}
+
+.lnk:active {
+  transform: scale(.96);
 }
 
 .real {
@@ -547,7 +562,7 @@ body.rd header .race {
   }
 
   .dev {
-    max-width: 440px;
+    max-width: 480px;
     margin: 0 auto;
     width: 100%;
     border-width: 2.5px;
@@ -556,77 +571,119 @@ body.rd header .race {
   }
 
   .vp {
-    height: clamp(280px, 42svh, 350px);
+    height: clamp(390px, 52svh, 480px);
   }
 
   .pg {
+    padding: 12px 14px;
+    gap: 8px;
+    font-size: 15px;
+  }
+
+  .sim-hero-banner {
     padding: 10px 12px;
     gap: 6px;
   }
 
-  .sim-hero-banner {
-    padding: 8px 10px;
-    gap: 4px;
-  }
-
   .sim-hero-banner h4 {
-    font-size: .95rem;
+    font-size: 1.05rem;
   }
 
   .sim-hero-banner p {
-    font-size: .7rem;
+    font-size: .86rem;
+    line-height: 1.55;
   }
 
   .sim-feat-card {
-    padding: 6px 3px;
-    font-size: .7rem;
+    padding: 8px 6px;
+    font-size: .82rem;
   }
 
   .sim-feat-card small {
-    font-size: .58rem;
+    font-size: .7rem;
   }
 
   .sim-trust-strip {
-    font-size: .6rem;
-    padding-top: 4px;
+    font-size: .75rem;
+    padding-top: 5px;
   }
 
   .sim-cta {
-    padding: 8px;
-    font-size: .8rem;
+    padding: 12px 14px;
+    font-size: .98rem;
   }
 
   .sim-cta-sub {
-    font-size: .58rem;
+    font-size: .76rem;
   }
 
   .sim-opt-card {
-    padding: 8px 4px;
+    padding: 10px 6px;
   }
 
   .sim-opt-card-title {
-    font-size: .75rem;
+    font-size: .88rem;
   }
 
   .sim-opt-card-sub {
-    font-size: .6rem;
+    font-size: .74rem;
   }
 
   .sim-time-card {
-    padding: 8px 6px;
+    padding: 10px 8px;
   }
 
   .sim-time-title {
-    font-size: .75rem;
+    font-size: .88rem;
   }
 
   .sim-time-sub {
-    font-size: .6rem;
+    font-size: .74rem;
   }
 
   .sim-summary-pill {
-    padding: 4px 8px;
-    font-size: .68rem;
+    padding: 6px 10px;
+    font-size: .82rem;
+  }
+
+  .sim-wa-header-bar {
+    padding: 8px 12px;
+    gap: 10px;
+  }
+
+  .sim-wa-info b {
+    font-size: .98rem;
+    font-weight: 700;
+  }
+
+  .sim-wa-info small {
+    font-size: .8rem;
+  }
+
+  .sim-wa-security-pill {
+    font-size: .76rem;
+    padding: 3px 12px;
+  }
+
+  .sim-bubble-msg {
+    font-size: .98rem;
+    line-height: 1.65;
+    padding: 10px 14px;
+    font-weight: 500;
+  }
+
+  .sim-bubble-meta {
+    font-size: .76rem;
+  }
+
+  .sim-mini-bar {
+    font-size: .86rem;
+  }
+
+  .sim-mini-bar button {
+    padding: 4px 10px;
+    font-size: .8rem;
+    font-weight: 700;
   }
 
   .wc1 {
@@ -635,17 +692,17 @@ body.rd header .race {
   }
 
   .wc1 .k2 {
-    font-size: .68rem;
+    font-size: .72rem;
   }
 
   .wc1 h3 {
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     margin: 2px 0;
   }
 
   .wc1 p {
-    font-size: .82rem;
-    line-height: 1.45;
+    font-size: .86rem;
+    line-height: 1.5;
     margin-bottom: 8px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -654,8 +711,8 @@ body.rd header .race {
   }
 
   .wc1 .btn {
-    padding: 10px 20px;
-    font-size: .92rem;
+    padding: 11px 22px;
+    font-size: .95rem;
     width: 100%;
     max-width: 320px;
     margin: 0 auto;
@@ -776,14 +833,14 @@ body.rd header .race {
 
 .vp {
   position: relative;
-  height: min(52svh, 430px);
+  height: min(60svh, 520px);
   overflow: hidden;
   background: var(--card);
 }
 
 @media(min-width: 900px) {
   .vp {
-    height: min(60svh, 470px);
+    height: min(72svh, 580px);
   }
 }
 
@@ -794,12 +851,12 @@ body.rd header .race {
   pointer-events: none;
   transition: opacity .35s ease, transform .35s cubic-bezier(.2, .8, .2, 1);
   transform: translateY(12px);
-  padding: 12px 14px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  font-size: 13.5px;
-  line-height: 1.5;
+  gap: 10px;
+  font-size: 15px;
+  line-height: 1.55;
   overflow-y: auto;
 }
 
@@ -832,7 +889,7 @@ body.rd header .race {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 6px;
+  padding-bottom: 8px;
   border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
 }
 
@@ -840,37 +897,37 @@ body.rd header .race {
   font-family: "Noto Kufi Arabic", sans-serif;
   font-weight: 800;
   color: var(--go);
-  font-size: .86rem;
+  font-size: .95rem;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
 }
 
 .brand-cross {
   font-family: inherit;
   font-weight: 800;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   color: var(--go);
   line-height: 1;
 }
 
 .sim-rating-pill {
-  font-size: .68rem;
+  font-size: .78rem;
   font-weight: 700;
   background: color-mix(in srgb, var(--ink) 10%, transparent);
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 99px;
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
 }
 
 .sim-step-badge {
-  font-size: .68rem;
+  font-size: .78rem;
   font-weight: 700;
   background: color-mix(in srgb, var(--go) 18%, transparent);
   color: var(--go);
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 99px;
 }
 
@@ -879,10 +936,10 @@ body.rd header .race {
   background: linear-gradient(145deg, color-mix(in srgb, var(--go) 14%, var(--card)), var(--card));
   border: 1.5px solid color-mix(in srgb, var(--go) 35%, transparent);
   border-radius: 14px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   box-shadow: 0 4px 14px color-mix(in srgb, var(--go) 12%, transparent);
 }
 
@@ -894,11 +951,11 @@ body.rd header .race {
 }
 
 .sim-offer-badge {
-  font-size: .66rem;
+  font-size: .76rem;
   font-weight: 700;
   color: var(--go);
   background: color-mix(in srgb, var(--go) 16%, transparent);
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 99px;
   display: inline-flex;
   align-items: center;
@@ -906,17 +963,17 @@ body.rd header .race {
 }
 
 .sim-live-pulse {
-  font-size: .62rem;
+  font-size: .74rem;
   font-weight: 700;
   color: var(--bad);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .sim-live-pulse i {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--bad);
   display: inline-block;
@@ -924,22 +981,22 @@ body.rd header .race {
 }
 
 .sim-hero-banner h4 {
-  font: 800 1.05rem/1.3 "Noto Kufi Arabic", sans-serif;
+  font: 800 1.15rem/1.35 "Noto Kufi Arabic", sans-serif;
   margin: 0;
   color: inherit;
 }
 
 .sim-hero-banner p {
-  font-size: .74rem;
+  font-size: .86rem;
   color: var(--mut);
-  line-height: 1.5;
+  line-height: 1.6;
   margin: 0;
 }
 
 .sim-feats-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
+  gap: 6px;
   text-align: center;
   margin: 2px 0;
 }
@@ -948,8 +1005,8 @@ body.rd header .race {
   background: color-mix(in srgb, var(--ink) 6%, transparent);
   border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
   border-radius: 8px;
-  padding: 8px 5px;
-  font-size: .76rem;
+  padding: 9px 6px;
+  font-size: .84rem;
   font-weight: 700;
   line-height: 1.35;
   display: flex;
@@ -961,7 +1018,7 @@ body.rd header .race {
 
 .sim-feat-card small {
   display: block;
-  font-size: .62rem;
+  font-size: .72rem;
   color: var(--mut);
   font-weight: 500;
 }
@@ -969,22 +1026,22 @@ body.rd header .race {
 .sim-trust-strip {
   display: flex;
   justify-content: space-between;
-  font-size: .65rem;
+  font-size: .75rem;
   font-weight: 600;
   color: var(--mut);
   border-top: 1px dashed color-mix(in srgb, var(--ink) 16%, transparent);
-  padding-top: 5px;
+  padding-top: 6px;
 }
 
 /* زر الحجز الرئيسي الفخم */
 .sim-cta {
   width: 100%;
-  padding: 10px;
+  padding: 12px 14px;
   border-radius: 10px;
   background: var(--go);
   color: #fff;
   border: 0;
-  font: 700 .86rem inherit;
+  font: 700 .95rem inherit;
   cursor: pointer;
   text-align: center;
   transition: transform .2s, background .2s, box-shadow .2s;
@@ -994,7 +1051,7 @@ body.rd header .race {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1px;
+  gap: 2px;
 }
 
 .sim-cta:hover {
@@ -1008,8 +1065,8 @@ body.rd header .race {
 
 .sim-cta-sub {
   display: block;
-  font-size: .62rem;
-  opacity: .88;
+  font-size: .74rem;
+  opacity: .9;
   font-weight: 500;
 }
 
@@ -1017,7 +1074,7 @@ body.rd header .race {
 .sim-selector-wrap {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .sim-step-header {
@@ -1029,14 +1086,14 @@ body.rd header .race {
 
 .sim-step-title {
   font-weight: 700;
-  font-size: .78rem;
+  font-size: .88rem;
 }
 
 .sim-hint {
-  font-size: .62rem;
+  font-size: .72rem;
   color: var(--mut);
   background: color-mix(in srgb, var(--ink) 8%, transparent);
-  padding: 1px 6px;
+  padding: 2px 8px;
   border-radius: 4px;
 }
 
@@ -1048,7 +1105,7 @@ body.rd header .race {
 }
 
 .sim-opt-card {
-  padding: 10px 5px;
+  padding: 11px 6px;
   border-radius: 8px;
   border: 2px solid color-mix(in srgb, var(--ink) 25%, transparent);
   background: transparent;
@@ -1079,14 +1136,14 @@ body.rd header .race {
 }
 
 .sim-opt-card-title {
-  font-size: .8rem;
+  font-size: .88rem;
   font-weight: 700;
   line-height: 1.25;
 }
 
 .sim-opt-card-sub {
-  font-size: .64rem;
-  opacity: .85;
+  font-size: .74rem;
+  opacity: .88;
 }
 
 .sim-times-grid {
@@ -1097,7 +1154,7 @@ body.rd header .race {
 }
 
 .sim-time-card {
-  padding: 10px 8px;
+  padding: 11px 8px;
   border-radius: 8px;
   border: 2px solid color-mix(in srgb, var(--ink) 25%, transparent);
   background: transparent;
@@ -1114,13 +1171,13 @@ body.rd header .race {
 }
 
 .sim-time-title {
-  font-size: .8rem;
+  font-size: .88rem;
   font-weight: 700;
 }
 
 .sim-time-sub {
-  font-size: .64rem;
-  opacity: .8;
+  font-size: .74rem;
+  opacity: .85;
 }
 
 .sim-time-card[aria-pressed=true] {
@@ -1135,21 +1192,21 @@ body.rd header .race {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 10px;
+  padding: 7px 12px;
   border-radius: 6px;
   background: color-mix(in srgb, var(--go) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--go) 30%, transparent);
-  font-size: .72rem;
+  font-size: .82rem;
   font-weight: 700;
   color: var(--go);
   margin: 2px 0 4px;
 }
 
 .sim-save-tag {
-  font-size: .62rem;
+  font-size: .72rem;
   background: var(--go);
   color: #fff;
-  padding: 1px 6px;
+  padding: 2px 8px;
   border-radius: 99px;
 }
 
@@ -1157,68 +1214,68 @@ body.rd header .race {
 .sim-wa-frame {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .sim-wa-header-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
+  gap: 10px;
+  padding: 8px 12px;
   background: #075E54;
   color: #fff;
-  border-radius: 8px;
-  font-size: .74rem;
+  border-radius: 10px;
 }
 
 .sim-wa-avatar {
-  width: 30px;
-  height: 30px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: #14231D;
   border: 2px solid #25D366;
   display: grid;
   place-items: center;
   font-weight: 800;
-  font-size: .85rem;
+  font-size: 1.05rem;
   color: #fff;
   flex-shrink: 0;
 }
 
 .sim-wa-info b {
   display: block;
-  font-size: .76rem;
+  font-size: .95rem;
+  font-weight: 700;
 }
 
 .sim-wa-info small {
   display: block;
-  font-size: .62rem;
-  opacity: .88;
+  font-size: .78rem;
+  opacity: .9;
 }
 
 .sim-wa-bubbles {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 2px 0;
+  gap: 8px;
+  padding: 4px 0;
 }
 
 .sim-wa-security-pill {
   align-self: center;
-  font-size: .6rem;
+  font-size: .75rem;
   color: var(--mut);
   background: color-mix(in srgb, var(--ink) 8%, transparent);
-  padding: 2px 8px;
+  padding: 3px 12px;
   border-radius: 99px;
   text-align: center;
 }
 
 .sim-bubble-msg {
-  max-width: 92%;
-  padding: 7px 10px;
-  border-radius: 10px;
-  font-size: .74rem;
-  line-height: 1.5;
+  max-width: 90%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: .95rem;
+  line-height: 1.65;
   position: relative;
   animation: pop .3s ease-out;
 }
@@ -1254,10 +1311,10 @@ body.rd header .race {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 4px;
-  font-size: .6rem;
+  gap: 5px;
+  font-size: .74rem;
   color: var(--mut);
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .sim-checks {
@@ -1273,20 +1330,20 @@ body.rd header .race {
 
 .sim-mini-bar {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   flex-wrap: wrap;
   align-items: center;
-  font-size: .7rem;
-  margin-top: 2px;
+  font-size: .84rem;
+  margin-top: 4px;
 }
 
 .sim-mini-bar button {
-  padding: 3px 8px;
+  padding: 4px 10px;
   border-radius: 99px;
   border: 1.5px solid currentColor;
   background: none;
   color: inherit;
-  font: 600 .68rem inherit;
+  font: 700 .78rem inherit;
   cursor: pointer;
   transition: all .2s;
 }
@@ -1825,6 +1882,103 @@ footer {
 
 .in .wm > span {
   transform: none;
+}
+
+@media(max-width: 759px) {
+  header .w {
+    gap: 20px;
+    padding-top: 16px;
+    padding-bottom: 28px;
+  }
+
+  .brand {
+    font-size: .84rem;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: clamp(1.75rem, 5.8vw, 2.15rem);
+    line-height: 1.22;
+  }
+
+  .lead {
+    margin: 12px 0 18px;
+    font-size: .98rem;
+    line-height: 1.65;
+  }
+
+  #cta .btn {
+    padding: 12px 22px;
+    font-size: .96rem;
+  }
+
+  .race {
+    gap: 10px;
+  }
+
+  .scr {
+    border-width: 2.5px;
+    border-radius: 18px;
+    aspect-ratio: 9/13.2;
+  }
+
+  .blk {
+    padding: 8px 6px;
+    gap: 5px;
+  }
+
+  .blk b:nth-child(2) {
+    height: 48px !important;
+  }
+
+  .blk .cta {
+    font-size: .68rem;
+    padding: 6px 4px;
+  }
+
+  .stamp span {
+    font-size: .95rem;
+    padding: 2px 8px;
+    border-width: 2px;
+  }
+
+  .nm {
+    margin-top: 6px;
+    font-size: .82rem;
+  }
+
+  .tm {
+    font-size: 1.65rem;
+    line-height: 1.2;
+  }
+
+  .sc {
+    font-size: .72rem;
+  }
+
+  .lnk {
+    margin-top: 10px;
+    padding: 5px 12px;
+    font-size: .82rem;
+  }
+
+  .real {
+    margin-top: 10px;
+    font-size: .8rem;
+    line-height: 1.5;
+  }
+
+  #leak {
+    height: 260px;
+  }
+
+  .inv {
+    padding: 40px 0;
+  }
+
+  .book {
+    padding: 40px 0;
+  }
 }
 
 @media(min-width: 760px) {

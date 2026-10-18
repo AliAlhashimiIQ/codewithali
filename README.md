@@ -8,14 +8,14 @@
 
 ## ⚡ Core Features
 
-- **🚀 Live Speed Race Simulator**: Real-time side-by-side comparison between legacy/WordPress sites (5.2s load, "الزبون غادر" stamp) and CodeWithAli's Next.js architecture (0.9s load, 92+ PageSpeed).
-- **💸 Ad Spend Leak Physics Simulator (Canvas 2D)**: Real-time particle simulation demonstrating monthly ad budget waste due to slow loading speeds with instant interactive savings calculation.
-- **⏱️ Real Device Telemetry**: Measures the visitor's live First Contentful Paint (FCP) and total Navigation Load time directly in their browser.
-- **📱 Pinned 3D Horizontal Gallery**: Smooth RTL-compatible horizontal scroll showcasing proven client projects:
-  - **Bilingual Clinic & Corporate Platform**: Instant AR/EN flipping without layout shift.
-  - **NexaFlow**: B2B Workflow & Lead Automation SaaS (92+ Mobile PageSpeed).
-  - **TradeTrackr**: Full-stack financial analytics and trade journal.
-- **💬 Direct WhatsApp Conversion Engine**: Interactive service & sector configurator that generates personalized, pre-formatted WhatsApp consultation inquiries.
+- **🚀 Live Speed Race Simulator**: Real-time side-by-side benchmark comparing legacy/WordPress sites (5.2s load, "الزبون غادر" bounce stamp) with CodeWithAli's Next.js architecture (0.9s load, 92+ PageSpeed score).
+- **💸 Ad Spend Leak Physics Simulator (Canvas 2D)**: Real-time particle physics showing monthly ad budget loss from slow page loads, with instant interactive ROI recovery calculation.
+- **⏱️ Live Device Telemetry**: Dynamically measures the visitor's real First Contentful Paint (FCP) and total Navigation Load time directly inside their browser session.
+- **📱 3-Phase Interactive Clinic Funnel Simulator**: Real-time simulation demonstrating how ad traffic converts into clear, pre-filled WhatsApp bookings:
+  - **المرحلة 1 · الوضوح**: Fast-loading, focused clinic offer ("ابتسامتك أنقى خلال جلسة واحدة").
+  - **المرحلة 2 · الاختيار**: Interactive treatment (تنظيف، تبييض، تقويم) and timing (صباحاً، مساءً) selection.
+  - **المرحلة 3 · الرسالة الجاهزة**: Instant pre-formatted WhatsApp message ready to be sent to the business.
+- **💬 Direct WhatsApp Consultation Funnel**: Business-oriented package selector ("صفحة لإعلانك", "موقع لشركتك أو عيادتك", "إصلاح موقعك الحالي"), URL audit input, collapsible sector/timeline options, and animated chat preview generating direct chats with Ali (`+9647700683686`).
 - **🎨 Bespoke Design System**: Organic editorial tech aesthetic (Olive/Forest palette with dark mode adaptation, IBM Plex Sans Arabic & Noto Kufi Arabic typography).
 
 ---

@@ -8,9 +8,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "CodeWithAli | مواقع تفتح بأقل من ثانية وتحوّل الإعلان إلى مبيعات",
+  title: "CodeWithAli | مواقع وصفحات هبوط لأصحاب الإعلانات",
   description:
-    "أبني مواقع Next.js تفتح بأقل من ثانية على الموبايل وتحوّل الضغطة إلى رسالة واتساب. تتبع دقيق لـ Meta Pixel و Conversion API وسرعة 92+ على PageSpeed.",
+    "أنا علي، أبني صفحات ومواقع للعيادات والمتاجر والشركات اللي تعلن. أوضّح عرضك، أحسّن سرعة الموبايل، وأسهّل وصول الزبون لواتساب.",
 };
 
 export default function RootLayout({
@@ -25,10 +25,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Kufi+Arabic:wght@700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@700;800&display=swap"
         />
       </head>
-      <body>
+      <body className="rd">
         {children}
       </body>
     </html>

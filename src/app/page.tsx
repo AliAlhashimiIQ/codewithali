@@ -10,22 +10,24 @@ const formatWAUrl = (text: string) =>
 const formatNumber = (num: number) => num.toLocaleString("en-US");
 
 export default function Home() {
-  const websiteUrlId = useId();
   const customSpendId = useId();
+  const websiteUrlId = useId();
 
   // Booking Services & Options
-  const SERVICES = [
+  const SV = [
     {
-      name: "صفحة هبوط للإعلانات",
+      name: "صفحة لإعلانك",
       duration: "2–4 أيام",
-      desc: "Next.js يفتح فوراً على الموبايل، نص إقناعي بالعربي، Meta Pixel وConversion API، وكل زبون يصلك على واتساب مباشرة.",
+      desc: "تروّج لمنتج أو خدمة محددة؟ صفحة توضّح عرضك وتجهّز طلب الزبون على واتساب.",
+      subTech: "Next.js سريع للموبايل · ربط Meta Pixel وCAPI",
       hot: true,
       iconPath: <path d="M13 2 4 14h7l-1 8 9-12h-7z" />,
     },
     {
-      name: "موقع شركة أو عيادة (عربي/إنجليزي)",
+      name: "موقع لشركتك أو عيادتك",
       duration: "5–10 أيام",
-      desc: "موقع متعدد الصفحات بهوية خاصة، حركات راقية، تبديل RTL/LTR سلس، وSEO من أول يوم.",
+      desc: "تحتاج موقع رسمي؟ اعرض خدماتك بالعربي والإنجليزي، مع مسار واضح للتواصل أو طلب موعد.",
+      subTech: "عربي/إنجليزي RTL/LTR · تهيئة محركات البحث SEO",
       hot: false,
       iconPath: (
         <>
@@ -35,9 +37,10 @@ export default function Home() {
       ),
     },
     {
-      name: "إنقاذ سرعة موقعي الحالي",
-      duration: "48 ساعة",
-      desc: "ضغط الصور WebP، تنظيف الكود، وإصلاح تتبّع البيكسل دون الحاجة لإعادة البناء من الصفر.",
+      name: "إصلاح موقعك الحالي",
+      duration: "48 ساعة للنطاق المتفق عليه",
+      desc: "موقعك بطيء أو الطلب بيه معقّد؟ أفحصه وأحدد الإصلاحات المطلوبة قبل ما نتفق.",
+      subTech: "ضغط صور WebP · تنظيف الكود · مراجعة التتبّع",
       hot: false,
       iconPath: (
         <>
@@ -48,16 +51,18 @@ export default function Home() {
     },
   ];
 
-  const SECTORS = ["عيادة", "متجر إلكتروني", "عقارات", "خدمات"];
-  const TIMINGS = ["خلال 48 ساعة", "هذا الأسبوع", "مرن"];
+  const HELP_OPT = "ساعدني أختار الباقة المناسبة";
+  const SE = ["عيادة", "متجر إلكتروني", "عقارات", "خدمات"];
+  const WH = ["خلال 48 ساعة", "هذا الأسبوع", "مرن"];
   const PRESET_SPENDS = [500, 1000, 2000, 5000, 10000];
 
-  const [selectedService, setSelectedService] = useState(SERVICES[0].name);
-  const [selectedSector, setSelectedSector] = useState(SECTORS[0]);
-  const [selectedTiming, setSelectedTiming] = useState(TIMINGS[1]);
+  // Booking Selection State
+  const [selectedService, setSelectedService] = useState(SV[0].name);
+  const [selectedSector, setSelectedSector] = useState("");
+  const [selectedTiming, setSelectedTiming] = useState("");
   const [currentUrl, setCurrentUrl] = useState("");
 
-  // Simulated Typing State in Chat
+  // Simulated Typing State in Chat Mockup
   const [isTyping, setIsTyping] = useState(false);
   const [displayedMessage, setDisplayedMessage] = useState("");
   const [messageTime, setMessageTime] = useState("");
@@ -74,32 +79,51 @@ export default function Home() {
   const [raceElapsed, setRaceElapsed] = useState({ legacy: 0, ali: 0 });
   const [raceFinished, setRaceFinished] = useState({ legacy: false, ali: false });
 
-  // Bilingual card state
-  const [bilingualIndex, setBilingualIndex] = useState(0);
+  // Interactive Funnel Simulation State (#work)
+  const [simIndex, setSimIndex] = useState(0);
+  const [simSvc, setSimSvc] = useState("تنظيف أسنان");
+  const [simTime, setSimTime] = useState("مساءً");
 
   // Refs for Canvases & Observers
   const fxCanvasRef = useRef<HTMLCanvasElement>(null);
   const leakCanvasRef = useRef<HTMLCanvasElement>(null);
   const headerRef = useRef<HTMLElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const ringScoreRef = useRef<HTMLSpanElement>(null);
-  const ringCircleRef = useRef<SVGCircleElement>(null);
   const workRef = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
   const scrollBarRef = useRef<HTMLElement>(null);
   const workProgressRef = useRef<HTMLElement>(null);
-  const bookRef = useRef<HTMLElement>(null);
   const raceRafRef = useRef<number | null>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // WhatsApp Message Composer
+  // Interactive Funnel Phases definition
+  const PJ = [
+    {
+      n: "1. الزبون يشوف العرض",
+      k: "المرحلة الأولى · الوضوح",
+      d: "صفحة سريعة توضّح الخدمة وتفاصيلها للزبون أول ما يضغط الإعلان، مع زر مباشر لطلب الموعد بدون تشتت.",
+      u: "نموذج تفاعلي · 1. عرض واضح",
+    },
+    {
+      n: "2. يختار احتياجه",
+      k: "المرحلة الثانية · الاختيار",
+      d: "يحدّد الخدمة اللي يريدها (تنظيف، تبييض، أو تقويم) والوقت المفضّل بضغطة واحدة. جرّب تغيير الاختيارات داخل الشاشة.",
+      u: "نموذج تفاعلي · 2. تحديد الطلب",
+    },
+    {
+      n: "3. يتجه لواتساب",
+      k: "المرحلة الثالثة · الرسالة الجاهزة",
+      d: "تظهر رسالة واتساب جاهزة ومفصّلة توصل لصاحب البزنس فوراً، حتى يتحول الزائر إلى زبون واضح الطلب.",
+      u: "نموذج تفاعلي · 3. رسالة واتساب",
+    },
+  ];
+
+  // Composed WhatsApp message for Booking
   const compiledWhatsAppMessage = [
     "السلام عليكم علي 👋",
-    `أريد طلب: ${selectedService}`,
-    `مجال شغلي: ${selectedSector}`,
-    currentUrl.trim() && `موقعي الحالي: ${currentUrl.trim()}`,
-    `وقت البدء: ${selectedTiming}`,
-    "أرسل لي التفاصيل والتدقيق المجاني.",
+    `أريد: ${selectedService}`,
+    currentUrl.trim() && `رابط موقعي: ${currentUrl.trim()}`,
+    selectedSector && `مجال شغلي: ${selectedSector}`,
+    selectedTiming && `وقت البدء: ${selectedTiming}`,
+    "خلّينا نتفق على المطلوب والتكلفة.",
   ]
     .filter(Boolean)
     .join("\n");
@@ -111,11 +135,10 @@ export default function Home() {
     if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
     setIsTyping(true);
 
-    const nowStr =
-      new Date().toLocaleTimeString("ar-IQ", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }) + " ✓✓";
+    const nowStr = new Date().toLocaleTimeString("ar-IQ", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
     setMessageTime(nowStr);
 
     let charIndex = 0;
@@ -124,14 +147,14 @@ export default function Home() {
       setDisplayedMessage("");
 
       const stepTyping = () => {
-        charIndex = Math.min(charIndex + 4, fullText.length);
+        charIndex = Math.min(charIndex + 5, fullText.length);
         setDisplayedMessage(fullText.slice(0, charIndex));
         if (charIndex < fullText.length) {
-          typingTimeoutRef.current = setTimeout(stepTyping, 16);
+          typingTimeoutRef.current = setTimeout(stepTyping, 14);
         }
       };
       stepTyping();
-    }, 350);
+    }, 220);
   };
 
   useEffect(() => {
@@ -142,7 +165,7 @@ export default function Home() {
   }, [selectedService, selectedSector, selectedTiming, currentUrl]);
 
   /* ─────────────────────────────────────────────────────────────
-     2. IMMEDIATE LOAD & REAL METRICS (NO INTRO BLOCKER)
+     2. IMMEDIATE LOAD & REAL METRICS
   ───────────────────────────────────────────────────────────── */
   useEffect(() => {
     document.body.classList.add("rd");
@@ -190,7 +213,6 @@ export default function Home() {
       });
     }
 
-    // Run race immediately on page load
     startRace();
 
     return () => {
@@ -332,7 +354,7 @@ export default function Home() {
   }, []);
 
   /* ─────────────────────────────────────────────────────────────
-     5. UPGRADED AD LEAK PHYSICS CANVAS SIMULATION (#leak)
+     5. AD LEAK PHYSICS CANVAS SIMULATION (#leak)
   ───────────────────────────────────────────────────────────── */
   useEffect(() => {
     const canvas = leakCanvasRef.current;
@@ -394,7 +416,7 @@ export default function Home() {
       rafId = requestAnimationFrame(render);
       if (!isVisible || !W) return;
 
-      const p = isFixed ? 0.1 : 0.5; // Leak ratio
+      const p = isFixed ? 0.1 : 0.5;
       const elapsed = isReduced ? T : now - t0;
       const q = Math.min(elapsed / T, 1);
 
@@ -421,7 +443,6 @@ export default function Home() {
       const coinVal = spend / 128;
       const gc = isFixed ? col.g : col.b;
 
-      // Spawn coins
       if (q < 1 && now - lastSpawn > 70) {
         lastSpawn = now;
         coins.push({
@@ -444,7 +465,6 @@ export default function Home() {
       ctx.textAlign = "left";
       ctx.fillText(`يوم ${Math.max(1, Math.ceil(q * 30))} / 30`, 4, 14);
 
-      // Pipe outline
       ctx.globalAlpha = 0.55;
       ctx.strokeStyle = col.f;
       ctx.lineWidth = 3;
@@ -458,7 +478,6 @@ export default function Home() {
       ctx.lineTo(cx + 20, end);
       ctx.stroke();
 
-      // Dynamic Pipe Joint: smooth line when fixed, broken crack when slow
       ctx.globalAlpha = 1;
       ctx.strokeStyle = gc;
       ctx.lineWidth = 3;
@@ -475,7 +494,6 @@ export default function Home() {
       }
       ctx.stroke();
 
-      // Status text
       ctx.fillStyle = gc;
       ctx.font = "700 15px " + fontMain;
       ctx.textAlign = "left";
@@ -483,7 +501,6 @@ export default function Home() {
       ctx.textAlign = "right";
       ctx.fillText(`${Math.round(p * 100)}% تسرّب`, cx - 38, gy - 22);
 
-      // Update coins physics
       for (const k of coins) {
         k.y += k.vy;
         if (!k.s && k.y > gy) {
@@ -510,7 +527,6 @@ export default function Home() {
         }
       }
 
-      // Filter landed coins and trigger splash
       coins = coins.filter((k) => {
         const yLimit = bb - getFill(k.s);
         const hit = k.s && k.y >= yLimit;
@@ -530,7 +546,6 @@ export default function Home() {
         return !hit;
       });
 
-      // Draw coins with "$" text
       for (const k of coins) {
         ctx.fillStyle = k.s === 2 ? col.b : k.s === 1 ? col.g : col.f;
         ctx.beginPath();
@@ -543,7 +558,6 @@ export default function Home() {
         ctx.fillText("$", k.x, k.y + 3.2);
       }
 
-      // Draw splash particles
       for (const o of splashParticles) {
         o.x += o.vx;
         o.y += o.vy;
@@ -555,7 +569,6 @@ export default function Home() {
       }
       splashParticles = splashParticles.filter((o) => o.a > 0);
 
-      // Draw floating loss tags (-$X)
       for (const o of priceTags) {
         o.y -= 0.5;
         o.a -= 0.012;
@@ -570,7 +583,6 @@ export default function Home() {
 
       shake *= 0.85;
 
-      // Draw bins with wavy liquid surfaces
       const drawBin = (
         bx: number,
         fillRatio: number,
@@ -624,105 +636,62 @@ export default function Home() {
   }, [spend, isFixed]);
 
   /* ─────────────────────────────────────────────────────────────
-     6. SCORE RING INTERSECTION ANIMATION
-  ───────────────────────────────────────────────────────────── */
-  useEffect(() => {
-    const ring = ringRef.current;
-    if (!ring) return;
-
-    const io = new IntersectionObserver(
-      (entries, observer) => {
-        if (!entries[0].isIntersecting) return;
-        observer.disconnect();
-
-        if (ringCircleRef.current) {
-          ringCircleRef.current.style.strokeDashoffset = String(326.7 * 0.08);
-        }
-
-        const start = performance.now();
-        const duration = 1400;
-
-        const anim = (t: number) => {
-          const q = Math.min((t - start) / duration, 1);
-          const score = Math.round(92 * (1 - Math.pow(1 - q, 2)));
-          if (ringScoreRef.current) {
-            ringScoreRef.current.textContent = String(score);
-          }
-          if (q < 1) requestAnimationFrame(anim);
-        };
-        requestAnimationFrame(anim);
-      },
-      { threshold: 0.3 }
-    );
-
-    io.observe(ring);
-    return () => io.disconnect();
-  }, []);
-
-  /* ─────────────────────────────────────────────────────────────
-     7. BILINGUAL CARD AUTOMATIC FLIP
-  ───────────────────────────────────────────────────────────── */
-  useEffect(() => {
-    const isReduced = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
-    if (isReduced) return;
-
-    const interval = setInterval(() => {
-      setBilingualIndex((prev) => (prev === 0 ? 1 : 0));
-    }, 2600);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  /* ─────────────────────────────────────────────────────────────
-     8. PINNED HORIZONTAL GALLERY SCROLL & PROGRESS
+     6. INTERACTIVE FUNNEL SIMULATOR SCROLL (#work)
   ───────────────────────────────────────────────────────────── */
   useEffect(() => {
     const work = workRef.current;
-    const track = trackRef.current;
-    if (!work || !track) return;
+    if (!work) return;
 
-    const cards = Array.from(track.children) as HTMLElement[];
-
+    let rafScroll: number;
     const handleScroll = () => {
       const rect = work.getBoundingClientRect();
-      const progress = Math.min(Math.max(-rect.top / (rect.height - window.innerHeight), 0), 1);
-
-      track.style.transform = `translateX(${-(1 - progress) * (track.offsetWidth - window.innerWidth)}px)`;
+      const progress = Math.min(
+        Math.max(-rect.top / (rect.height - window.innerHeight), 0),
+        0.9999
+      );
+      const phase = Math.floor(progress * 3);
+      setSimIndex(phase);
 
       if (workProgressRef.current) {
         workProgressRef.current.style.width = `${progress * 100}%`;
       }
-
       if (scrollBarRef.current) {
         const fullScroll = document.documentElement.scrollHeight - window.innerHeight;
         const pageProgress = fullScroll > 0 ? (window.scrollY / fullScroll) * 100 : 0;
         scrollBarRef.current.style.width = `${pageProgress}%`;
       }
-
-      const trackLeft = track.getBoundingClientRect().left;
-      cards.forEach((card) => {
-        const dist =
-          (trackLeft + card.offsetLeft + card.offsetWidth / 2 - window.innerWidth / 2) /
-          window.innerWidth;
-        const absDist = Math.min(Math.abs(dist), 1);
-        card.style.transform = `translateY(${absDist * 34}px) rotate(${dist * -4}deg) scale(${
-          1 - absDist * 0.08
-        })`;
-      });
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
+    const onScroll = () => {
+      cancelAnimationFrame(rafScroll);
+      rafScroll = requestAnimationFrame(handleScroll);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     handleScroll();
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
+      cancelAnimationFrame(rafScroll);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, []);
 
+  const scrollToPhase = (phaseIndex: number) => {
+    const work = workRef.current;
+    if (!work) return;
+    const targetTop =
+      work.offsetTop +
+      (phaseIndex / 3 + 0.05) * (work.offsetHeight - window.innerHeight);
+    window.scrollTo({ top: targetTop, behavior: "smooth" });
+  };
+
+  const currentPhase = PJ[simIndex] || PJ[0];
   const leakRatio = isFixed ? 0.1 : 0.5;
   const monthlyLoss = Math.round(spend * leakRatio);
+
+  const timingIndex = WH.indexOf(selectedTiming);
 
   return (
     <>
@@ -730,7 +699,7 @@ export default function Home() {
       <i id="sp" ref={scrollBarRef} />
 
       {/* ─────────────────────────────────────────────────────────────
-          HEADER SECTION (INSTANT LOAD WITH REAL PERFORMANCE READOUT)
+          1. HEADER SECTION (EXACT LEAD & CTA TO #book)
       ───────────────────────────────────────────────────────────── */}
       <header ref={headerRef}>
         <canvas id="fx" ref={fxCanvasRef} />
@@ -741,24 +710,18 @@ export default function Home() {
               تدفع على الإعلان، وموقعك يطرد الزبون قبل أن يفتح.
             </h1>
             <p className="lead">
-              أبني مواقع Next.js تفتح بأقل من ثانية على الموبايل وتحوّل الضغطة إلى رسالة واتساب.
-              شغّل السباق وشاهد الفرق بنفسك.
+              أنا علي، أبني صفحات ومواقع للعيادات والمتاجر والشركات اللي تعلن.
+              أوضّح عرضك، أحسّن سرعة الموبايل، وأسهّل وصول الزبون لواتساب.
             </p>
-            <a
-              className="btn"
-              id="cta"
-              href={formatWAUrl("السلام عليكم علي، أريد تدقيقاً مجانياً لموقعي")}
-              target="_blank"
-              rel="noreferrer"
-            >
-              اطلب تدقيق مجاني على واتساب
+            <a className="btn" id="cta" href="#book">
+              أرسل موقعك للتدقيق المجاني
             </a>
           </div>
 
           <div>
             {/* Live Speed Race Component */}
             <div className="race" id="race">
-              {/* Legacy Site Card */}
+              {/* Legacy Slow Site Card */}
               <div className="ph" style={{ "--c": "var(--bad)" } as React.CSSProperties}>
                 <div className="scr">
                   <i
@@ -783,7 +746,7 @@ export default function Home() {
                     </div>
                   )}
                 </div>
-                <p className="nm">موقع قالب أو ووردبريس</p>
+                <p className="nm">موقع بطيء</p>
                 <p
                   className="tm disp"
                   style={{ color: raceFinished.legacy ? "var(--bad)" : undefined }}
@@ -793,7 +756,7 @@ export default function Home() {
                 <p className="sc">PageSpeed موبايل: 34/100</p>
               </div>
 
-              {/* CodeWithAli Site Card */}
+              {/* Fast Site Card */}
               <div className="ph" style={{ "--c": "var(--go)" } as React.CSSProperties}>
                 <div className="scr">
                   <i
@@ -813,7 +776,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <p className="nm">موقع CodeWithAli</p>
+                <p className="nm">موقع سريع</p>
                 <p
                   className="tm disp"
                   style={{ color: raceFinished.ali ? "var(--go)" : undefined }}
@@ -828,10 +791,10 @@ export default function Home() {
               أعد السباق
             </button>
 
-            {/* Live Navigation Readout on visitor's device */}
+            {/* Live Navigation Readout */}
             <p className="real" id="real">
-              قياس حقيقي على جهازك الآن: أول ظهور{" "}
-              <b id="m1">{fcpTime !== null ? fcpTime : "…"}</b> ms، وتحميل كامل{" "}
+              قياس هذه الزيارة: أول ظهور{" "}
+              <b id="m1">{fcpTime !== null ? fcpTime : "…"}</b> ms، واكتمال التحميل{" "}
               <b id="m2">{loadTime !== null ? loadTime : "…"}</b> ms.
             </p>
           </div>
@@ -843,18 +806,13 @@ export default function Home() {
       ───────────────────────────────────────────────────────────── */}
       <div className="mq">
         <div className="tk">
-          <span>92/100 PageSpeed</span>
-          <span>أقل من ثانية</span>
+          <span>صفحات هبوط للإعلانات</span>
+          <span>مصمّم للموبايل</span>
           <span>Meta Pixel وConversion API</span>
           <span>واتساب مباشر</span>
           <span>عربي / English</span>
-          <span>92/100 PageSpeed</span>
-          <span>أقل من ثانية</span>
-          <span>Meta Pixel وConversion API</span>
-          <span>واتساب مباشر</span>
-          <span>عربي / English</span>
-          <span>92/100 PageSpeed</span>
-          <span>أقل من ثانية</span>
+          <span>صفحات هبوط للإعلانات</span>
+          <span>مصمّم للموبايل</span>
           <span>Meta Pixel وConversion API</span>
           <span>واتساب مباشر</span>
           <span>عربي / English</span>
@@ -862,17 +820,17 @@ export default function Home() {
       </div>
 
       {/* ─────────────────────────────────────────────────────────────
-          INVERTED SECTION: AD SPEND LEAK SIMULATOR
+          2. AD SPEND LEAK CALCULATOR
       ───────────────────────────────────────────────────────────── */}
       <section className="inv">
         <div className="w">
           <div>
-            <h2>أموال إعلانك تتسرّب من موقعك كل شهر.</h2>
+            <h2>شكد يكلّفك ضياع نقرات الإعلان؟</h2>
             <p className="s">
-              اختر ميزانيتك، وشاهد شهراً كاملاً من الإعلانات في 9 ثوانٍ.
+              اختر ميزانيتك الشهرية وشوف فرق الهدر لما يفتح موقعك بسرعة بدل ما يغادر الزبون.
             </p>
 
-            <div className="chips pre">
+            <div className="chips pre" id="pre">
               {PRESET_SPENDS.map((val) => (
                 <button
                   key={val}
@@ -899,21 +857,22 @@ export default function Home() {
               />
             </label>
 
-            <p className="yr" aria-live="polite">
+            <p className="yr" id="yr" aria-live="polite">
               {isFixed
-                ? `نفس الميزانية، ويعود إليك $${formatNumber(Math.round(spend * 0.4))} كل شهر.`
-                : `$${formatNumber(monthlyLoss)} تضيع كل شهر، أي $${formatNumber(
+                ? `بعد التسريع: توفّر $${formatNumber(Math.round(spend * 0.4))} شهرياً من ميزانيتك.`
+                : `مع البطء: $${formatNumber(monthlyLoss)} تضيع شهرياً ($${formatNumber(
                     monthlyLoss * 12
-                  )} في السنة.`}
+                  )} سنوياً).`}
             </p>
 
             <button
               type="button"
               className="fixb"
+              id="fix"
               aria-pressed={isFixed}
               onClick={() => setIsFixed(!isFixed)}
             >
-              {isFixed ? "العودة للوضع الحالي" : "شاهد الوضع بعد التسريع"}
+              {isFixed ? "ارجع للوضع الحالي" : "شوف الوضع بعد التسريع"}
             </button>
           </div>
 
@@ -921,181 +880,168 @@ export default function Home() {
             <canvas
               id="leak"
               ref={leakCanvasRef}
-              aria-label="رسم متحرك: نصف فلوس الإعلان تضيع قبل أن تصل للزبون"
+              aria-label="محاكاة لتأثير سرعة الموقع على ميزانية الإعلان"
             />
           </div>
         </div>
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          PROOF SECTION (PAGE SPEED 92 RING)
-      ───────────────────────────────────────────────────────────── */}
-      <section className="proof w">
-        <div className="top">
-          <div className="ring" ref={ringRef}>
-            <svg viewBox="0 0 120 120">
-              <circle className="t" cx="60" cy="60" r="52" />
-              <circle className="v" ref={ringCircleRef} cx="60" cy="60" r="52" />
-            </svg>
-            <span className="disp" ref={ringScoreRef}>
-              0
-            </span>
-          </div>
-          <div>
-            <h2>92 من 100 على Google PageSpeed للموبايل.</h2>
-            <p style={{ marginTop: "12px", maxWidth: "520px", lineHeight: 2 }}>
-              مواقع ووردبريس والقوالب تحقق 30–40 وتخسر أكثر من نصف نقرات الإعلان. موقعك القادم يفتح
-              في أقل من ثانية.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ─────────────────────────────────────────────────────────────
-          WORK SECTION (PINNED 3D HORIZONTAL GALLERY)
+          3. INTERACTIVE FUNNEL SIMULATOR (#work)
+          From ad click to clear WhatsApp request
       ───────────────────────────────────────────────────────────── */}
       <section id="work" ref={workRef}>
         <div className="pin">
-          <div className="w">
-            <h2>أعمال يمكنك تجربتها.</h2>
-          </div>
-          <div id="track" ref={trackRef}>
-            {/* Card 1: Clinic / Bilingual Platform */}
-            <article className="cd" dir="rtl">
-              <div className="dv">
-                <div className="b3">
-                  <i />
-                  <i />
-                  <i />
-                </div>
-                <div className="scn mc">
-                  <div className="nv">
-                    <span className="lg">+</span>
-                    <i />
-                    <i />
-                    <i />
-                    <em>AR · EN</em>
+          <div className="w wk">
+            <div className="wa1">
+              <span className="sim-tag">نموذج تفاعلي · من ضغطة إعلان إلى طلب واضح</span>
+              <h2>خلّي الزبون يوصل وهو عارف شنو يريد.</h2>
+              <div className="wt" id="wt">
+                {PJ.map((p, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    aria-pressed={simIndex === i}
+                    onClick={() => scrollToPhase(i)}
+                  >
+                    {p.n}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Simulated Phone/Browser Viewport */}
+            <div className="dev">
+              <div className="dbar">
+                <i />
+                <i />
+                <i />
+                <u id="du">{currentPhase.u}</u>
+              </div>
+              <div className="vp" id="vp">
+                {/* Phase 0: Offer View */}
+                <div className={`pg p-sim ${simIndex === 0 ? "on" : ""}`} dir="rtl">
+                  <div className="sim-nav">
+                    <b>+ عيادة الابتسامة</b>
+                    <span>نموذج تفاعلي · المرحلة 1 من 3</span>
                   </div>
-                  <div className="hr">
-                    <div
-                      id="bi"
-                      dir={bilingualIndex === 0 ? "rtl" : "ltr"}
-                      style={{ transition: "opacity 0.25s" }}
-                    >
-                      <b className="disp">
-                        {bilingualIndex === 0 ? "عيادة الابتسامة" : "Smile Clinic"}
-                      </b>
-                      <span>
-                        {bilingualIndex === 0
-                          ? "احجز موعدك خلال دقيقة"
-                          : "Book your visit in a minute"}
-                      </span>
+                  <div className="sim-hero">
+                    <h4>ابتسامتك أنقى خلال جلسة واحدة</h4>
+                    <p>
+                      عرض خاص لزوار الإعلان: فحص شامل مع خطة علاج واضحة بدون انتظار على الهاتف.
+                    </p>
+                    <div className="sim-feats">
+                      <div>تنظيف أسنان</div>
+                      <div>تبييض بالليزر</div>
+                      <div>تقويم شفاف</div>
                     </div>
-                    <div className="dr">+</div>
                   </div>
-                  <div className="bk">
-                    <u>الاسم</u>
-                    <u>التاريخ</u>
-                    <em className="bt2">احجز</em>
-                  </div>
-                </div>
-              </div>
-              <div className="cp">
-                <span className="k">ثنائي اللغة</span>
-                <h3>منصّة شركة وعيادة</h3>
-                <p>
-                  تبديل RTL/LTR بدون وميض، واجهة فاخرة، ومسار حجز مواعيد.{" "}
-                  <a
-                    href={formatWAUrl("السلام عليكم علي، أريد معاينة حيّة لمشروع منصة الشركة والعيادة")}
-                    target="_blank"
-                    rel="noreferrer"
+                  <button
+                    type="button"
+                    className="sim-cta"
+                    onClick={() => scrollToPhase(1)}
                   >
-                    اطلب معاينة حيّة
-                  </a>
-                </p>
-              </div>
-            </article>
+                    اطلب موعد ←
+                  </button>
+                </div>
 
-            {/* Card 2: NexaFlow with Floating Badge */}
-            <article className="cd" dir="rtl">
-              <div className="dv">
-                <div className="b3">
-                  <i />
-                  <i />
-                  <i />
-                </div>
-                <div className="scn nx">
-                  <u className="o1" />
-                  <u className="o2" />
-                  <u className="o3" />
-                  <b className="disp">NexaFlow</b>
-                  <span className="bd">92</span>
-                  <span className="sb">ابدأ الآن</span>
-                </div>
-              </div>
-              <div className="cp">
-                <span className="k">موقع حي</span>
-                <h3>NexaFlow</h3>
-                <p>
-                  حركات سلسة وبنية حديثة، 92/100 على الموبايل.{" "}
-                  <a
-                    href="https://nexa-flow-gamma.vercel.app"
-                    target="_blank"
-                    rel="noreferrer"
+                {/* Phase 1: Service & Time Selection */}
+                <div className={`pg p-sim ${simIndex === 1 ? "on" : ""}`} dir="rtl">
+                  <div className="sim-nav">
+                    <b>+ عيادة الابتسامة</b>
+                    <span>نموذج تفاعلي · المرحلة 2 من 3</span>
+                  </div>
+                  <div>
+                    <span className="sim-lbl">1. اختَر الخدمة المطلوبة (جرّب الضغط):</span>
+                    <div className="sim-opts" id="simSvcs">
+                      {["تنظيف أسنان", "تبييض أسنان", "تقويم أسنان"].map((svcName) => (
+                        <button
+                          key={svcName}
+                          type="button"
+                          className="sim-opt"
+                          aria-pressed={simSvc === svcName}
+                          onClick={() => setSimSvc(svcName)}
+                        >
+                          {svcName.replace(" أسنان", "")}
+                        </button>
+                      ))}
+                    </div>
+                    <span className="sim-lbl">2. حدّد الوقت المفضّل:</span>
+                    <div className="sim-times" id="simTimes">
+                      {["صباحاً", "مساءً"].map((tName) => (
+                        <button
+                          key={tName}
+                          type="button"
+                          className="sim-opt"
+                          aria-pressed={simTime === tName}
+                          onClick={() => setSimTime(tName)}
+                        >
+                          {tName}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="sim-cta"
+                    onClick={() => scrollToPhase(2)}
                   >
-                    افتح الموقع الحي
-                  </a>
-                </p>
-              </div>
-            </article>
+                    تجهيز رسالة واتساب ←
+                  </button>
+                </div>
 
-            {/* Card 3: TradeTrackr with KPI Bar & SVG Chart */}
-            <article className="cd" dir="rtl">
-              <div className="dv">
-                <div className="b3">
-                  <i />
-                  <i />
-                  <i />
-                </div>
-                <div className="scn tt">
-                  <div className="kp">
-                    <b>+12.4%</b>
-                    <b>$48.2K</b>
-                    <b>63%</b>
+                {/* Phase 2: Live WhatsApp Message */}
+                <div className={`pg p-sim ${simIndex === 2 ? "on" : ""}`} dir="rtl">
+                  <div className="sim-nav">
+                    <b>تحويل مباشر إلى واتساب</b>
+                    <span>نموذج تفاعلي · المرحلة 3 من 3</span>
                   </div>
-                  <svg viewBox="0 0 160 80" preserveAspectRatio="none">
-                    <polyline
-                      className="ln"
-                      pathLength="1"
-                      points="0,70 20,55 40,62 60,30 80,40 100,14 120,26 140,6 160,10"
-                      fill="none"
-                      stroke="var(--go)"
-                      strokeWidth="2.5"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <div className="tb">
-                    <i />
-                    <i />
-                    <i />
+                  <div className="sim-wa-box">
+                    <div className="sim-wa-top">
+                      <span>رسالة الزبون الجاهزة لعيادتك:</span>
+                      <span style={{ color: "var(--go)" }}>جاهزة للإرسال ✓</span>
+                    </div>
+                    <div className="sim-wa-bub" id="simWaText">
+                      {`السلام عليكم، أريد أطلب موعد ${simSvc}. الوقت المفضّل: ${simTime}. شنو المواعيد المتوفرة؟`}
+                    </div>
+                  </div>
+                  <div className="sim-mini-bar">
+                    <span>جرّب تغيير الاختيار:</span>
+                    {["تنظيف أسنان", "تبييض أسنان", "تقويم أسنان"].map((svcName) => (
+                      <button
+                        key={svcName}
+                        type="button"
+                        aria-pressed={simSvc === svcName}
+                        onClick={() => setSimSvc(svcName)}
+                      >
+                        {svcName.replace(" أسنان", "")}
+                      </button>
+                    ))}
+                    <span>·</span>
+                    {["صباحاً", "مساءً"].map((tName) => (
+                      <button
+                        key={tName}
+                        type="button"
+                        aria-pressed={simTime === tName}
+                        onClick={() => setSimTime(tName)}
+                      >
+                        {tName}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
-              <div className="cp">
-                <span className="k">تطبيق كامل</span>
-                <h3>TradeTrackr</h3>
-                <p>
-                  نظام تحليلات ولوحة تحكم Full-stack، وليست صفحات ثابتة.{" "}
-                  <a
-                    href={formatWAUrl("السلام عليكم علي، أريد معاينة حيّة لمشروع TradeTrackr")}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    اطلب معاينة حيّة
-                  </a>
-                </p>
-              </div>
-            </article>
+            </div>
+
+            {/* Description & CTA */}
+            <div className="wc1" id="wd">
+              <span className="k2">{currentPhase.k}</span>
+              <h3 className="disp">{currentPhase.n}</h3>
+              <p>{currentPhase.d}</p>
+              <a className="btn" href="#book">
+                أريد هيچ تجربة لبزنسي
+              </a>
+            </div>
           </div>
           <div className="pb">
             <i id="wp" ref={workProgressRef} />
@@ -1104,28 +1050,28 @@ export default function Home() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          BOOKING & WHATSAPP CONFIGURATOR SECTION (UPGRADED WITH STEPS, SC2 CARDS, SEGMENTED CONTROL & CHAT MOCKUP)
+          4 & 5. PACKAGES & BOOKING FUNNEL (#book)
       ───────────────────────────────────────────────────────────── */}
-      <section className="book" id="book" ref={bookRef}>
+      <section className="book" id="book">
         <div className="w two">
           <div>
-            <h2>اختر طلبك، ورسالتك جاهزة على واتساب.</h2>
+            <h2>شنو يحتاج موقعك؟ خلّينا نحدده.</h2>
 
-            {/* Step 1: Service Selection with .sc2 cards and icons */}
+            {/* Step 1: Package Selection */}
             <p className="stp">
-              <i>1</i>ماذا تحتاج؟
+              <i>1</i>اختَر الباقة المناسبة
             </p>
-            <div id="svcs" role="radiogroup" aria-label="الخدمة">
-              {SERVICES.map((s) => {
-                const isChecked = selectedService === s.name;
+            <div id="svcs" role="radiogroup" aria-label="الباقة">
+              {SV.map((pkg) => {
+                const isChecked = selectedService === pkg.name;
                 return (
                   <button
-                    key={s.name}
+                    key={pkg.name}
                     type="button"
                     className="sc2"
                     role="radio"
                     aria-checked={isChecked}
-                    onClick={() => setSelectedService(s.name)}
+                    onClick={() => setSelectedService(pkg.name)}
                   >
                     <span className="ic">
                       <svg
@@ -1138,84 +1084,110 @@ export default function Home() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       >
-                        {s.iconPath}
+                        {pkg.iconPath}
                       </svg>
                     </span>
                     <span className="tt2">
                       <span>
-                        {s.name}
-                        {s.hot && (
+                        {pkg.name}
+                        {pkg.hot && (
                           <em className="hot" style={{ fontStyle: "normal" }}>
                             الأكثر طلباً
                           </em>
                         )}
                       </span>
-                      <span className="pl">{s.duration}</span>
+                      <span className="pl">{pkg.duration}</span>
                     </span>
-                    <span className="ds">{s.desc}</span>
+                    <span className="ds">{pkg.desc}</span>
+                    <span className="sub-tech">{pkg.subTech}</span>
                     <span className="ck">✓</span>
                   </button>
                 );
               })}
             </div>
 
-            {/* Step 2: Sector / Industry */}
-            <p className="stp">
-              <i>2</i>مجال عملك
-            </p>
-            <div className="chips" id="secs">
-              {SECTORS.map((sec) => (
-                <button
-                  key={sec}
-                  type="button"
-                  className="chip"
-                  aria-pressed={selectedSector === sec}
-                  onClick={() => setSelectedSector(sec)}
-                >
-                  {sec}
-                </button>
-              ))}
-            </div>
-
-            {/* Step 3: Segmented Timeline Control */}
-            <p className="stp">
-              <i>3</i>متى تريد أن نبدأ؟
-            </p>
-            <div
-              className="seg"
-              id="whn"
-              style={{ "--x": TIMINGS.indexOf(selectedTiming) } as React.CSSProperties}
+            {/* Helper Button */}
+            <button
+              type="button"
+              className="help-pick"
+              id="helpPick"
+              aria-pressed={selectedService === HELP_OPT}
+              onClick={() => {
+                setSelectedService(HELP_OPT);
+                const el = document.getElementById("url");
+                el?.focus();
+              }}
             >
-              <i />
-              {TIMINGS.map((tm) => (
-                <button
-                  key={tm}
-                  type="button"
-                  aria-pressed={selectedTiming === tm}
-                  onClick={() => setSelectedTiming(tm)}
-                >
-                  {tm}
-                </button>
-              ))}
-            </div>
+              مو متأكد؟ أرسل موقعك وأساعدك تختار.
+            </button>
 
-            {/* Step 4: Optional Website URL */}
-            <p className="stp">
-              <i>4</i>رابط موقعك الحالي (اختياري)
-            </p>
+            {/* Step 2: Website URL */}
+            <label className="stp" htmlFor={websiteUrlId} style={{ marginTop: "20px" }}>
+              <i>2</i>رابط موقعك الحالي (اختياري)
+            </label>
             <input
-              id={websiteUrlId}
               type="url"
+              id={websiteUrlId}
               placeholder="https://"
               value={currentUrl}
               onChange={(e) => setCurrentUrl(e.target.value)}
             />
+
+            {/* Collapsible Details */}
+            <details className="opt-box">
+              <summary>أضف تفاصيل — اختياري</summary>
+              <div className="opt-body">
+                <p className="q" style={{ marginTop: "4px" }}>
+                  مجال شغلك
+                </p>
+                <div className="chips" id="secs">
+                  {SE.map((sec) => (
+                    <button
+                      key={sec}
+                      type="button"
+                      className="chip"
+                      aria-pressed={selectedSector === sec}
+                      onClick={() =>
+                        setSelectedSector((prev) => (prev === sec ? "" : sec))
+                      }
+                    >
+                      {sec}
+                    </button>
+                  ))}
+                </div>
+
+                <p className="q">وقت البدء</p>
+                <div
+                  className="seg"
+                  id="whn"
+                  style={
+                    {
+                      "--x": Math.max(0, timingIndex),
+                      "--so": timingIndex >= 0 ? 1 : 0,
+                    } as React.CSSProperties
+                  }
+                >
+                  <i />
+                  {WH.map((tm) => (
+                    <button
+                      key={tm}
+                      type="button"
+                      aria-pressed={selectedTiming === tm}
+                      onClick={() =>
+                        setSelectedTiming((prev) => (prev === tm ? "" : tm))
+                      }
+                    >
+                      {tm}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </details>
           </div>
 
-          {/* Sticky WhatsApp Chat Phone Mockup */}
+          {/* Sticky WhatsApp Phone Mockup */}
           <div className="sticky">
             <div className="wp">
-              {/* WhatsApp Chat Header */}
               <div className="wh">
                 <span className="wa">
                   <svg viewBox="0 0 64 64" width="24" height="24">
@@ -1236,13 +1208,12 @@ export default function Home() {
                 </span>
                 <div>
                   <b>علي · CodeWithAli</b>
-                  <small>متصل الآن</small>
+                  <small>معاينة رسالتك</small>
                 </div>
               </div>
 
-              {/* Chat Message Body */}
               <div className="wc">
-                <p className="wd">اليوم</p>
+                <p className="wd">الرسالة الجاهزة</p>
                 <div className="bub" id="msg" hidden={isTyping}>
                   {displayedMessage}
                 </div>
@@ -1256,7 +1227,6 @@ export default function Home() {
                 </small>
               </div>
 
-              {/* Chat Action Footer */}
               <div className="wf">
                 <a
                   className="send"
@@ -1265,13 +1235,13 @@ export default function Home() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  أرسلها على واتساب
+                  ناقش مشروعك ويا علي
                 </a>
               </div>
             </div>
 
             <p className="note" style={{ textAlign: "center" }}>
-              ستفتح محادثة جاهزة على واتساب، وما عليك إلا الضغط على إرسال.
+              نتفق على المطلوب والسعر قبل أي دفعة.
             </p>
           </div>
         </div>
@@ -1282,7 +1252,7 @@ export default function Home() {
       ───────────────────────────────────────────────────────────── */}
       <footer className="w">© 2026 CodeWithAli. مصمَّم ومبرمج يدوياً.</footer>
       <a className="fix" href="#book">
-        احجز على واتساب
+        ناقش مشروعك ويا علي
       </a>
     </>
   );

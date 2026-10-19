@@ -773,6 +773,35 @@ export default function Home() {
     };
   }, []);
 
+  /* ─────────────────────────────────────────────────────────────
+     7. SCROLL-DRIVEN REVEAL ANIMATIONS OBSERVER
+  ───────────────────────────────────────────────────────────── */
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+          }
+        });
+      },
+      { threshold: 0.05, rootMargin: "0px 0px -20px 0px" }
+    );
+
+    const elements = document.querySelectorAll(
+      ".scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale"
+    );
+    elements.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight - 10) {
+        el.classList.add("in-view");
+      }
+      observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [activeCaseTab, caseMode]);
+
   const activeCase = CASE_STUDIES[activeCaseTab] || CASE_STUDIES[0];
   const leakRatio = isFixed ? 0.1 : 0.5;
   const monthlyLoss = Math.round(spend * leakRatio);
@@ -932,7 +961,7 @@ export default function Home() {
       ───────────────────────────────────────────────────────────── */}
       <section className="inv">
         <div className="w">
-          <div>
+          <div className="scroll-reveal-right">
             <h2>شكد يكلّفك ضياع نقرات الإعلان؟</h2>
             <p className="s">
               اختر ميزانيتك الشهرية وشوف فرق الهدر لما يفتح موقعك بسرعة بدل ما يغادر الزبون.
@@ -984,7 +1013,7 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="lk">
+          <div className="lk scroll-reveal-left delay-1">
             <canvas
               id="leak"
               ref={leakCanvasRef}
@@ -995,16 +1024,12 @@ export default function Home() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          3. INTERACTIVE FUNNEL SIMULATOR (#work)
-          From ad click to clear WhatsApp request
-      ───────────────────────────────────────────────────────────── */}
-      {/* ─────────────────────────────────────────────────────────────
           3. COMMERCIAL FUNNELS & CRO SHOWCASE (#work)
           Replaces the old clinic scroll trap with versatile commercial funnels
       ───────────────────────────────────────────────────────────── */}
       <section id="work" className="cs-section">
         <div className="w">
-          <div className="cs-top">
+          <div className="cs-top scroll-reveal">
             <span className="cs-tag">هندسة التحويل والنتائج</span>
             <h2 className="disp">شلون نحوّل زائر إعلانك إلى زبون يدفع؟</h2>
             <p className="cs-sub">
@@ -1012,7 +1037,7 @@ export default function Home() {
             </p>
 
             {/* Industry Switcher Tabs */}
-            <div className="cs-tabs" role="tablist" aria-label="نماذج العمل">
+            <div className="cs-tabs scroll-reveal delay-1" role="tablist" aria-label="نماذج العمل">
               {CASE_STUDIES.map((c, i) => (
                 <button
                   key={c.id}
@@ -1030,8 +1055,8 @@ export default function Home() {
           </div>
 
           {/* Active Case Study Layout */}
-          <div className="cs-body">
-            <div className="cs-hero-strip">
+          <div className="cs-body" key={`${activeCaseTab}-${caseMode}`}>
+            <div className="cs-hero-strip scroll-reveal delay-2">
               <div>
                 <span className="cs-badge">{activeCase.badge}</span>
                 <h3 className="cs-title">{activeCase.title}</h3>
@@ -1061,9 +1086,9 @@ export default function Home() {
             </div>
 
             {/* Grid: Comparison Card + Live Mockup Preview */}
-            <div className="cs-grid">
+            <div className="cs-grid cs-animated-content">
               {/* Comparison Details Card */}
-              <div className={`cs-card ${caseMode === "after" ? "cs-card-after" : "cs-card-before"}`}>
+              <div className={`cs-card ${caseMode === "after" ? "cs-card-after" : "cs-card-before"} scroll-reveal-right delay-2`}>
                 <div className="cs-card-head">
                   <div>
                     <span className="cs-card-k">
@@ -1081,7 +1106,7 @@ export default function Home() {
 
                 <ul className="cs-points">
                   {(caseMode === "after" ? activeCase.after.points : activeCase.before.points).map((pt, idx) => (
-                    <li key={idx}>
+                    <li key={idx} style={{ animationDelay: `${0.06 * (idx + 1)}s` }}>
                       <span className="cs-bullet">{caseMode === "after" ? "✓" : "✕"}</span>
                       <span>{pt}</span>
                     </li>
@@ -1094,7 +1119,7 @@ export default function Home() {
               </div>
 
               {/* Live Mockup Preview */}
-              <div className="cs-preview-wrap">
+              <div className="cs-preview-wrap scroll-reveal-left delay-3">
                 <div className="cs-preview-device">
                   <div className="cs-preview-topbar">
                     <span className="cs-preview-dots">
@@ -1108,7 +1133,13 @@ export default function Home() {
                   <div className="cs-preview-content">
                     <div className="cs-preview-header">
                       <span className="cs-brand-name">{activeCase.preview.brand}</span>
-                      <span className="cs-live-pill">معاينة مباشرة</span>
+                      <span className="cs-live-pill">
+                        <span className="cs-beacon-dot">
+                          <span className="cs-beacon-core" />
+                          <span className="cs-beacon-ring" />
+                        </span>
+                        معاينة مباشرة
+                      </span>
                     </div>
 
                     <div className="cs-preview-banner">
@@ -1129,7 +1160,11 @@ export default function Home() {
                 {/* 4 Stats Pills */}
                 <div className="cs-metrics-row">
                   {activeCase.metrics.map((m, idx) => (
-                    <div key={idx} className="cs-metric-card">
+                    <div
+                      key={idx}
+                      className="cs-metric-card scroll-reveal-scale"
+                      style={{ transitionDelay: `${idx * 70}ms` }}
+                    >
                       <b className="cs-metric-val">{m.val}</b>
                       <span className="cs-metric-lbl">{m.label}</span>
                     </div>
@@ -1139,7 +1174,7 @@ export default function Home() {
             </div>
 
             {/* Bottom Section Action */}
-            <div className="cs-foot">
+            <div className="cs-foot scroll-reveal delay-2">
               <a className="btn" href="#book">
                 <span>أريد صفحة هبوط مماثلة لمجال شغلي</span>
                 <span className="btn-arr">←</span>
@@ -1154,7 +1189,7 @@ export default function Home() {
       ───────────────────────────────────────────────────────────── */}
       <section className="book" id="book">
         <div className="w two">
-          <div>
+          <div className="scroll-reveal-right">
             <h2>شنو يحتاج موقعك؟ خلّينا نحدده.</h2>
 
             {/* Step 1: Package Selection */}
@@ -1162,13 +1197,14 @@ export default function Home() {
               <i>1</i>اختَر الباقة المناسبة
             </p>
             <div id="svcs" role="radiogroup" aria-label="الباقة">
-              {SV.map((pkg) => {
+              {SV.map((pkg, idx) => {
                 const isChecked = selectedService === pkg.name;
                 return (
                   <button
                     key={pkg.name}
                     type="button"
-                    className="sc2"
+                    className="sc2 scroll-reveal"
+                    style={{ transitionDelay: `${idx * 60}ms` }}
                     role="radio"
                     aria-checked={isChecked}
                     onClick={() => setSelectedService(pkg.name)}
@@ -1209,7 +1245,7 @@ export default function Home() {
             {/* Helper Button */}
             <button
               type="button"
-              className="help-pick"
+              className="help-pick scroll-reveal"
               id="helpPick"
               aria-pressed={selectedService === HELP_OPT}
               onClick={() => {
@@ -1287,7 +1323,7 @@ export default function Home() {
           </div>
 
           {/* Sticky WhatsApp Phone Mockup */}
-          <div className="sticky">
+          <div className="sticky scroll-reveal-left delay-2">
             <div className="wp">
               <div className="wh">
                 <span className="wa">

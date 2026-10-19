@@ -134,7 +134,12 @@ export default function Home() {
         item: "طقم كاجوال فاخر قطن طبيعي 100% مقاوم للحرارة",
         price: "45,000 د.ع",
         oldPrice: "65,000 د.ع",
+        badgeText: "تخفيض محدود اليوم",
         ctaText: "اطلب الآن عبر واتساب مع التوصيل المجاني ←",
+        liveToast: "طلب جديد مؤكد عبر واتساب: طقم كاجوال فاخر · تم الحجز للتو",
+        step1: "نقرة إعلان إنستغرام وميتا",
+        step2: "صفحة متجر خفيفة (0.8s)",
+        step3: "طلب فوري وتأكيد بواتساب",
       },
     },
     {
@@ -177,8 +182,13 @@ export default function Home() {
         offer: "وحدات سكنية بإطلالة بانورامية وأقساط لـ 5 سنوات",
         item: "شقة نموذجية 180م² · تشطيب VIP متكامل",
         price: "مقدمة 15% وقسط شهري ميسر",
-        oldPrice: "متبقي 4 وحدات فقط ضمن المرحلة الحالية",
+        oldPrice: "",
+        badgeText: "متبقي 4 وحدات فقط ضمن المرحلة الحالية",
         ctaText: "احجز زيارة ومعاينة ميدانية للمشروع ←",
+        liveToast: "حجز موعد معاينة ميدانية للشقة 180م² · مستثمر مؤهل",
+        step1: "إعلان استثمار وتطوير عقاري",
+        step2: "حاسبة أقساط وفيديو تفاعلي (0.9s)",
+        step3: "حجز مباشر وتواصل مع المبيعات",
       },
     },
     {
@@ -221,8 +231,13 @@ export default function Home() {
         offer: "وفّر 15 ساعة عمل أسبوعياً من الروتين الإداري",
         item: "نظام تدقيق المبيعات والعمليات المالية للشركات",
         price: "جلسة تقييم مجانية بالكامل (30 دقيقة)",
-        oldPrice: "متاح لـ 5 شركات فقط خلال هذا الشهر",
+        oldPrice: "",
+        badgeText: "متاح لـ 5 شركات فقط خلال هذا الشهر",
         ctaText: "احجز جلسة التدقيق المباشرة مع المستشار ←",
+        liveToast: "تأكيد جلسة استشارية: تدقيق العمليات والمبيعات · 30 دقيقة",
+        step1: "إعلان استهداف أصحاب القرار",
+        step2: "حساب العائد ودراسة حالة (0.7s)",
+        step3: "جلسة عمل محجوزة مباشرة بواتساب",
       },
     },
   ];
@@ -1085,6 +1100,44 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Interactive Motion Graphic Pipeline */}
+            <div className="cs-motion-pipeline scroll-reveal delay-2">
+              <div className="cs-pipeline-track">
+                <div className="cs-pipeline-laser" />
+              </div>
+              <div className="cs-pipeline-steps">
+                <div className="cs-pstep pstep-1">
+                  <div className="cs-pstep-icon-wrap">
+                    <span className="cs-pstep-dot" />
+                  </div>
+                  <div className="cs-pstep-info">
+                    <span className="cs-pstep-tag">المرحلة 1</span>
+                    <b className="cs-pstep-title">{activeCase.preview.step1}</b>
+                  </div>
+                </div>
+
+                <div className="cs-pstep pstep-2 cs-pstep-active">
+                  <div className="cs-pstep-icon-wrap">
+                    <span className="cs-pstep-dot cs-pstep-core" />
+                  </div>
+                  <div className="cs-pstep-info">
+                    <span className="cs-pstep-tag">المرحلة 2 · CodeWithAli</span>
+                    <b className="cs-pstep-title">{activeCase.preview.step2}</b>
+                  </div>
+                </div>
+
+                <div className="cs-pstep pstep-3 cs-pstep-goal">
+                  <div className="cs-pstep-icon-wrap">
+                    <span className="cs-pstep-dot cs-pstep-check">✓</span>
+                  </div>
+                  <div className="cs-pstep-info">
+                    <span className="cs-pstep-tag">المرحلة 3 · تحويل مؤكد</span>
+                    <b className="cs-pstep-title">{activeCase.preview.step3}</b>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Grid: Comparison Card + Live Mockup Preview */}
             <div className="cs-grid cs-animated-content">
               {/* Comparison Details Card */}
@@ -1102,6 +1155,13 @@ export default function Home() {
                     <span>السرعة</span>
                     <b>{caseMode === "after" ? activeCase.after.speed : activeCase.before.speed}</b>
                   </div>
+                </div>
+
+                {/* Animated Multiplier HUD Indicator */}
+                <div className="cs-hud-badge">
+                  <span className="cs-hud-radar" />
+                  <span className="cs-hud-label">{caseMode === "after" ? "قفزة كفاءة المبيعات" : "معدل فقدان الزوار"}</span>
+                  <b className="cs-hud-val">{caseMode === "after" ? activeCase.badge : "أكثر من 65% هدر إعلاني"}</b>
                 </div>
 
                 <ul className="cs-points">
@@ -1142,12 +1202,34 @@ export default function Home() {
                       </span>
                     </div>
 
+                    {/* Live Simulated Event Toast (Motion Graphic Micro-Animation) */}
+                    <div className="cs-live-toast" key={activeCase.preview.liveToast}>
+                      <span className="cs-toast-beacon" />
+                      <div className="cs-toast-body">
+                        <span className="cs-toast-tag">نشاط تحويل حي</span>
+                        <span className="cs-toast-text">{activeCase.preview.liveToast}</span>
+                      </div>
+                      <span className="cs-toast-time">الآن</span>
+                    </div>
+
                     <div className="cs-preview-banner">
                       <div className="cs-banner-badge">{activeCase.preview.offer}</div>
                       <h4 className="cs-banner-item">{activeCase.preview.item}</h4>
-                      <div className="cs-price-row">
-                        <span className="cs-price">{activeCase.preview.price}</span>
-                        <span className="cs-old-price">{activeCase.preview.oldPrice}</span>
+                      
+                      <div className="cs-preview-details">
+                        <div className="cs-main-plan">
+                          <span className="cs-plan-label">تفاصيل العرض:</span>
+                          <b className="cs-plan-val">{activeCase.preview.price}</b>
+                        </div>
+                        {activeCase.preview.oldPrice && (
+                          <span className="cs-old-price">{activeCase.preview.oldPrice}</span>
+                        )}
+                        {activeCase.preview.badgeText && (
+                          <span className="cs-urgency-pill">
+                            <span className="cs-urgency-pulse" />
+                            {activeCase.preview.badgeText}
+                          </span>
+                        )}
                       </div>
                     </div>
 

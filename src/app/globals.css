@@ -499,235 +499,115 @@ body.rd header .race {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   3. قسم التجربة التفاعلية: من ضغطة إعلان إلى طلب واضح
+   3. قسم نماذج التحويل: الفارق العملي بين الموقع العادي وصفحة الهبوط
 ───────────────────────────────────────────────────────────── */
-#work {
-  height: 320vh;
+.cs-section {
+  padding: 80px 0;
+  background: var(--card);
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
 }
 
-.pin {
-  position: sticky;
-  top: 0;
-  height: 100svh;
-  overflow: hidden;
+@media(max-width: 759px) {
+  .cs-section {
+    padding: 48px 0;
+  }
+}
+
+.cs-top {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 36px;
+}
+
+.cs-tag {
+  display: inline-block;
+  font-size: .84rem;
+  font-weight: 700;
+  color: var(--go);
+  background: color-mix(in srgb, var(--go) 12%, transparent);
+  padding: 4px 14px;
+  border-radius: 99px;
+  margin-bottom: 12px;
+}
+
+.cs-top h2 {
+  font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+
+.cs-sub {
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--mut);
+  margin-bottom: 24px;
+}
+
+/* تبويبات مجالات العمل */
+.cs-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.cs-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 99px;
+  border: 2px solid color-mix(in srgb, var(--ink) 25%, transparent);
+  background: transparent;
+  color: var(--ink);
+  font: 700 .92rem inherit;
+  cursor: pointer;
+  transition: all .2s cubic-bezier(.2, .8, .2, 1);
+}
+
+.cs-tab:hover {
+  border-color: var(--go);
+  transform: translateY(-2px);
+}
+
+.cs-tab.active {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.cs-tab-pill {
+  font-size: .74rem;
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: color-mix(in srgb, currentColor 18%, transparent);
+  font-weight: 600;
+}
+
+/* بطاقة النموذج النشط */
+.cs-body {
+  margin-top: 32px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 0;
+  gap: 24px;
 }
 
-.pin > .w {
-  width: 100%;
+.cs-hero-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  padding-bottom: 20px;
 }
 
-.wk {
-  display: grid;
-  gap: 16px;
-  align-items: center;
-  grid-template-areas: "a" "d" "c";
-}
-
-.wa1 { grid-area: a; }
-.dev { grid-area: d; }
-.wc1 { grid-area: c; }
-
-@media(min-width: 900px) {
-  .wk {
-    grid-template-columns: .85fr 1.35fr;
-    grid-template-areas: "a d" "c d";
-    gap: 20px 48px;
-  }
-}
-
-@media(max-width: 899px) {
-  .pin {
-    padding: 8px 0;
-    justify-content: space-evenly;
-  }
-
-  .wk {
-    gap: 8px;
-  }
-
-  .wa1 .sim-tag {
-    font-size: .7rem;
-    margin-bottom: 2px;
-  }
-
-  .wa1 h2 {
-    font-size: clamp(1.15rem, 4vw, 1.45rem);
-    margin: 0;
-  }
-
-  .wt {
-    margin-top: 6px;
-    gap: 6px;
-  }
-
-  .wt button {
-    padding: 4px 10px;
-    font-size: .74rem;
-  }
-
-  .dev {
-    max-width: 480px;
-    margin: 0 auto;
-    width: 100%;
-    border-width: 2.5px;
-    border-radius: 20px;
-    box-shadow: -4px 4px 0 var(--go), 0 12px 28px -8px rgba(0,0,0,.45);
-  }
-
-  .vp {
-    height: clamp(390px, 52svh, 480px);
-  }
-
-  .pg {
-    padding: 12px 14px;
-    gap: 8px;
-    font-size: 15px;
-  }
-
-  .sim-hero-banner {
-    padding: 10px 12px;
-    gap: 6px;
-  }
-
-  .sim-hero-banner h4 {
-    font-size: 1.05rem;
-  }
-
-  .sim-hero-banner p {
-    font-size: .86rem;
-    line-height: 1.55;
-  }
-
-  .sim-feat-card {
-    padding: 8px 6px;
-    font-size: .82rem;
-  }
-
-  .sim-feat-card small {
-    font-size: .7rem;
-  }
-
-  .sim-trust-strip {
-    font-size: .75rem;
-    padding-top: 5px;
-  }
-
-  .sim-cta {
-    padding: 12px 14px;
-    font-size: .98rem;
-  }
-
-  .sim-cta-sub {
-    font-size: .76rem;
-  }
-
-  .sim-opt-card {
-    padding: 10px 6px;
-  }
-
-  .sim-opt-card-title {
-    font-size: .88rem;
-  }
-
-  .sim-opt-card-sub {
-    font-size: .74rem;
-  }
-
-  .sim-time-card {
-    padding: 10px 8px;
-  }
-
-  .sim-time-title {
-    font-size: .88rem;
-  }
-
-  .sim-time-sub {
-    font-size: .74rem;
-  }
-
-  .sim-summary-pill {
-    padding: 6px 10px;
-    font-size: .82rem;
-  }
-
-  .sim-wa-header-bar {
-    padding: 8px 12px;
-    gap: 10px;
-  }
-
-  .sim-wa-info b {
-    font-size: .98rem;
-    font-weight: 700;
-  }
-
-  .sim-wa-info small {
-    font-size: .8rem;
-  }
-
-  .sim-wa-security-pill {
-    font-size: .76rem;
-    padding: 3px 12px;
-  }
-
-  .sim-bubble-msg {
-    font-size: .98rem;
-    line-height: 1.65;
-    padding: 10px 14px;
-    font-weight: 500;
-  }
-
-  .sim-bubble-meta {
-    font-size: .76rem;
-  }
-
-  .sim-mini-bar {
-    font-size: .86rem;
-  }
-
-  .sim-mini-bar button {
-    padding: 4px 10px;
-    font-size: .8rem;
-    font-weight: 700;
-  }
-
-  .wc1 {
-    min-height: auto;
-    text-align: center;
-  }
-
-  .wc1 .k2 {
-    font-size: .72rem;
-  }
-
-  .wc1 h3 {
-    font-size: 1.25rem;
-    margin: 2px 0;
-  }
-
-  .wc1 p {
-    font-size: .86rem;
-    line-height: 1.5;
-    margin-bottom: 8px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .wc1 .btn {
-    padding: 11px 22px;
-    font-size: .95rem;
-    width: 100%;
-    max-width: 320px;
-    margin: 0 auto;
-  }
-}
-
-.sim-tag {
+.cs-badge {
   display: inline-block;
   font-size: .8rem;
   font-weight: 700;
@@ -735,649 +615,390 @@ body.rd header .race {
   margin-bottom: 6px;
 }
 
-/* أزرار المراحل الثلاثية النظيفة */
-.wt {
+.cs-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.cs-desc {
+  font-size: .95rem;
+  color: var(--mut);
+  line-height: 1.7;
+  max-width: 580px;
+}
+
+/* أزرار التبديل قبل / بعد */
+.cs-toggle-wrap {
   display: flex;
-  gap: 8px;
-  margin-top: 14px;
+  align-items: center;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-.wt button {
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: 2px solid var(--ink);
-  background: none;
-  color: var(--ink);
-  font: 600 .88rem inherit;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all .2s cubic-bezier(.2, .8, .2, 1);
-}
-
-.wt button:hover {
-  border-color: var(--go);
-  transform: translateY(-2px);
-}
-
-.wt button[aria-pressed=true] {
-  background: var(--ink);
-  color: var(--bg);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--ink) 25%, transparent);
-}
-
-.wc1 {
-  min-height: 145px;
-}
-
-.wc1 h3 {
-  font-size: 1.45rem;
-  margin: 6px 0 4px;
-}
-
-.wc1 p {
-  color: var(--mut);
-  line-height: 1.9;
-  margin-bottom: 14px;
-  font-size: .95rem;
-}
-
-.wc1 .k2 {
-  font-size: .72rem;
+.cs-toggle-label {
+  font-size: .84rem;
   font-weight: 600;
-  background: var(--ink);
-  color: var(--bg);
-  padding: 3px 8px;
-  border-radius: 4px;
+  color: var(--mut);
 }
 
-.wc1 > * {
-  animation: pop .35s ease-out;
-}
-
-/* شاشة المحاكاة الاحترافية */
-.dev {
-  border: 3.5px solid var(--ink);
-  border-radius: 28px;
-  overflow: hidden;
-  background: var(--card);
-  box-shadow: -8px 8px 0 var(--go), 0 20px 40px -12px rgba(0,0,0,.45);
-  transition: box-shadow .25s, transform .25s;
-}
-
-.dbar {
+.cs-toggle-btns {
   display: flex;
+  gap: 6px;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  padding: 4px;
+  border-radius: 12px;
+}
+
+.cs-toggle-btn {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border-bottom: 2px solid color-mix(in srgb, var(--ink) 20%, transparent);
-  background: color-mix(in srgb, var(--card) 95%, transparent);
-}
-
-.dbar i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--ink);
-  opacity: .35;
-}
-
-.dbar u {
-  flex: 1;
-  text-decoration: none;
-  direction: ltr;
-  text-align: center;
-  font-size: .72rem;
-  background: var(--bg);
+  border-radius: 8px;
+  border: 0;
+  background: transparent;
   color: var(--ink);
-  border-radius: 99px;
-  padding: 3px 12px;
-  margin-inline-start: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
+  font: 700 .86rem inherit;
+  cursor: pointer;
+  transition: all .2s;
 }
 
-.vp {
-  position: relative;
-  height: min(60svh, 520px);
-  overflow: hidden;
+.cs-toggle-btn.on {
   background: var(--card);
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.cs-check {
+  color: var(--go);
+  font-weight: 800;
+}
+
+.cs-cross {
+  color: var(--bad);
+  font-weight: 800;
+}
+
+/* الشبكة الأساسية: بطاقة التحليل + معاينة الواجهة */
+.cs-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
 }
 
 @media(min-width: 900px) {
-  .vp {
-    height: min(72svh, 580px);
+  .cs-grid {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 32px;
   }
 }
 
-.pg {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .35s ease, transform .35s cubic-bezier(.2, .8, .2, 1);
-  transform: translateY(12px);
-  padding: 14px 16px;
+/* بطاقة مقارنة النقاط */
+.cs-card {
+  border-radius: 18px;
+  padding: 24px;
+  border: 2px solid;
+  transition: all .3s cubic-bezier(.2, .8, .2, 1);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  font-size: 15px;
-  line-height: 1.55;
-  overflow-y: auto;
-}
-
-.pg.on {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-/* داخل شاشة التجربة التفاعلية (مثال عيادة أسنان) */
-.p-sim {
-  background: #F4FAF8;
-  color: #0B3B3A;
-}
-
-:root[data-theme="dark"] .p-sim {
-  background: #10211A;
-  color: #E4E8E3;
-}
-
-@media(prefers-color-scheme:dark) {
-  :root:not([data-theme="light"]) .p-sim {
-    background: #10211A;
-    color: #E4E8E3;
-  }
-}
-
-/* شريط رأس العيادة */
-.sim-brand-row {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding-bottom: 8px;
-  border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  gap: 20px;
 }
 
-.sim-brand-title {
-  font-family: "Noto Kufi Arabic", sans-serif;
-  font-weight: 800;
-  color: var(--go);
-  font-size: .95rem;
+.cs-card-after {
+  background: linear-gradient(145deg, color-mix(in srgb, var(--go) 8%, var(--bg)), var(--bg));
+  border-color: color-mix(in srgb, var(--go) 35%, transparent);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--go) 12%, transparent);
+}
+
+.cs-card-before {
+  background: linear-gradient(145deg, color-mix(in srgb, var(--bad) 8%, var(--bg)), var(--bg));
+  border-color: color-mix(in srgb, var(--bad) 35%, transparent);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--bad) 10%, transparent);
+}
+
+.cs-card-head {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
 }
 
-.brand-cross {
-  font-family: inherit;
-  font-weight: 800;
+.cs-card-k {
+  display: block;
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.cs-card-after .cs-card-k { color: var(--go); }
+.cs-card-before .cs-card-k { color: var(--bad); }
+
+.cs-card-title {
   font-size: 1.15rem;
-  color: var(--go);
-  line-height: 1;
+  font-weight: 800;
+  line-height: 1.35;
 }
 
-.sim-rating-pill {
-  font-size: .78rem;
-  font-weight: 700;
-  background: color-mix(in srgb, var(--ink) 10%, transparent);
-  padding: 3px 10px;
-  border-radius: 99px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.sim-step-badge {
-  font-size: .78rem;
-  font-weight: 700;
-  background: color-mix(in srgb, var(--go) 18%, transparent);
-  color: var(--go);
-  padding: 3px 10px;
-  border-radius: 99px;
-}
-
-/* بطاقة العرض البصرية الفخمة */
-.sim-hero-banner {
-  background: linear-gradient(145deg, color-mix(in srgb, var(--go) 14%, var(--card)), var(--card));
-  border: 1.5px solid color-mix(in srgb, var(--go) 35%, transparent);
-  border-radius: 14px;
-  padding: 12px 14px;
+.cs-card-speed {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--go) 12%, transparent);
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  font-size: .74rem;
+  line-height: 1.3;
 }
 
-.sim-hero-top-badge {
+.cs-card-speed b {
+  font-size: 1.1rem;
+}
+
+.cs-card-after .cs-card-speed b { color: var(--go); }
+.cs-card-before .cs-card-speed b { color: var(--bad); }
+
+.cs-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cs-points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: .95rem;
+  line-height: 1.6;
+}
+
+.cs-bullet {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: .8rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.cs-card-after .cs-bullet {
+  background: color-mix(in srgb, var(--go) 20%, transparent);
+  color: var(--go);
+}
+
+.cs-card-before .cs-bullet {
+  background: color-mix(in srgb, var(--bad) 20%, transparent);
+  color: var(--bad);
+}
+
+.cs-summary-strip {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: .92rem;
+  line-height: 1.5;
+}
+
+.cs-card-after .cs-summary-strip {
+  background: color-mix(in srgb, var(--go) 16%, transparent);
+  color: var(--go);
+  border: 1px solid color-mix(in srgb, var(--go) 30%, transparent);
+}
+
+.cs-card-before .cs-summary-strip {
+  background: color-mix(in srgb, var(--bad) 14%, transparent);
+  color: var(--bad);
+  border: 1px solid color-mix(in srgb, var(--bad) 28%, transparent);
+}
+
+/* صندوق المعاينة الحية */
+.cs-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cs-preview-device {
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  background: var(--card);
+  overflow: hidden;
+  box-shadow: -4px 4px 0 var(--go), 0 12px 30px -8px rgba(0,0,0,.35);
+}
+
+.cs-preview-topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+  gap: 8px;
+  padding: 8px 14px;
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  border-bottom: 1.5px solid color-mix(in srgb, var(--ink) 14%, transparent);
 }
 
-.sim-offer-badge {
-  font-size: .76rem;
-  font-weight: 700;
-  color: var(--go);
-  background: color-mix(in srgb, var(--go) 16%, transparent);
-  padding: 3px 10px;
-  border-radius: 99px;
-  display: inline-flex;
-  align-items: center;
+.cs-preview-dots {
+  display: flex;
   gap: 4px;
 }
 
-.sim-live-pulse {
-  font-size: .74rem;
-  font-weight: 700;
-  color: var(--bad);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.sim-live-pulse i {
+.cs-preview-dots i {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--bad);
+  background: var(--ink);
+  opacity: .35;
   display: inline-block;
-  animation: pulse 1.5s infinite;
 }
 
-.sim-hero-banner h4 {
-  font: 800 1.15rem/1.35 "Noto Kufi Arabic", sans-serif;
-  margin: 0;
-  color: inherit;
-}
-
-.sim-hero-banner p {
-  font-size: .86rem;
-  color: var(--mut);
-  line-height: 1.6;
-  margin: 0;
-}
-
-.sim-feats-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
+.cs-preview-url {
+  font-size: .72rem;
+  direction: ltr;
   text-align: center;
-  margin: 2px 0;
+  flex: 1;
+  color: var(--mut);
+  background: var(--bg);
+  padding: 2px 10px;
+  border-radius: 99px;
+  font-family: monospace;
 }
 
-.sim-feat-card {
-  background: color-mix(in srgb, var(--ink) 6%, transparent);
-  border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
-  border-radius: 8px;
-  padding: 9px 6px;
-  font-size: .84rem;
-  font-weight: 700;
-  line-height: 1.35;
+.cs-preview-content {
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
+  gap: 14px;
 }
 
-.sim-feat-card small {
-  display: block;
-  font-size: .72rem;
-  color: var(--mut);
-  font-weight: 500;
-}
-
-.sim-trust-strip {
+.cs-preview-header {
   display: flex;
   justify-content: space-between;
-  font-size: .75rem;
-  font-weight: 600;
-  color: var(--mut);
-  border-top: 1px dashed color-mix(in srgb, var(--ink) 16%, transparent);
-  padding-top: 6px;
+  align-items: center;
+  border-bottom: 1px dashed color-mix(in srgb, var(--ink) 18%, transparent);
+  padding-bottom: 8px;
 }
 
-/* زر الحجز الرئيسي الفخم */
-.sim-cta {
-  width: 100%;
-  padding: 12px 14px;
+.cs-brand-name {
+  font-weight: 800;
+  font-size: .95rem;
+  color: var(--go);
+}
+
+.cs-live-pill {
+  font-size: .74rem;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--go) 16%, transparent);
+  color: var(--go);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.cs-preview-banner {
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cs-banner-badge {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--go);
+}
+
+.cs-banner-item {
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.cs-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.cs-price {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.cs-old-price {
+  font-size: .84rem;
+  color: var(--mut);
+  text-decoration: line-through;
+}
+
+.cs-preview-cta {
+  display: block;
+  text-align: center;
+  padding: 12px 16px;
   border-radius: 10px;
   background: var(--go);
   color: #fff;
-  border: 0;
   font: 700 .95rem inherit;
-  cursor: pointer;
-  text-align: center;
-  transition: transform .2s, background .2s, box-shadow .2s;
+  text-decoration: none;
   box-shadow: 0 4px 14px color-mix(in srgb, var(--go) 35%, transparent);
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
+  transition: transform .2s, box-shadow .2s;
 }
 
-.sim-cta:hover {
+.cs-preview-cta:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 18px color-mix(in srgb, var(--go) 50%, transparent);
 }
 
-.sim-cta:active {
-  transform: scale(.98);
-}
-
-.sim-cta-sub {
-  display: block;
-  font-size: .74rem;
-  opacity: .9;
-  font-weight: 500;
-}
-
-/* بطاقات الاختيارات التفاعلية في المرحلة 2 */
-.sim-selector-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.sim-step-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 2px;
-}
-
-.sim-step-title {
-  font-weight: 700;
-  font-size: .88rem;
-}
-
-.sim-hint {
-  font-size: .72rem;
-  color: var(--mut);
-  background: color-mix(in srgb, var(--ink) 8%, transparent);
-  padding: 2px 8px;
-  border-radius: 4px;
-}
-
-.sim-opts-grid {
+/* شريط الإحصائيات الأربعة */
+.cs-metrics-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  margin-bottom: 4px;
-}
-
-.sim-opt-card {
-  padding: 11px 6px;
-  border-radius: 8px;
-  border: 2px solid color-mix(in srgb, var(--ink) 25%, transparent);
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  text-align: center;
-  transition: all .2s cubic-bezier(.2, .8, .2, 1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-}
-
-.sim-opt-card:hover {
-  border-color: var(--go);
-  transform: translateY(-2px);
-}
-
-.sim-opt-card[aria-pressed=true] {
-  background: var(--go);
-  border-color: var(--go);
-  color: #fff;
-  font-weight: 700;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--go) 35%, transparent);
-}
-
-.sim-opt-card-title {
-  font-size: .88rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.sim-opt-card-sub {
-  font-size: .74rem;
-  opacity: .88;
-}
-
-.sim-times-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-  margin-bottom: 4px;
-}
-
-.sim-time-card {
-  padding: 11px 8px;
-  border-radius: 8px;
-  border: 2px solid color-mix(in srgb, var(--ink) 25%, transparent);
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  text-align: center;
-  transition: all .2s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-}
-
-.sim-time-title {
-  font-size: .88rem;
-  font-weight: 700;
-}
-
-.sim-time-sub {
-  font-size: .74rem;
-  opacity: .85;
-}
-
-.sim-time-card[aria-pressed=true] {
-  background: var(--go);
-  border-color: var(--go);
-  color: #fff;
-  font-weight: 700;
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--go) 35%, transparent);
-}
-
-.sim-summary-pill {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 7px 12px;
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--go) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--go) 30%, transparent);
-  font-size: .82rem;
-  font-weight: 700;
-  color: var(--go);
-  margin: 2px 0 4px;
-}
-
-.sim-save-tag {
-  font-size: .72rem;
-  background: var(--go);
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 99px;
-}
-
-/* شاشة المحادثة الواقعية في المرحلة 3 */
-.sim-wa-frame {
-  display: flex;
-  flex-direction: column;
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
 
-.sim-wa-header-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  background: #075E54;
-  color: #fff;
-  border-radius: 10px;
-}
-
-.sim-wa-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #14231D;
-  border: 2px solid #25D366;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  font-size: 1.05rem;
-  color: #fff;
-  flex-shrink: 0;
-}
-
-.sim-wa-info b {
-  display: block;
-  font-size: .95rem;
-  font-weight: 700;
-}
-
-.sim-wa-info small {
-  display: block;
-  font-size: .78rem;
-  opacity: .9;
-}
-
-.sim-wa-bubbles {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 4px 0;
-}
-
-.sim-wa-security-pill {
-  align-self: center;
-  font-size: .75rem;
-  color: var(--mut);
-  background: color-mix(in srgb, var(--ink) 8%, transparent);
-  padding: 3px 12px;
-  border-radius: 99px;
-  text-align: center;
-}
-
-.sim-bubble-msg {
-  max-width: 90%;
-  padding: 10px 14px;
-  border-radius: 12px;
-  font-size: .95rem;
-  line-height: 1.65;
-  position: relative;
-  animation: pop .3s ease-out;
-}
-
-.sim-bubble-client {
-  align-self: flex-end;
-  background: #DCF8C6;
-  color: #075E54;
-  border-bottom-right-radius: 2px;
-}
-
-:root[data-theme="dark"] .sim-bubble-client {
-  background: #005C4B;
-  color: #E9EDEF;
-}
-
-@media(prefers-color-scheme:dark) {
-  :root:not([data-theme="light"]) .sim-bubble-client {
-    background: #005C4B;
-    color: #E9EDEF;
+@media(min-width: 500px) {
+  .cs-metrics-row {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
-.sim-bubble-doctor {
-  align-self: flex-start;
-  background: var(--card);
-  color: var(--ink);
-  border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
-  border-bottom-left-radius: 2px;
+.cs-metric-card {
+  background: var(--bg);
+  border: 1.5px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  border-radius: 10px;
+  padding: 10px 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.sim-bubble-meta {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 5px;
+.cs-metric-val {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--go);
+  line-height: 1.2;
+}
+
+.cs-metric-lbl {
   font-size: .74rem;
   color: var(--mut);
-  margin-top: 4px;
+  font-weight: 600;
 }
 
-.sim-checks {
-  color: #34B7F1;
-  font-weight: 700;
-  letter-spacing: -1px;
-}
-
-.sim-client-text,
-.sim-doctor-text {
-  white-space: pre-line;
-}
-
-.sim-mini-bar {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  align-items: center;
-  font-size: .84rem;
-  margin-top: 4px;
-}
-
-.sim-mini-bar button {
-  padding: 4px 10px;
-  border-radius: 99px;
-  border: 1.5px solid currentColor;
-  background: none;
-  color: inherit;
-  font: 700 .78rem inherit;
-  cursor: pointer;
-  transition: all .2s;
-}
-
-.sim-mini-bar button:hover {
-  border-color: var(--go);
-}
-
-.sim-mini-bar button[aria-pressed=true] {
-  background: var(--go);
-  border-color: var(--go);
-  color: #fff;
-}
-
-.pb {
-  height: 4px;
-  background: color-mix(in srgb, var(--ink) 15%, transparent);
-  margin: 14px 20px 0;
-  border-radius: 2px;
-}
-
-.pb i {
-  display: block;
-  height: 100%;
-  width: 0;
-  background: var(--go);
+.cs-foot {
+  text-align: center;
+  margin-top: 12px;
 }
 
 /* قسم الباقات والتواصل */

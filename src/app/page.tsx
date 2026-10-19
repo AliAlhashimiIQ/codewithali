@@ -79,40 +79,151 @@ export default function Home() {
   const [raceElapsed, setRaceElapsed] = useState({ legacy: 0, ali: 0 });
   const [raceFinished, setRaceFinished] = useState({ legacy: false, ali: false });
 
-  // Interactive Funnel Simulation State (#work)
-  const [simIndex, setSimIndex] = useState(0);
-  const [simSvc, setSimSvc] = useState("تنظيف أسنان");
-  const [simTime, setSimTime] = useState("مساءً");
+  // Commercial Funnel Showcase State (#work)
+  const [activeCaseTab, setActiveCaseTab] = useState(0);
+  const [caseMode, setCaseMode] = useState<"after" | "before">("after");
 
   // Refs for Canvases & Observers
   const fxCanvasRef = useRef<HTMLCanvasElement>(null);
   const leakCanvasRef = useRef<HTMLCanvasElement>(null);
   const headerRef = useRef<HTMLElement>(null);
-  const workRef = useRef<HTMLElement>(null);
   const scrollBarRef = useRef<HTMLElement>(null);
-  const workProgressRef = useRef<HTMLElement>(null);
   const raceRafRef = useRef<number | null>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Interactive Funnel Phases definition
-  const PJ = [
+  // Commercial Funnels & Before/After Showcase
+  const CASE_STUDIES = [
     {
-      n: "1. الزبون يشوف العرض",
-      k: "المرحلة الأولى · الوضوح",
-      d: "صفحة سريعة توضّح الخدمة وتفاصيلها للزبون أول ما يضغط الإعلان، مع زر مباشر لطلب الموعد بدون تشتت.",
-      u: "نموذج تفاعلي · 1. عرض واضح",
+      id: "store",
+      name: "متاجر إلكترونية",
+      tag: "تجارة إلكترونية وتجزئة",
+      title: "متجر أجهزة وإكسسوارات وملابس",
+      desc: "تحويل نقرات إعلانات الموبايل إلى طلبات مؤكدة فورية عبر واتساب، مع التخلص التام من السلات المهجورة الناتجة عن تعقيد خطوات الشراء.",
+      badge: "معدل التحويل: +160%",
+      before: {
+        headline: "الموقع التقليدي القديم (WordPress / سلة عادية)",
+        speed: "5.4 ثانية",
+        points: [
+          "تحميل بطيء جداً، الزائر يمل ويغادر قبل أن يرى المنتجات",
+          "قوائم وصفحات فرعية كثيرة تشتت الزبون وتضيّع رغبته بالشراء",
+          "إجبار الزبون على التسجيل وإدخال إيميل وكلمة سر وعنوان تفصيلي",
+          "أكثر من 75% سلات مهجورة بسبب تعقيد وطول نموذج الطلب",
+        ],
+        summary: "النتيجة: ضياع أكثر من 60% من ميزانية إعلاناتك على نقرات بلا مبيعات",
+      },
+      after: {
+        headline: "صفحة الهبوط الهندسية (CodeWithAli)",
+        speed: "0.8 ثانية",
+        points: [
+          "سرعة فائقة تفتح بلحظة واحدة مع صور خفيفة بدقة استثنائية",
+          "عرض بطل مركّز (Hero Offer) يشرح مميزات المنتج وضمان الجودة فوراً",
+          "طلب فوري بنقرة واحدة عبر واتساب مع رسالة جاهزة باسم المنتج والمقاس",
+          "ربط بيكسل Meta وConversion API لتتبع كل تحويل بدقة 100%",
+        ],
+        summary: "النتيجة: مضاعفة المبيعات الفعلية وانخفاض تكلفة الطلب بـ 42%",
+      },
+      metrics: [
+        { label: "زيادة اكتمال الطلبات", val: "+160%" },
+        { label: "سرعة تحميل الصفحة", val: "0.8s" },
+        { label: "انخفاض تكلفة الزبون", val: "-42%" },
+        { label: "تقييم Google Mobile", val: "96/100" },
+      ],
+      preview: {
+        brand: "أوريجينال كولكشن · صيف 2026",
+        offer: "خصم 30% لزوار إعلان اليوم + توصيل سريع",
+        item: "طقم كاجوال فاخر قطن طبيعي 100% مقاوم للحرارة",
+        price: "45,000 د.ع",
+        oldPrice: "65,000 د.ع",
+        ctaText: "اطلب الآن عبر واتساب مع التوصيل المجاني ←",
+      },
     },
     {
-      n: "2. يختار احتياجه",
-      k: "المرحلة الثانية · الاختيار",
-      d: "يحدّد الخدمة اللي يريدها (تنظيف، تبييض، أو تقويم) والوقت المفضّل بضغطة واحدة. جرّب تغيير الاختيارات داخل الشاشة.",
-      u: "نموذج تفاعلي · 2. تحديد الطلب",
+      id: "realestate",
+      name: "عقارات ومشاريع",
+      tag: "تطوير عقاري واستثمار",
+      title: "مجمعات سكنية ومشاريع تجارية",
+      desc: "تصفية ليدات جادة لمستثمرين يبحثون عن حجز مباشر، واستبعاد الاتصالات العشوائية اللي تستهلك وقت فريق المبيعات بدون نتيجة.",
+      badge: "ليدات مستثمرين مؤهلين: 3.8x",
+      before: {
+        headline: "الموقع المؤسسي التقليدي",
+        speed: "6.2 ثانية",
+        points: [
+          "صفحات تعريفية عامة بدون أي عرض استثماري أو خطة أقساط واضحة",
+          "ملفات PDF ثقيلة لا تفتح على الموبايل وصور بطيئة جداً",
+          "نموذج اتصال بالبريد الإلكتروني يتجاهله 95% من الزوار",
+          "اتصالات عشوائية من غير مهتمين تستهلك وقت فريق المبيعات",
+        ],
+        summary: "النتيجة: تكلفة ليد مرتفعة جداً مع صعوبة إغلاق الصفقات",
+      },
+      after: {
+        headline: "صفحة المشروع الهندسية (CodeWithAli)",
+        speed: "0.9 ثانية",
+        points: [
+          "استعراض مرئي سريع وخفيف (فيديو مضغوط، صور تفصيلية، موقع المشروع)",
+          "حاسبة أقساط ذكية تبيّن الدفعة الأولى والقسط الشهري بلحظة",
+          "تأهيل فوري للزبون: يحدد المساحة والميزانية قبل بدء المحادثة",
+          "تحويل مباشر لرقم مسؤول المبيعات مع بيانات الوحدة المختارة",
+        ],
+        summary: "النتيجة: 3.8 أضعاف ليدات مؤهلة وجاهزة للحجز والتعاقد",
+      },
+      metrics: [
+        { label: "ليدات مؤهلة للحجز", val: "3.8x" },
+        { label: "سرعة فتح المشروع", val: "0.9s" },
+        { label: "انخفاض تكلفة الليد", val: "-55%" },
+        { label: "دقة التتبع الإعلاني", val: "99%" },
+      ],
+      preview: {
+        brand: "مجمع أبراج بغداد السكني الفاخر",
+        offer: "وحدات سكنية بإطلالة بانورامية وأقساط لـ 5 سنوات",
+        item: "شقة نموذجية 180م² · تشطيب VIP متكامل",
+        price: "مقدمة 15% وقسط شهري ميسر",
+        oldPrice: "متبقي 4 وحدات فقط ضمن المرحلة الحالية",
+        ctaText: "احجز زيارة ومعاينة ميدانية للمشروع ←",
+      },
     },
     {
-      n: "3. يتجه لواتساب",
-      k: "المرحلة الثالثة · الرسالة الجاهزة",
-      d: "تظهر رسالة واتساب جاهزة ومفصّلة توصل لصاحب البزنس فوراً، حتى يتحول الزائر إلى زبون واضح الطلب.",
-      u: "نموذج تفاعلي · 3. رسالة واتساب",
+      id: "services",
+      name: "شركات وخدمات B2B",
+      tag: "استشارات وخدمات مهنية",
+      title: "شركات الخدمات والاستشارات والحلول التقنية",
+      desc: "بناء ثقة سريعة وإقناع أصحاب القرار بحجز جلسة عمل بنقرة واحدة، بدل النماذج المهملة التي لا يقرأها أحد.",
+      badge: "معدل حجز استشارات: 24.5%",
+      before: {
+        headline: "الموقع التقليدي القديم",
+        speed: "4.8 ثانية",
+        points: [
+          "نصوص عامة مملة لا توضح القيمة الحقيقية ولا تبرز حل المشكلة",
+          "غياب تام للنتائج والأرقام الملموسة التي يبحث عنها صاحب القرار",
+          "طريقة تواصل وحيدة عبر نموذج بريد إلكتروني لا يتابعه أحد",
+          "الزائر لا يرى أي سبب مقنع لاختيارك بدل المنافسين",
+        ],
+        summary: "النتيجة: ارتداد أكثر من 90% من نقرات الإعلان بلا أي تفاعل",
+      },
+      after: {
+        headline: "صفحة التحويل والإقناع (CodeWithAli)",
+        speed: "0.7 ثانية",
+        points: [
+          "عنوان واضح يخاطب ألم العميل وحل المشكلة خلال أول 3 ثوانٍ",
+          "إبراز أرقام النتائج السابقة ودراسات الحالة لإثبات الكفاءة",
+          "إلغاء التشتت وتوجيه الزائر لخطوة واحدة: حجز جلسة تقييم مجانية",
+          "نقرة واتساب مباشرة مجهزة بتفاصيل الخدمة والتوقيت المتاح",
+        ],
+        summary: "النتيجة: تحويل 1 من كل 4 زوار إلى محادثة جادة وفرصة تعاقد",
+      },
+      metrics: [
+        { label: "معدل التحويل لاستشارة", val: "24.5%" },
+        { label: "وقت التحميل الفوري", val: "0.7s" },
+        { label: "ثقة صاحب القرار", val: "+85%" },
+        { label: "العائد على الإنفاق (ROAS)", val: "4.2x" },
+      ],
+      preview: {
+        brand: "حلول الأتمتة والأنظمة السحابية",
+        offer: "وفّر 15 ساعة عمل أسبوعياً من الروتين الإداري",
+        item: "نظام تدقيق المبيعات والعمليات المالية للشركات",
+        price: "جلسة تقييم مجانية بالكامل (30 دقيقة)",
+        oldPrice: "متاح لـ 5 شركات فقط خلال هذا الشهر",
+        ctaText: "احجز جلسة التدقيق المباشرة مع المستشار ←",
+      },
     },
   ];
 
@@ -636,25 +747,11 @@ export default function Home() {
   }, [spend, isFixed]);
 
   /* ─────────────────────────────────────────────────────────────
-     6. INTERACTIVE FUNNEL SIMULATOR SCROLL (#work)
+     6. TOP SCROLL PROGRESS BAR (#sp)
   ───────────────────────────────────────────────────────────── */
   useEffect(() => {
-    const work = workRef.current;
-    if (!work) return;
-
     let rafScroll: number;
     const handleScroll = () => {
-      const rect = work.getBoundingClientRect();
-      const progress = Math.min(
-        Math.max(-rect.top / (rect.height - window.innerHeight), 0),
-        0.9999
-      );
-      const phase = Math.floor(progress * 3);
-      setSimIndex(phase);
-
-      if (workProgressRef.current) {
-        workProgressRef.current.style.width = `${progress * 100}%`;
-      }
       if (scrollBarRef.current) {
         const fullScroll = document.documentElement.scrollHeight - window.innerHeight;
         const pageProgress = fullScroll > 0 ? (window.scrollY / fullScroll) * 100 : 0;
@@ -668,26 +765,15 @@ export default function Home() {
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
     handleScroll();
 
     return () => {
       cancelAnimationFrame(rafScroll);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
     };
   }, []);
 
-  const scrollToPhase = (phaseIndex: number) => {
-    const work = workRef.current;
-    if (!work) return;
-    const targetTop =
-      work.offsetTop +
-      (phaseIndex / 3 + 0.05) * (work.offsetHeight - window.innerHeight);
-    window.scrollTo({ top: targetTop, behavior: "smooth" });
-  };
-
-  const currentPhase = PJ[simIndex] || PJ[0];
+  const activeCase = CASE_STUDIES[activeCaseTab] || CASE_STUDIES[0];
   const leakRatio = isFixed ? 0.1 : 0.5;
   const monthlyLoss = Math.round(spend * leakRatio);
 
@@ -912,271 +998,153 @@ export default function Home() {
           3. INTERACTIVE FUNNEL SIMULATOR (#work)
           From ad click to clear WhatsApp request
       ───────────────────────────────────────────────────────────── */}
-      <section id="work" ref={workRef}>
-        <div className="pin">
-          <div className="w wk">
-            <div className="wa1">
-              <span className="sim-tag">نموذج تفاعلي · من ضغطة إعلان إلى طلب واضح</span>
-              <h2>خلّي الزبون يوصل وهو عارف شنو يريد.</h2>
-              <div className="wt" id="wt">
-                {PJ.map((p, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    aria-pressed={simIndex === i}
-                    onClick={() => {
-                      setSimIndex(i);
-                      scrollToPhase(i);
-                    }}
-                  >
-                    {p.n}
-                  </button>
-                ))}
-              </div>
+      {/* ─────────────────────────────────────────────────────────────
+          3. COMMERCIAL FUNNELS & CRO SHOWCASE (#work)
+          Replaces the old clinic scroll trap with versatile commercial funnels
+      ───────────────────────────────────────────────────────────── */}
+      <section id="work" className="cs-section">
+        <div className="w">
+          <div className="cs-top">
+            <span className="cs-tag">هندسة التحويل والنتائج</span>
+            <h2 className="disp">شلون نحوّل زائر إعلانك إلى زبون يدفع؟</h2>
+            <p className="cs-sub">
+              بدل ما تضيّع ميزانية إعلاناتك على مواقع تقليدية معقدة تطرد الزبون.. هذا هو الفارق العملي بين الموقع العادي وصفحة الهبوط المصممة للإعلانات.
+            </p>
+
+            {/* Industry Switcher Tabs */}
+            <div className="cs-tabs" role="tablist" aria-label="نماذج العمل">
+              {CASE_STUDIES.map((c, i) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  role="tab"
+                  className={`cs-tab ${activeCaseTab === i ? "active" : ""}`}
+                  aria-selected={activeCaseTab === i}
+                  onClick={() => setActiveCaseTab(i)}
+                >
+                  <span className="cs-tab-name">{c.name}</span>
+                  <span className="cs-tab-pill">{c.tag}</span>
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Simulated Phone/Browser Viewport */}
-            <div className="dev">
-              <div className="dbar">
-                <i />
-                <i />
-                <i />
-                <u id="du">{currentPhase.u}</u>
+          {/* Active Case Study Layout */}
+          <div className="cs-body">
+            <div className="cs-hero-strip">
+              <div>
+                <span className="cs-badge">{activeCase.badge}</span>
+                <h3 className="cs-title">{activeCase.title}</h3>
+                <p className="cs-desc">{activeCase.desc}</p>
               </div>
-              <div className="vp" id="vp">
-                {/* Phase 0: Offer View */}
-                <div className={`pg p-sim ${simIndex === 0 ? "on" : ""}`} dir="rtl">
-                  <div className="sim-brand-row">
-                    <div className="sim-brand-title">
-                      <span className="brand-cross">+</span>
-                      <span>عيادة الابتسامة التخصصية</span>
-                    </div>
-                    <span className="sim-rating-pill">4.9 / 5 (420+ تقييم)</span>
-                  </div>
-
-                  <div className="sim-hero-banner">
-                    <div className="sim-hero-top-badge">
-                      <span className="sim-offer-badge">خصم 35% لزوار الإعلان</span>
-                      <span className="sim-live-pulse">
-                        <i /> متبقي 4 مقاعد اليوم
-                      </span>
-                    </div>
-
-                    <h4>ابتسامة ناصعة وثقة كاملة خلال جلسة واحدة</h4>
-                    <p>
-                      كشف ديجيتال 3D مجاني + تنظيف وتلميع فوري بدون ألم على يد أطباء اختصاص معتمدين في بغداد.
-                    </p>
-
-                    <div className="sim-feats-row">
-                      <div className="sim-feat-card">
-                        <b>تبييض ليزري</b>
-                        <small>جلسة 45 دقيقة</small>
-                      </div>
-                      <div className="sim-feat-card">
-                        <b>تنظيف عميق</b>
-                        <small>إزالة التكلسات</small>
-                      </div>
-                      <div className="sim-feat-card">
-                        <b>تقويم شفاف</b>
-                        <small>استشارة مجانية</small>
-                      </div>
-                    </div>
-
-                    <div className="sim-trust-strip">
-                      <span>✓ بدون انتظار</span>
-                      <span>✓ ليزر ألماني بارد</span>
-                      <span>✓ ضمان الجودة</span>
-                    </div>
-                  </div>
-
+              <div className="cs-toggle-wrap">
+                <span className="cs-toggle-label">طريقة العرض:</span>
+                <div className="cs-toggle-btns">
                   <button
                     type="button"
-                    className="sim-cta"
-                    onClick={() => {
-                      setSimIndex(1);
-                      scrollToPhase(1);
-                    }}
+                    className={`cs-toggle-btn ${caseMode === "after" ? "on" : ""}`}
+                    onClick={() => setCaseMode("after")}
                   >
-                    <span>احجز موعد العرض الآن ←</span>
-                    <span className="sim-cta-sub">تثبيت فوري عبر واتساب بدون أي دفع مسبق</span>
+                    <span>الحل بعد التطوير (CodeWithAli)</span>
+                    <span className="cs-check">✓</span>
                   </button>
-                </div>
-
-                {/* Phase 1: Service & Time Selection */}
-                <div className={`pg p-sim ${simIndex === 1 ? "on" : ""}`} dir="rtl">
-                  <div className="sim-brand-row">
-                    <div className="sim-brand-title">
-                      <span className="brand-cross">+</span>
-                      <span>عيادة الابتسامة التخصصية</span>
-                    </div>
-                    <span className="sim-step-badge">المرحلة 2 من 3</span>
-                  </div>
-
-                  <div className="sim-selector-wrap">
-                    <div className="sim-step-header">
-                      <span className="sim-step-title">1. اختَر الخدمة المطلوبة:</span>
-                      <span className="sim-hint">اضغط للتجربة</span>
-                    </div>
-
-                    <div className="sim-opts-grid" id="simSvcs">
-                      {[
-                        { id: "تنظيف أسنان", title: "تنظيف وتلميع", sub: "35,000 د.ع" },
-                        { id: "تبييض أسنان", title: "تبييض بالليزر", sub: "95,000 د.ع" },
-                        { id: "تقويم أسنان", title: "تقويم شفاف", sub: "استشارة مجانية" },
-                      ].map((svc) => (
-                        <button
-                          key={svc.id}
-                          type="button"
-                          className="sim-opt-card"
-                          aria-pressed={simSvc === svc.id}
-                          onClick={() => setSimSvc(svc.id)}
-                        >
-                          <span className="sim-opt-card-title">{svc.title}</span>
-                          <span className="sim-opt-card-sub">{svc.sub}</span>
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="sim-step-header">
-                      <span className="sim-step-title">2. حدّد الوقت المفضّل:</span>
-                    </div>
-
-                    <div className="sim-times-grid" id="simTimes">
-                      {[
-                        { id: "صباحاً", title: "فترة صباحية", sub: "10:00 ص - 1:00 ظ" },
-                        { id: "مساءً", title: "فترة مسائية", sub: "4:00 ع - 9:00 م" },
-                      ].map((t) => (
-                        <button
-                          key={t.id}
-                          type="button"
-                          className="sim-time-card"
-                          aria-pressed={simTime === t.id}
-                          onClick={() => setSimTime(t.id)}
-                        >
-                          <span className="sim-time-title">{t.title}</span>
-                          <span className="sim-time-sub">{t.sub}</span>
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="sim-summary-pill">
-                      <span>✓ المحدد: <b>{simSvc}</b> ({simTime})</span>
-                      <span className="sim-save-tag">خصم العرض مفعّل</span>
-                    </div>
-                  </div>
-
                   <button
                     type="button"
-                    className="sim-cta"
-                    onClick={() => {
-                      setSimIndex(2);
-                      scrollToPhase(2);
-                    }}
+                    className={`cs-toggle-btn ${caseMode === "before" ? "on" : ""}`}
+                    onClick={() => setCaseMode("before")}
                   >
-                    <span>تجهيز رسالة واتساب المباشرة ←</span>
-                    <span className="sim-cta-sub">تنتقل للمحادثة ومحدد فيها كل التفاصيل</span>
+                    <span>الموقع التقليدي</span>
+                    <span className="cs-cross">✕</span>
                   </button>
-                </div>
-
-                {/* Phase 2: Live WhatsApp Message */}
-                <div className={`pg p-sim ${simIndex === 2 ? "on" : ""}`} dir="rtl">
-                  <div className="sim-brand-row">
-                    <div className="sim-brand-title">
-                      <span className="brand-cross">+</span>
-                      <span>محادثة واتساب المباشرة</span>
-                    </div>
-                    <span className="sim-step-badge">المرحلة 3 من 3</span>
-                  </div>
-
-                  <div className="sim-wa-frame">
-                    <div className="sim-wa-header-bar">
-                      <div className="sim-wa-avatar">ع</div>
-                      <div className="sim-wa-info">
-                        <b>عيادة الابتسامة التخصصية</b>
-                        <small>متصل الآن · حساب واتساب بزنس موثق</small>
-                      </div>
-                    </div>
-
-                    <div className="sim-wa-bubbles">
-                      <div className="sim-wa-security-pill">
-                        رسائل مشفرة بنظام طرف إلى طرف
-                      </div>
-
-                      <div className="sim-bubble-msg sim-bubble-client">
-                        <div className="sim-client-text">
-                          {`السلام عليكم دكتور، شفت إعلان العرض وأريد أحجز:
-• الخدمة: ${simSvc}
-• الوقت المفضّل: ${simTime}
-شنو أقرب موعد متوفر باچر بالعيادة؟`}
-                        </div>
-                        <div className="sim-bubble-meta">
-                          <span>21:24</span>
-                          <span className="sim-checks">✓✓</span>
-                        </div>
-                      </div>
-
-                      <div className="sim-bubble-msg sim-bubble-doctor">
-                        <div className="sim-doctor-text">
-                          {`أهلاً وسهلاً بحضرتك.
-تم استلام طلبك لـ (${simSvc}) بالفترة الـ (${simTime}).
-الشاغر المتوفر باچر:
-1. الساعة 5:30 عصراً
-2. الساعة 7:15 مساءً
-تحب نثبتلك أي موعد منهم بالجدول؟`}
-                        </div>
-                        <div className="sim-bubble-meta">
-                          <span>21:24</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="sim-mini-bar">
-                      <span>جرّب تغيّر الطلب:</span>
-                      {["تنظيف أسنان", "تبييض أسنان", "تقويم أسنان"].map((svcName) => (
-                        <button
-                          key={svcName}
-                          type="button"
-                          aria-pressed={simSvc === svcName}
-                          onClick={() => setSimSvc(svcName)}
-                        >
-                          {svcName.replace(" أسنان", "")}
-                        </button>
-                      ))}
-                      <span>·</span>
-                      {["صباحاً", "مساءً"].map((tName) => (
-                        <button
-                          key={tName}
-                          type="button"
-                          aria-pressed={simTime === tName}
-                          onClick={() => setSimTime(tName)}
-                        >
-                          {tName}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <a className="sim-cta" href="#book" style={{ textDecoration: "none", display: "block" }}>
-                    <span>أريد موقع يحوّل زبائن إعلاناتي بهيچ وضوح ←</span>
-                    <span className="sim-cta-sub">اضغط للانتقال لباقات العمل</span>
-                  </a>
                 </div>
               </div>
             </div>
 
-            {/* Description & CTA */}
-            <div className="wc1" id="wd">
-              <span className="k2">{currentPhase.k}</span>
-              <h3 className="disp">{currentPhase.n}</h3>
-              <p>{currentPhase.d}</p>
+            {/* Grid: Comparison Card + Live Mockup Preview */}
+            <div className="cs-grid">
+              {/* Comparison Details Card */}
+              <div className={`cs-card ${caseMode === "after" ? "cs-card-after" : "cs-card-before"}`}>
+                <div className="cs-card-head">
+                  <div>
+                    <span className="cs-card-k">
+                      {caseMode === "after" ? "الهندسة الصحيحة" : "الخلل الشائع"}
+                    </span>
+                    <h4 className="cs-card-title">
+                      {caseMode === "after" ? activeCase.after.headline : activeCase.before.headline}
+                    </h4>
+                  </div>
+                  <div className="cs-card-speed">
+                    <span>السرعة</span>
+                    <b>{caseMode === "after" ? activeCase.after.speed : activeCase.before.speed}</b>
+                  </div>
+                </div>
+
+                <ul className="cs-points">
+                  {(caseMode === "after" ? activeCase.after.points : activeCase.before.points).map((pt, idx) => (
+                    <li key={idx}>
+                      <span className="cs-bullet">{caseMode === "after" ? "✓" : "✕"}</span>
+                      <span>{pt}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="cs-summary-strip">
+                  {caseMode === "after" ? activeCase.after.summary : activeCase.before.summary}
+                </div>
+              </div>
+
+              {/* Live Mockup Preview */}
+              <div className="cs-preview-wrap">
+                <div className="cs-preview-device">
+                  <div className="cs-preview-topbar">
+                    <span className="cs-preview-dots">
+                      <i /><i /><i />
+                    </span>
+                    <span className="cs-preview-url">
+                      {`https://deal.page/${activeCase.id}`}
+                    </span>
+                  </div>
+
+                  <div className="cs-preview-content">
+                    <div className="cs-preview-header">
+                      <span className="cs-brand-name">{activeCase.preview.brand}</span>
+                      <span className="cs-live-pill">معاينة مباشرة</span>
+                    </div>
+
+                    <div className="cs-preview-banner">
+                      <div className="cs-banner-badge">{activeCase.preview.offer}</div>
+                      <h4 className="cs-banner-item">{activeCase.preview.item}</h4>
+                      <div className="cs-price-row">
+                        <span className="cs-price">{activeCase.preview.price}</span>
+                        <span className="cs-old-price">{activeCase.preview.oldPrice}</span>
+                      </div>
+                    </div>
+
+                    <a className="cs-preview-cta" href="#book">
+                      <span>{activeCase.preview.ctaText}</span>
+                    </a>
+                  </div>
+                </div>
+
+                {/* 4 Stats Pills */}
+                <div className="cs-metrics-row">
+                  {activeCase.metrics.map((m, idx) => (
+                    <div key={idx} className="cs-metric-card">
+                      <b className="cs-metric-val">{m.val}</b>
+                      <span className="cs-metric-lbl">{m.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Section Action */}
+            <div className="cs-foot">
               <a className="btn" href="#book">
-                <span>أريد هيچ تجربة لبزنسي</span>
+                <span>أريد صفحة هبوط مماثلة لمجال شغلي</span>
                 <span className="btn-arr">←</span>
               </a>
             </div>
-          </div>
-          <div className="pb">
-            <i id="wp" ref={workProgressRef} />
           </div>
         </div>
       </section>

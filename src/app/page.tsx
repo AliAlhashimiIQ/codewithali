@@ -887,7 +887,10 @@ export default function Home() {
           3. COMMERCIAL FUNNELS & CRO SHOWCASE (#work)
           Interactive Conversion Rate Optimization (CRO) & Motion Graphic Studio
       ───────────────────────────────────────────────────────────── */}
-      <ConversionStory onChooseService={() => setSelectedService(SV[0].name)} />
+      <ConversionStory onChooseService={(sector) => {
+        setSelectedService(SV[0].name);
+        setSelectedSector(sector);
+      }} />
 
       {/* ─────────────────────────────────────────────────────────────
           4 & 5. PACKAGES & BOOKING FUNNEL (#book)

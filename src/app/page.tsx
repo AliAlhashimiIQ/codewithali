@@ -79,10 +79,12 @@ export default function Home() {
   // Speed Race State
   const [raceElapsed, setRaceElapsed] = useState({ legacy: 0, ali: 0 });
   const [raceFinished, setRaceFinished] = useState({ legacy: false, ali: false });
+  const [hideStickyBar, setHideStickyBar] = useState(true);
   // Refs for Canvases & Observers
   const fxCanvasRef = useRef<HTMLCanvasElement>(null);
   const leakCanvasRef = useRef<HTMLCanvasElement>(null);
   const headerRef = useRef<HTMLElement>(null);
+  const bookRef = useRef<HTMLElement>(null);
   const scrollBarRef = useRef<HTMLElement>(null);
   const raceRafRef = useRef<number | null>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -401,14 +403,15 @@ export default function Home() {
 
       if (frameCount++ % 90 === 0) updateColors();
 
+      const isCompact = W < 380;
       const cx = W / 2;
-      const gy = H * 0.36;
-      const end = gy + 46;
-      const bb = H - 50;
-      const bt = H * 0.64;
-      const bw = W * 0.34;
-      const xl = W * 0.2;
-      const xr = W * 0.8;
+      const gy = H * 0.35;
+      const end = gy + (isCompact ? 36 : 46);
+      const bb = H - (isCompact ? 44 : 52);
+      const bt = H * 0.62;
+      const bw = Math.min(W * 0.38, 170);
+      const xl = W * 0.24;
+      const xr = W * 0.76;
       const bh = bb - bt;
       const getFill = (bucket: number) => bh * q * (bucket === 2 ? p : 1 - p);
       const coinVal = spend / 128;
@@ -417,71 +420,115 @@ export default function Home() {
       if (q < 1 && now - lastSpawn > 70) {
         lastSpawn = now;
         coins.push({
-          x: cx + (Math.random() - 0.5) * 14,
-          y: 30,
-          vy: 2.6 + Math.random(),
+          x: cx + (Math.random() - 0.5) * 10,
+          y: 38,
+          vy: 2.5 + Math.random(),
           s: 0,
         });
       }
 
       ctx.clearRect(0, 0, W, H);
+
+      // Subtle instrument grid lines
+      ctx.globalAlpha = 0.06;
+      ctx.strokeStyle = col.f;
+      ctx.lineWidth = 1;
+      for (let yLine = 60; yLine < H - 40; yLine += 48) {
+        ctx.beginPath();
+        ctx.moveTo(16, yLine);
+        ctx.lineTo(W - 16, yLine);
+        ctx.stroke();
+      }
+
+      // Top Ad Source Capsule ("إعلانك")
+      ctx.globalAlpha = 0.12;
+      ctx.fillStyle = col.f;
+      ctx.beginPath();
+      ctx.roundRect(cx - 44, 4, 88, 24, 12);
+      ctx.fill();
+      ctx.globalAlpha = 0.3;
+      ctx.strokeStyle = col.f;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
       ctx.globalAlpha = 1;
       ctx.textAlign = "center";
       ctx.fillStyle = col.f;
-      ctx.font = "700 14px " + fontMain;
-      ctx.fillText("إعلانك", cx, 14);
+      ctx.font = `700 ${isCompact ? 12 : 13}px ${fontMain}`;
+      ctx.fillText("إعلانك", cx, 20);
 
-      ctx.globalAlpha = 0.7;
-      ctx.font = "500 13px " + fontMain;
+      // Day counter pill ("يوم X / 30")
+      ctx.globalAlpha = 0.75;
+      ctx.font = `600 ${isCompact ? 11 : 12}px ${fontMain}`;
       ctx.textAlign = "left";
-      ctx.fillText(`يوم ${Math.max(1, Math.ceil(q * 30))} / 30`, 4, 14);
+      ctx.fillText(`يوم ${Math.max(1, Math.ceil(q * 30))} / 30`, 8, 20);
 
-      ctx.globalAlpha = 0.55;
-      ctx.strokeStyle = col.f;
-      ctx.lineWidth = 3;
-      ctx.lineCap = "round";
+      // Curved guide paths from valve to collection chambers
+      ctx.globalAlpha = 0.14;
+      ctx.strokeStyle = col.b;
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
       ctx.beginPath();
-      ctx.moveTo(cx - 20, 22);
-      ctx.lineTo(cx - 20, gy - 16);
-      ctx.moveTo(cx - 20, gy + 16);
-      ctx.lineTo(cx - 20, end);
-      ctx.moveTo(cx + 20, 22);
-      ctx.lineTo(cx + 20, end);
+      ctx.moveTo(cx - 20, gy);
+      ctx.quadraticCurveTo(xl, gy + 10, xl, bt - 6);
       ctx.stroke();
 
+      ctx.strokeStyle = col.g;
+      ctx.beginPath();
+      ctx.moveTo(cx, end);
+      ctx.quadraticCurveTo(xr, end + 16, xr, bt - 6);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Conduit walls
+      ctx.globalAlpha = 0.45;
+      ctx.strokeStyle = col.f;
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(cx - 18, 32);
+      ctx.lineTo(cx - 18, gy - 16);
+      ctx.moveTo(cx - 18, gy + 16);
+      ctx.lineTo(cx - 18, end);
+      ctx.moveTo(cx + 18, 32);
+      ctx.lineTo(cx + 18, end);
+      ctx.stroke();
+
+      // Diagnostic Gate Valve
       ctx.globalAlpha = 1;
       ctx.strokeStyle = gc;
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
       if (isFixed) {
-        ctx.moveTo(cx - 24, gy - 16);
+        ctx.moveTo(cx - 21, gy - 16);
         ctx.lineTo(cx - 16, gy + 16);
       } else {
-        ctx.moveTo(cx - 20, gy - 16);
-        ctx.lineTo(cx - 27, gy - 6);
-        ctx.lineTo(cx - 15, gy + 2);
-        ctx.lineTo(cx - 26, gy + 10);
-        ctx.lineTo(cx - 20, gy + 16);
+        ctx.moveTo(cx - 18, gy - 16);
+        ctx.lineTo(cx - 26, gy - 6);
+        ctx.lineTo(cx - 14, gy + 2);
+        ctx.lineTo(cx - 25, gy + 10);
+        ctx.lineTo(cx - 18, gy + 16);
       }
       ctx.stroke();
 
+      // Status labels next to valve
       ctx.fillStyle = gc;
-      ctx.font = "700 15px " + fontMain;
+      ctx.font = `700 ${isCompact ? 12.5 : 14}px ${fontMain}`;
       ctx.textAlign = "left";
-      ctx.fillText(isFixed ? "موقع سريع" : "موقع بطيء", cx + 30, gy + 4);
+      ctx.fillText(isFixed ? "موقع سريع" : "موقع بطيء", cx + 26, gy + 4);
       ctx.textAlign = "right";
-      ctx.fillText(`${Math.round(p * 100)}% تسرّب`, cx - 38, gy - 22);
+      ctx.fillText(`${Math.round(p * 100)}% تسرّب`, cx - 30, gy - 22);
 
       for (const k of coins) {
         k.y += k.vy;
         if (!k.s && k.y > gy) {
           k.s = Math.random() < p ? 2 : 1;
           if (k.s === 2) {
-            k.vx = -2.6;
+            k.vx = -2.4;
             priceTags.push({
               t: `−$${Math.round(coinVal)}`,
               x: cx - 34,
-              y: gy - 4,
+              y: gy + 16,
               a: 1,
             });
           }
@@ -490,10 +537,10 @@ export default function Home() {
           k.x += k.vx;
           k.vx *= 0.96;
           k.vy += 0.12;
-          if (k.x < cx - 30) k.x += (xl - k.x) * 0.035;
+          if (k.x < cx - 26) k.x += (xl - k.x) * 0.045;
         }
         if (k.s === 1 && k.y > end) {
-          k.x += (xr - k.x) * 0.06;
+          k.x += (xr - k.x) * 0.065;
           k.vy += 0.05;
         }
       }
@@ -502,13 +549,13 @@ export default function Home() {
         const yLimit = bb - getFill(k.s);
         const hit = k.s && k.y >= yLimit;
         if (hit) {
-          if (k.s === 2) shake = 4;
+          if (k.s === 2) shake = 3.5;
           for (let i = 0; i < 5; i++) {
             splashParticles.push({
               x: k.x,
               y: yLimit,
-              vx: (Math.random() - 0.5) * 3,
-              vy: -1 - Math.random() * 2.5,
+              vx: (Math.random() - 0.5) * 2.8,
+              vy: -1 - Math.random() * 2.2,
               a: 1,
               c: k.s === 2 ? col.b : col.g,
             });
@@ -518,34 +565,45 @@ export default function Home() {
       });
 
       for (const k of coins) {
-        ctx.fillStyle = k.s === 2 ? col.b : k.s === 1 ? col.g : col.f;
+        const tokenColor = k.s === 2 ? col.b : k.s === 1 ? col.g : col.f;
+        ctx.globalAlpha = 0.22;
+        ctx.fillStyle = tokenColor;
         ctx.beginPath();
-        ctx.arc(k.x, k.y, 7, 0, Math.PI * 2);
+        ctx.arc(k.x, k.y, 9.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = tokenColor;
+        ctx.beginPath();
+        ctx.arc(k.x, k.y, 6.5, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.fillStyle = k.s ? "#fff" : col.i;
-        ctx.font = "700 9px " + fontMain;
+        ctx.font = "700 8.5px " + fontMain;
         ctx.textAlign = "center";
-        ctx.fillText("$", k.x, k.y + 3.2);
+        ctx.fillText("$", k.x, k.y + 3);
       }
 
       for (const o of splashParticles) {
         o.x += o.vx;
         o.y += o.vy;
         o.vy += 0.18;
-        o.a -= 0.04;
+        o.a -= 0.045;
         ctx.globalAlpha = Math.max(o.a, 0);
         ctx.fillStyle = o.c;
-        ctx.fillRect(o.x, o.y, 3, 3);
+        ctx.beginPath();
+        ctx.arc(o.x, o.y, 1.8, 0, Math.PI * 2);
+        ctx.fill();
       }
       splashParticles = splashParticles.filter((o) => o.a > 0);
 
       for (const o of priceTags) {
-        o.y -= 0.5;
-        o.a -= 0.012;
+        o.x -= 0.32;
+        o.y += 0.22;
+        o.a -= 0.016;
         ctx.globalAlpha = Math.max(o.a, 0);
         ctx.fillStyle = col.b;
-        ctx.font = "700 13px " + fontMain;
+        ctx.font = `700 ${isCompact ? 11.5 : 12.5}px ${fontMain}`;
         ctx.textAlign = "right";
         ctx.fillText(o.t, o.x, o.y);
       }
@@ -565,32 +623,69 @@ export default function Home() {
         const left = bx - bw / 2 + offset;
         const yTop = bb - bh * fillRatio;
 
-        ctx.globalAlpha = 0.6;
-        ctx.strokeStyle = col.f;
-        ctx.lineWidth = 2;
-        ctx.strokeRect(left, bt, bw, bh);
-        ctx.globalAlpha = 1;
+        // Subtle glass background inside chamber
+        ctx.globalAlpha = 0.06;
+        ctx.fillStyle = col.f;
+        ctx.beginPath();
+        ctx.roundRect(left, bt, bw, bh, 10);
+        ctx.fill();
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(left, bt, bw, bh, 10);
+        ctx.clip();
 
         if (fillRatio > 0) {
+          ctx.globalAlpha = 0.88;
           ctx.fillStyle = binColor;
           ctx.beginPath();
           ctx.moveTo(left, bb);
           ctx.lineTo(left, yTop);
           for (let i = 0; i <= bw; i += 6) {
-            ctx.lineTo(left + i, yTop + Math.sin(i / 9 + now / 260) * 2.2);
+            ctx.lineTo(left + i, yTop + Math.sin(i / 9 + now / 260) * 2);
           }
           ctx.lineTo(left + bw, bb);
           ctx.closePath();
           ctx.fill();
+
+          // Bright meniscus highlight on liquid surface
+          ctx.globalAlpha = 1;
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          for (let i = 0; i <= bw; i += 6) {
+            const wy = yTop + Math.sin(i / 9 + now / 260) * 2;
+            if (i === 0) ctx.moveTo(left + i, wy);
+            else ctx.lineTo(left + i, wy);
+          }
+          ctx.stroke();
         }
+        ctx.restore();
+
+        // Chamber border & measurement ticks
+        ctx.globalAlpha = 0.26;
+        ctx.strokeStyle = col.f;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(left, bt, bw, bh, 10);
+        ctx.stroke();
+
+        for (let tick = 1; tick <= 3; tick++) {
+          const ty = bt + (bh * tick) / 4;
+          ctx.beginPath();
+          ctx.moveTo(left + 4, ty);
+          ctx.lineTo(left + 10, ty);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
 
         ctx.textAlign = "center";
         ctx.fillStyle = col.f;
-        ctx.font = "600 13px " + fontMain;
-        ctx.fillText(label, bx, H - 30);
+        ctx.font = `600 ${isCompact ? 11.5 : 13}px ${fontMain}`;
+        ctx.fillText(label, bx, H - (isCompact ? 24 : 28));
         ctx.fillStyle = binColor;
-        ctx.font = "800 22px " + fontKufi;
-        ctx.fillText("$" + formatNumber(Math.round(val)), bx, H - 6);
+        ctx.font = `800 ${isCompact ? 17 : 21}px ${fontKufi}`;
+        ctx.fillText("$" + formatNumber(Math.round(val)), bx, H - 5);
       };
 
       drawBin(xl, q * p, col.b, "أموال ضائعة", spend * p * q, Math.sin(now / 30) * shake);
@@ -607,7 +702,7 @@ export default function Home() {
   }, [spend, isFixed]);
 
   /* ─────────────────────────────────────────────────────────────
-     6. TOP SCROLL PROGRESS BAR (#sp)
+     6. TOP SCROLL PROGRESS BAR (#sp) & MOBILE STICKY BAR GUARD
   ───────────────────────────────────────────────────────────── */
   useEffect(() => {
     let rafScroll: number;
@@ -617,6 +712,16 @@ export default function Home() {
         const pageProgress = fullScroll > 0 ? (window.scrollY / fullScroll) * 100 : 0;
         scrollBarRef.current.style.width = `${pageProgress}%`;
       }
+
+      const headerRect = headerRef.current?.getBoundingClientRect();
+      const leakRect = leakCanvasRef.current?.getBoundingClientRect();
+      const bookRect = bookRef.current?.getBoundingClientRect();
+      const inHero = headerRect ? headerRect.bottom > 120 : window.scrollY < 450;
+      const inLeakCanvas = leakRect
+        ? leakRect.top < window.innerHeight - 20 && leakRect.bottom > window.innerHeight - 120
+        : false;
+      const inBookOrBelow = bookRect ? bookRect.top < window.innerHeight - 60 : false;
+      setHideStickyBar(inHero || inLeakCanvas || inBookOrBelow);
     };
 
     const onScroll = () => {
@@ -625,11 +730,23 @@ export default function Home() {
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
+    document.body.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    const stickyIo = new IntersectionObserver(onScroll, {
+      threshold: [0, 0.05, 0.15, 0.5, 1],
+    });
+    if (headerRef.current) stickyIo.observe(headerRef.current);
+    if (bookRef.current) stickyIo.observe(bookRef.current);
+
     handleScroll();
 
     return () => {
       cancelAnimationFrame(rafScroll);
+      stickyIo.disconnect();
       window.removeEventListener("scroll", onScroll);
+      document.body.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, []);
 
@@ -659,7 +776,9 @@ export default function Home() {
       observer.observe(el);
     });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
 
@@ -694,24 +813,57 @@ export default function Home() {
             </a>
           </div>
 
-          <div>
+          <div className="race-stage">
             {/* Live Speed Race Component */}
             <div className="race" id="race">
               {/* Legacy Slow Site Card */}
-              <div className="ph" style={{ "--c": "var(--bad)" } as React.CSSProperties}>
+              <div
+                className={`ph ph-slow${raceFinished.legacy ? " is-done" : ""}`}
+                style={{ "--c": "var(--bad)" } as React.CSSProperties}
+              >
                 <div className="scr">
+                  <div className="scr-top" aria-hidden="true">
+                    <span className="scr-notch" />
+                    <span className="scr-url">slow-site.com</span>
+                  </div>
                   <i
                     className="bar"
                     style={{ width: `${(raceElapsed.legacy / 5200) * 100}%` }}
                   />
                   <div className="blk">
-                    <b style={{ height: "12px", width: "33%", opacity: raceElapsed.legacy / 5200 > 0.1 ? 0.4 : 0.1 }} />
-                    <b style={{ height: "80px", borderRadius: "8px", opacity: raceElapsed.legacy / 5200 > 0.4 ? 0.4 : 0.1 }} />
-                    <b style={{ height: "10px", width: "83%", opacity: raceElapsed.legacy / 5200 > 0.6 ? 0.4 : 0.1 }} />
-                    <b style={{ height: "10px", width: "66%", opacity: raceElapsed.legacy / 5200 > 0.7 ? 0.4 : 0.1 }} />
+                    <div
+                      className="blk-nav"
+                      style={{ opacity: raceElapsed.legacy / 5200 > 0.12 ? 0.5 : 0.16 }}
+                    >
+                      <i className="blk-dot" />
+                      <b style={{ height: "7px", width: "38%", opacity: 0.45 }} />
+                    </div>
+                    <div
+                      className="blk-card"
+                      style={{ opacity: raceElapsed.legacy / 5200 > 0.4 ? 0.55 : 0.15 }}
+                    >
+                      <span className="blk-card-tag" />
+                      <div className="blk-card-row">
+                        <div className="blk-card-lines">
+                          <i />
+                          <i />
+                        </div>
+                        <span className="blk-card-graphic" />
+                      </div>
+                    </div>
+                    <b style={{ height: "8px", width: "86%", opacity: raceElapsed.legacy / 5200 > 0.6 ? 0.42 : 0.12 }} />
+                    <b style={{ height: "8px", width: "64%", opacity: raceElapsed.legacy / 5200 > 0.72 ? 0.35 : 0.12 }} />
+                    <div
+                      className="blk-pills"
+                      style={{ opacity: raceElapsed.legacy / 5200 > 0.82 ? 0.45 : 0.12 }}
+                    >
+                      <i />
+                      <i />
+                      <i />
+                    </div>
                     <div
                       className="cta"
-                      style={{ opacity: raceElapsed.legacy / 5200 > 0.9 ? 1 : 0.1 }}
+                      style={{ opacity: raceElapsed.legacy / 5200 > 0.92 ? 0.85 : 0.14 }}
                     >
                       تواصل واتساب
                     </div>
@@ -729,45 +881,63 @@ export default function Home() {
                 >
                   <span>{(raceElapsed.legacy / 1000).toFixed(1)}</span> ث
                 </p>
-                <p className="sc">PageSpeed موبايل: 34/100</p>
+                <p className="sc sc-bad">PageSpeed موبايل: 34/100</p>
               </div>
 
               {/* Fast Site Card */}
-              <div className="ph" style={{ "--c": "var(--go)" } as React.CSSProperties}>
+              <div
+                className={`ph ph-fast${raceFinished.ali ? " is-done" : ""}`}
+                style={{ "--c": "var(--go)" } as React.CSSProperties}
+              >
                 <div className="scr relative">
+                  <div className="scr-top" aria-hidden="true">
+                    <span className="scr-notch" />
+                    <span className="scr-url scr-url-fast">deal.page</span>
+                  </div>
                   <i
                     className="bar"
                     style={{ width: `${(raceElapsed.ali / 900) * 100}%` }}
                   />
                   <div className="blk">
-                    <b style={{ height: "12px", width: "33%", opacity: raceElapsed.ali / 900 > 0.1 ? 0.4 : 0.1 }} />
-                    <b style={{ height: "80px", borderRadius: "8px", opacity: raceElapsed.ali / 900 > 0.4 ? 0.4 : 0.1 }} />
-                    <b style={{ height: "10px", width: "83%", opacity: raceElapsed.ali / 900 > 0.6 ? 0.4 : 0.1 }} />
-                    <b style={{ height: "10px", width: "66%", opacity: raceElapsed.ali / 900 > 0.7 ? 0.4 : 0.1 }} />
                     <div
-                      className="cta"
-                      style={{ opacity: raceElapsed.ali / 900 > 0.9 ? 1 : 0.1 }}
+                      className="blk-nav"
+                      style={{ opacity: raceElapsed.ali / 900 > 0.12 ? 0.95 : 0.18 }}
+                    >
+                      <i className="blk-dot blk-dot-go" />
+                      <b style={{ height: "7px", width: "42%", opacity: 0.75 }} />
+                    </div>
+                    <div
+                      className="blk-card blk-card-fast"
+                      style={{ opacity: raceElapsed.ali / 900 > 0.38 ? 1 : 0.18 }}
+                    >
+                      <span className="blk-card-tag blk-tag-go" />
+                      <div className="blk-card-row">
+                        <div className="blk-card-lines blk-lines-go">
+                          <i />
+                          <i />
+                        </div>
+                        <span className="blk-card-graphic blk-graphic-go" />
+                      </div>
+                    </div>
+                    <b style={{ height: "8px", width: "86%", opacity: raceElapsed.ali / 900 > 0.58 ? 0.72 : 0.14 }} />
+                    <b style={{ height: "8px", width: "64%", opacity: raceElapsed.ali / 900 > 0.7 ? 0.5 : 0.14 }} />
+                    <div
+                      className="blk-pills"
+                      style={{ opacity: raceElapsed.ali / 900 > 0.8 ? 0.95 : 0.14 }}
+                    >
+                      <i className="active" />
+                      <i />
+                      <i />
+                    </div>
+                    <div
+                      className="cta cta-fast"
+                      style={{ opacity: raceElapsed.ali / 900 > 0.9 ? 1 : 0.16 }}
                     >
                       تواصل واتساب
                     </div>
                   </div>
                   {raceFinished.ali && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "10px",
-                        insetInlineEnd: "10px",
-                        padding: "3px 8px",
-                        borderRadius: "999px",
-                        background: "var(--go)",
-                        color: "#fff",
-                        fontSize: "0.7rem",
-                        fontWeight: 700,
-                        boxShadow: "0 4px 12px rgba(11,154,91,0.4)",
-                        animation: "pop 0.3s ease-out",
-                        zIndex: 10,
-                      }}
-                    >
+                    <div className="fast-badge">
                       أسرع بـ 5.7 أضعاف
                     </div>
                   )}
@@ -779,21 +949,23 @@ export default function Home() {
                 >
                   <span>{(raceElapsed.ali / 1000).toFixed(1)}</span> ث
                 </p>
-                <p className="sc">PageSpeed موبايل: 92/100</p>
+                <p className="sc sc-go">PageSpeed موبايل: 92/100</p>
               </div>
             </div>
 
-            <button type="button" className="lnk" id="again" onClick={startRace}>
-              <span style={{ fontSize: "1rem", lineHeight: 1 }}>↺</span>
-              <span>أعد المقارنة</span>
-            </button>
+            <div className="race-footer">
+              <button type="button" className="lnk" id="again" onClick={startRace}>
+                <span style={{ fontSize: "1rem", lineHeight: 1 }}>↺</span>
+                <span>أعد المقارنة</span>
+              </button>
 
-            {/* Live Navigation Readout */}
-            <p className="real" id="real">
-              قياس هذه الزيارة: أول ظهور{" "}
-              <b id="m1">{fcpTime !== null ? fcpTime : "…"}</b> ms، واكتمال التحميل{" "}
-              <b id="m2">{loadTime !== null ? loadTime : "…"}</b> ms.
-            </p>
+              {/* Live Navigation Readout */}
+              <p className="real" id="real">
+                قياس هذه الزيارة: أول ظهور{" "}
+                <b id="m1">{fcpTime !== null ? fcpTime : "…"}</b> ms، واكتمال التحميل{" "}
+                <b id="m2">{loadTime !== null ? loadTime : "…"}</b> ms.
+              </p>
+            </div>
           </div>
         </div>
       </header>
@@ -805,14 +977,14 @@ export default function Home() {
         <div className="tk">
           <span>صفحات هبوط للإعلانات</span>
           <span>مصمّم للموبايل</span>
-          <span>Meta Pixel وConversion API</span>
+          <span><bdi>Meta Pixel</bdi> و<bdi>Conversion API</bdi></span>
           <span>واتساب مباشر</span>
-          <span>عربي / English</span>
+          <span>عربي / <bdi>English</bdi></span>
           <span>صفحات هبوط للإعلانات</span>
           <span>مصمّم للموبايل</span>
-          <span>Meta Pixel وConversion API</span>
+          <span><bdi>Meta Pixel</bdi> و<bdi>Conversion API</bdi></span>
           <span>واتساب مباشر</span>
-          <span>عربي / English</span>
+          <span>عربي / <bdi>English</bdi></span>
         </div>
       </div>
 
@@ -836,7 +1008,7 @@ export default function Home() {
                   aria-pressed={spend === val}
                   onClick={() => setSpend(val)}
                 >
-                  ${formatNumber(val)}
+                  <bdi dir="ltr">${formatNumber(val)}</bdi>
                 </button>
               ))}
             </div>
@@ -854,12 +1026,19 @@ export default function Home() {
               />
             </label>
 
-            <p className="yr" id="yr" aria-live="polite">
-              {isFixed
-                ? `بعد التسريع: توفّر $${formatNumber(Math.round(spend * 0.4))} شهرياً من ميزانيتك.`
-                : `مع البطء: $${formatNumber(monthlyLoss)} تضيع شهرياً ($${formatNumber(
-                    monthlyLoss * 12
-                  )} سنوياً).`}
+            <p className={`yr${isFixed ? " is-fixed" : ""}`} id="yr" aria-live="polite">
+              {isFixed ? (
+                <>
+                  بعد التسريع: توفّر{" "}
+                  <bdi dir="ltr">${formatNumber(Math.round(spend * 0.4))}</bdi> شهرياً من
+                  ميزانيتك.
+                </>
+              ) : (
+                <>
+                  مع البطء: <bdi dir="ltr">${formatNumber(monthlyLoss)}</bdi> تضيع شهرياً (
+                  <bdi dir="ltr">${formatNumber(monthlyLoss * 12)}</bdi> سنوياً).
+                </>
+              )}
             </p>
 
             <button
@@ -895,7 +1074,7 @@ export default function Home() {
       {/* ─────────────────────────────────────────────────────────────
           4 & 5. PACKAGES & BOOKING FUNNEL (#book)
       ───────────────────────────────────────────────────────────── */}
-      <section className="book" id="book">
+      <section className="book" id="book" ref={bookRef}>
         <div className="w two">
           <div className="scroll-reveal-right">
             <h2>شنو يحتاج موقعك؟ خلّينا نحدده.</h2>
@@ -1033,9 +1212,12 @@ export default function Home() {
           {/* Sticky WhatsApp Phone Mockup */}
           <div className="sticky scroll-reveal-left delay-2">
             <div className="wp">
+              <div className="wp-bezel" aria-hidden="true">
+                <span className="wp-speaker" />
+              </div>
               <div className="wh">
                 <span className="wa">
-                  <svg viewBox="0 0 64 64" width="24" height="24">
+                  <svg viewBox="0 0 64 64" width="22" height="22">
                     <path
                       d="M30 12 10 32l20 20"
                       fill="none"
@@ -1050,6 +1232,7 @@ export default function Home() {
                       strokeLinecap="square"
                     />
                   </svg>
+                  <i className="wa-online" aria-hidden="true" />
                 </span>
                 <div>
                   <b>علي · CodeWithAli</b>
@@ -1060,16 +1243,17 @@ export default function Home() {
               <div className="wc">
                 <p className="wd">الرسالة الجاهزة</p>
                 <div className="bub" id="msg" hidden={isTyping}>
-                  {displayedMessage}
+                  <span className="bub-txt">{displayedMessage}</span>
+                  <small className="mt" id="mt">
+                    <span>{messageTime}</span>
+                    <i className="mt-ticks" aria-hidden="true">✓✓</i>
+                  </small>
                 </div>
                 <div className="typ" id="typ" hidden={!isTyping}>
                   <i />
                   <i />
                   <i />
                 </div>
-                <small className="mt" id="mt">
-                  {messageTime}
-                </small>
               </div>
 
               <div className="wf">
@@ -1097,7 +1281,7 @@ export default function Home() {
           FOOTER & MOBILE STICKY CTA
       ───────────────────────────────────────────────────────────── */}
       <footer className="w">© 2026 CodeWithAli. مصمَّم ومبرمج يدوياً.</footer>
-      <a className="fix" href="#book">
+      <a className={`fix${hideStickyBar ? " is-hidden" : ""}`} href="#book">
         <span>راسلني رأساً على واتساب وخلّينا نبدأ</span>
         <span className="btn-arr">←</span>
       </a>

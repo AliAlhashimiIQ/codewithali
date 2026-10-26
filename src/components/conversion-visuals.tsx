@@ -45,16 +45,20 @@ function useIllustrationMotion({ progress, reducedMotion }: VisualProps) {
 function IllustrationDefs({ id }: { id: string }) {
   return (
     <defs>
+      <filter id={`${id}-elev`} x="-15%" y="-15%" width="130%" height="135%">
+        <feDropShadow dx="0" dy="10" stdDeviation="10" floodColor="#0A1410" floodOpacity="0.18" />
+        <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#0A1410" floodOpacity="0.1" />
+      </filter>
       <linearGradient id={`${id}-enamel`} x1="125" y1="85" x2="288" y2="297" gradientUnits="userSpaceOnUse">
         <stop stopColor="#FFFFFF" />
         <stop offset=".48" stopColor={mineral} />
-        <stop offset="1" stopColor="#8FA99A" />
+        <stop offset="1" stopColor="#9BB2A4" />
       </linearGradient>
       <linearGradient id={`${id}-metal`} x1="100" y1="100" x2="290" y2="270" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#D8E0D8" />
+        <stop stopColor="#E6ECE6" />
         <stop offset=".3" stopColor="#8FA395" />
-        <stop offset=".65" stopColor="#E4E8E3" />
-        <stop offset="1" stopColor="#607A6B" />
+        <stop offset=".65" stopColor="#F2F6F2" />
+        <stop offset="1" stopColor="#5C7667" />
       </linearGradient>
       <linearGradient id={`${id}-dark`} x1="100" y1="120" x2="300" y2="300" gradientUnits="userSpaceOnUse">
         <stop stopColor="#3D594A" />
@@ -63,7 +67,7 @@ function IllustrationDefs({ id }: { id: string }) {
       </linearGradient>
       <linearGradient id={`${id}-paper`} x1="130" y1="100" x2="295" y2="300" gradientUnits="userSpaceOnUse">
         <stop stopColor="#FFFFFF" />
-        <stop offset="1" stopColor="#D6DED5" />
+        <stop offset="1" stopColor="#DCE4DC" />
       </linearGradient>
       <linearGradient id={`${id}-glass`} x1="190" y1="140" x2="305" y2="295" gradientUnits="userSpaceOnUse">
         <stop stopColor="#476B57" />
@@ -76,7 +80,7 @@ function IllustrationDefs({ id }: { id: string }) {
         <stop offset="1" stopColor={green} stopOpacity="0" />
       </linearGradient>
       <radialGradient id={`${id}-halo`}>
-        <stop stopColor={green} stopOpacity=".1" />
+        <stop stopColor={green} stopOpacity=".14" />
         <stop offset="1" stopColor={green} stopOpacity="0" />
       </radialGradient>
     </defs>
@@ -88,15 +92,16 @@ function Setting({ id, progress, reducedMotion }: IllustrationProps) {
   return (
     <g>
       <circle cx="210" cy="190" r="165" fill={`url(#${id}-halo)`} />
-      <circle cx="210" cy="190" r="146" stroke={green} strokeOpacity=".1" />
+      <circle cx="210" cy="190" r="146" stroke={green} strokeOpacity=".14" />
+      <circle cx="210" cy="190" r="108" stroke="var(--ink)" strokeOpacity=".06" strokeDasharray="3 6" />
       <motion.g style={{ rotate: animation.orbit, originX: "210px", originY: "190px" }}>
-        <path d="M70 162a143 143 0 0 1 260-45M350 218a143 143 0 0 1-260 45" stroke={green} strokeOpacity=".2" strokeDasharray="2 9" />
-        <circle cx="71" cy="162" r="3.5" fill={green} fillOpacity=".65" />
-        <circle cx="350" cy="218" r="3.5" fill={green} fillOpacity=".65" />
+        <path d="M70 162a143 143 0 0 1 260-45M350 218a143 143 0 0 1-260 45" stroke={green} strokeOpacity=".24" strokeDasharray="2 9" />
+        <circle cx="71" cy="162" r="3.5" fill={green} fillOpacity=".75" />
+        <circle cx="350" cy="218" r="3.5" fill={green} fillOpacity=".75" />
       </motion.g>
-      <motion.path d="M67 190a143 143 0 0 1 286 0" stroke={green} strokeWidth="1.5" strokeOpacity=".4" strokeLinecap="round" style={{ pathLength: animation.draw }} />
-      <path d="M46 190h9m310 0h9M210 23v9m0 316v9" stroke={forest} strokeOpacity=".2" />
-      <ellipse cx="210" cy="326" rx="94" ry="11" fill={forest} fillOpacity=".09" />
+      <motion.path d="M67 190a143 143 0 0 1 286 0" stroke={green} strokeWidth="1.5" strokeOpacity=".45" strokeLinecap="round" style={{ pathLength: animation.draw }} />
+      <path d="M46 190h9m310 0h9M210 23v9m0 316v9" stroke="var(--ink)" strokeOpacity=".18" />
+      <ellipse cx="210" cy="326" rx="94" ry="11" fill="#000000" fillOpacity=".12" />
     </g>
   );
 }
@@ -105,21 +110,20 @@ function ClinicIllustration({ id, progress, reducedMotion }: IllustrationProps) 
   const animation = useIllustrationMotion({ progress, reducedMotion });
   return (
     <g>
-      <motion.g style={{ rotate: animation.rotate, y: animation.drift, originX: "210px", originY: "190px" }}>
-        <path d="M212 110c-35-30-80-24-92 18-12 40 18 68 25 104 7 37 12 75 29 77 19 1 17-63 38-63s19 64 38 63c17-2 23-40 29-77 7-36 37-64 25-104-12-42-57-48-92-18Z" fill={forest} fillOpacity=".08" transform="translate(5 5)" />
+      <motion.g filter={`url(#${id}-elev)`} style={{ rotate: animation.rotate, y: animation.drift, originX: "210px", originY: "190px" }}>
         <path d="M208 100c-35-30-80-24-92 18-12 40 18 68 25 104 7 37 12 75 29 77 19 1 17-63 38-63s19 64 38 63c17-2 23-40 29-77 7-36 37-64 25-104-12-42-57-48-92-18Z" fill={`url(#${id}-enamel)`} stroke="#8CA392" strokeWidth="1.5" />
-        <path d="M148 102c-21 3-27 24-22 44M144 220c7 21 10 47 17 56" stroke="#FFFFFF" strokeWidth="7" strokeLinecap="round" strokeOpacity=".75" />
+        <path d="M148 102c-21 3-27 24-22 44M144 220c7 21 10 47 17 56" stroke="#FFFFFF" strokeWidth="7" strokeLinecap="round" strokeOpacity=".82" />
         <path d="M171 88c14 1 26 7 37 13 11 6 20 6 29 2" stroke="#86A08D" strokeWidth="2" strokeLinecap="round" />
-        <path d="M264 110c20 14 21 34 14 51" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeOpacity=".65" />
+        <path d="M264 110c20 14 21 34 14 51" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeOpacity=".7" />
         <path d="M210 236c-9-12-15-18-16-33" stroke="#A5B9AA" strokeWidth="2" strokeLinecap="round" />
       </motion.g>
       <motion.rect x="75" y="0" width="270" height="2" rx="1" fill={`url(#${id}-scan)`} style={{ y: animation.scan, opacity: animation.scanOpacity }} />
       <motion.g style={{ opacity: animation.reveal, y: animation.rise }}>
         <path d="m296 81 5 14 14 5-14 5-5 14-5-14-14-5 14-5Z" fill={green} />
-        <path d="m102 242 3 8 8 3-8 3-3 8-3-8-8-3 8-3Z" fill={green} fillOpacity=".6" />
-        <g transform="translate(277 254)">
-          <rect width="46" height="46" rx="15" fill={forest} />
-          <rect x="1" y="1" width="44" height="44" rx="14" stroke={green} strokeOpacity=".5" />
+        <path d="m102 242 3 8 8 3-8 3-3 8-3-8-8-3 8-3Z" fill={green} fillOpacity=".65" />
+        <g transform="translate(277 254)" filter={`url(#${id}-elev)`}>
+          <rect width="46" height="46" rx="14" fill={forest} stroke="#385A47" strokeWidth="1" />
+          <rect x="2" y="2" width="42" height="42" rx="12" stroke={green} strokeOpacity=".55" />
           <motion.path d="m14 23 6 6 13-14" stroke={mineral} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ pathLength: animation.draw }} />
         </g>
       </motion.g>
@@ -133,29 +137,29 @@ function StoreIllustration({ id, progress, reducedMotion }: IllustrationProps) {
   const rightSpread = useTransform(progress, [0, 0.22, 0.42, 0.7], [0, 17, 17, 0]);
   return (
     <g>
-      <motion.g style={{ rotate: animation.rotate, originX: "210px", originY: "190px" }}>
-        <path d="M118 224v-42c0-66 38-108 92-108s92 42 92 108v42" stroke={forest} strokeWidth="26" strokeLinecap="round" />
+      <motion.g filter={`url(#${id}-elev)`} style={{ rotate: animation.rotate, originX: "210px", originY: "190px" }}>
+        <path d="M118 224v-42c0-66 38-108 92-108s92 42 92 108v42" stroke="#243C30" strokeWidth="26" strokeLinecap="round" />
         <path d="M118 203v-24c0-62 38-104 92-104s92 42 92 104v24" stroke={`url(#${id}-metal)`} strokeWidth="19" strokeLinecap="round" />
         <path d="M137 171c2-43 29-75 73-75s71 32 73 75" stroke="#2A4335" strokeWidth="14" strokeLinecap="round" />
-        <path d="M144 124c15-23 36-35 66-35s52 12 67 36" stroke="#F2F5F0" strokeWidth="2.5" strokeLinecap="round" strokeOpacity=".8" />
+        <path d="M144 124c15-23 36-35 66-35s52 12 67 36" stroke="#F2F5F0" strokeWidth="2.5" strokeLinecap="round" strokeOpacity=".85" />
         <motion.g style={{ x: reducedMotion ? 0 : leftSpread }}>
           <path d="M115 179v53" stroke="#627F6B" strokeWidth="10" strokeLinecap="round" />
-          <rect x="104" y="192" width="52" height="107" rx="24" fill={forest} transform="rotate(-8 130 245)" />
-          <rect x="95" y="190" width="44" height="106" rx="21" fill={`url(#${id}-dark)`} stroke="#607C68" transform="rotate(-8 117 243)" />
-          <path d="M108 209c-7 15-4 51 4 68" stroke="#6F8B78" strokeWidth="2" strokeLinecap="round" />
+          <rect x="104" y="192" width="52" height="107" rx="24" fill={forest} stroke="#385A47" strokeWidth="1" transform="rotate(-8 130 245)" />
+          <rect x="95" y="190" width="44" height="106" rx="21" fill={`url(#${id}-dark)`} stroke="#6E8D78" transform="rotate(-8 117 243)" />
+          <path d="M108 209c-7 15-4 51 4 68" stroke="#85A38E" strokeWidth="2" strokeLinecap="round" />
           <rect x="136" y="208" width="15" height="73" rx="7.5" fill="#0D1B13" transform="rotate(-8 143 244)" />
         </motion.g>
         <motion.g style={{ x: reducedMotion ? 0 : rightSpread }}>
           <path d="M305 179v53" stroke="#627F6B" strokeWidth="10" strokeLinecap="round" />
-          <rect x="264" y="192" width="52" height="107" rx="24" fill={forest} transform="rotate(8 290 245)" />
-          <rect x="281" y="190" width="44" height="106" rx="21" fill={`url(#${id}-dark)`} stroke="#607C68" transform="rotate(8 303 243)" />
-          <path d="M311 209c7 15 4 51-4 68" stroke="#6F8B78" strokeWidth="2" strokeLinecap="round" />
+          <rect x="264" y="192" width="52" height="107" rx="24" fill={forest} stroke="#385A47" strokeWidth="1" transform="rotate(8 290 245)" />
+          <rect x="281" y="190" width="44" height="106" rx="21" fill={`url(#${id}-dark)`} stroke="#6E8D78" transform="rotate(8 303 243)" />
+          <path d="M311 209c7 15 4 51-4 68" stroke="#85A38E" strokeWidth="2" strokeLinecap="round" />
           <rect x="269" y="208" width="15" height="73" rx="7.5" fill="#0D1B13" transform="rotate(8 276 244)" />
-          <circle cx="307" cy="255" r="2" fill={green} />
+          <circle cx="307" cy="255" r="2.5" fill={green} />
         </motion.g>
       </motion.g>
       <motion.g style={{ opacity: animation.reveal, y: animation.rise }}>
-        <rect x="172" y="228" width="76" height="47" rx="23.5" fill={mineral} stroke="#BBCABC" />
+        <rect x="172" y="228" width="76" height="47" rx="23.5" fill={mineral} stroke="#9BB2A2" filter={`url(#${id}-elev)`} />
         {[12, 22, 30, 20, 12].map((height, index) => (
           <motion.path
             key={index}
@@ -166,7 +170,7 @@ function StoreIllustration({ id, progress, reducedMotion }: IllustrationProps) {
             style={{ pathLength: animation.draw }}
           />
         ))}
-        <path d="M340 211c9 14 9 35 0 49M349 200c14 21 14 50 0 71M80 211c-9 14-9 35 0 49" stroke={green} strokeWidth="1.5" strokeLinecap="round" strokeOpacity=".6" />
+        <path d="M340 211c9 14 9 35 0 49M349 200c14 21 14 50 0 71M80 211c-9 14-9 35 0 49" stroke={green} strokeWidth="1.5" strokeLinecap="round" strokeOpacity=".65" />
       </motion.g>
     </g>
   );
@@ -176,8 +180,8 @@ function PropertyIllustration({ id, progress, reducedMotion }: IllustrationProps
   const animation = useIllustrationMotion({ progress, reducedMotion });
   const roofY = useTransform(progress, [0, 0.22, 0.42, 0.7], [0, -24, -24, 0]);
   return (
-    <g>
-      <path d="m70 284 143-64 143 66-144 65Z" fill="#B9CCBC" fillOpacity=".6" />
+    <g filter={`url(#${id}-elev)`}>
+      <path d="m70 284 143-64 143 66-144 65Z" fill="#B9CCBC" fillOpacity=".65" />
       <path d="m70 284 142 65v7L70 291Z" fill="#93AA98" />
       <path d="m212 349 144-63v7l-144 63Z" fill="#7A9581" />
       <motion.g style={{ y: animation.spread }}>
@@ -186,7 +190,7 @@ function PropertyIllustration({ id, progress, reducedMotion }: IllustrationProps
         <path d="m111 169 96-44 98 41-98 44Z" fill="#F6F6EC" />
         <path d="m221 224 73-33v67l-73 34Z" fill={`url(#${id}-glass)`} />
         <path d="M246 213v67m23-78v67m-48-12 73-34" stroke="#A1B6A5" strokeWidth="2" />
-        <path d="m221 224 20-9-20 40Zm48-22 25-11-25 45Z" fill="#CEE0CF" fillOpacity=".13" />
+        <path d="m221 224 20-9-20 40Zm48-22 25-11-25 45Z" fill="#CEE0CF" fillOpacity=".16" />
         <path d="m123 194 25 11v50l-25-11Z" fill="#45654D" />
         <path d="m159 210 25 11v50l-25-11Z" fill="#45654D" />
         <path d="m125 197 21 9m-21 8 21 9m-21 8 21 9m15-27 21 9m-21 8 21 9m-21 8 21 9" stroke="#94AA92" strokeWidth="1.5" />
@@ -212,7 +216,7 @@ function PropertyIllustration({ id, progress, reducedMotion }: IllustrationProps
       <motion.g style={{ opacity: animation.reveal, y: animation.rise }}>
         <path d="m246 297 29-13 25 12-28 13Z" fill={mineral} />
         <path d="m249 305 23 10 27-12" stroke="#91A88F" strokeWidth="2" />
-        <path d="M322 107c0 15-19 31-19 31s-19-16-19-31a19 19 0 1 1 38 0Z" fill={forest} />
+        <path d="M322 107c0 15-19 31-19 31s-19-16-19-31a19 19 0 1 1 38 0Z" fill={forest} stroke="#3E614E" strokeWidth="1.2" />
         <circle cx="303" cy="107" r="6" fill={green} />
         <motion.path d="m75 306 137 61 144-65" stroke={green} strokeWidth="1.5" strokeLinecap="round" strokeDasharray="3 5" style={{ pathLength: animation.draw }} />
       </motion.g>
@@ -225,7 +229,7 @@ function CompanyIllustration({ id, progress, reducedMotion }: IllustrationProps)
   return (
     <g>
       <motion.path d="M94 143v-36h73m158 122v53h-64M87 246v40h77" stroke={green} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="4 5" style={{ pathLength: animation.draw }} />
-      <motion.g style={{ x: animation.drift, y: animation.drift, rotate: animation.rotate, originX: "210px", originY: "190px" }}>
+      <motion.g filter={`url(#${id}-elev)`} style={{ x: animation.drift, y: animation.drift, rotate: animation.rotate, originX: "210px", originY: "190px" }}>
         <rect x="116" y="79" width="168" height="214" rx="13" fill="#A6BAAA" stroke="#8CA592" transform="rotate(-9 200 186)" />
         <rect x="137" y="94" width="168" height="214" rx="13" fill="#C4D2C5" stroke="#A1B8A8" transform="rotate(5 221 201)" />
         <rect x="130" y="88" width="164" height="218" rx="13" fill={`url(#${id}-paper)`} stroke="#A7BCAA" />
@@ -237,19 +241,19 @@ function CompanyIllustration({ id, progress, reducedMotion }: IllustrationProps)
         <path d="M150 181h100" stroke="#AFBFAE" strokeWidth="3" strokeLinecap="round" />
         <rect x="150" y="202" width="124" height="59" rx="7" fill="#D5E0D4" />
         <path d="M162 243v-12m16 12v-19m16 19v-15m16 15v-27m16 27v-21m16 21v-32m16 32v-38" stroke="#8AA58E" strokeWidth="7" strokeLinecap="round" />
-        <motion.path d="m161 226 17-9 16 5 16-16 16 7 16-15 17-7" stroke={green} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ pathLength: animation.draw }} />
+        <motion.path d="m161 226 17-9 16 5 16-16 16 7 16-15 17-7" stroke={green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ pathLength: animation.draw }} />
         <path d="M151 282h54" stroke="#9FB39F" strokeWidth="3" strokeLinecap="round" />
         <rect x="230" y="274" width="44" height="15" rx="7.5" fill={green} />
       </motion.g>
       <motion.g style={{ opacity: animation.reveal, y: animation.rise }}>
-        <g transform="translate(57 134)">
-          <rect width="66" height="69" rx="18" fill={forest} stroke="#5E7C65" />
+        <g transform="translate(57 134)" filter={`url(#${id}-elev)`}>
+          <rect width="66" height="69" rx="18" fill={forest} stroke="#5E7C65" strokeWidth="1.2" />
           <circle cx="33" cy="25" r="9" fill="#AFC7B2" />
           <path d="M18 52c0-10 6-16 15-16s15 6 15 16" fill="#AFC7B2" />
         </g>
-        <g transform="translate(291 198)">
+        <g transform="translate(291 198)" filter={`url(#${id}-elev)`}>
           <rect width="64" height="64" rx="20" fill={green} />
-          <rect x="6" y="6" width="52" height="52" rx="15" stroke="#E4E8E3" strokeOpacity=".3" />
+          <rect x="6" y="6" width="52" height="52" rx="15" stroke="#E4E8E3" strokeOpacity=".35" />
           <motion.path d="m19 32 9 9 18-20" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ pathLength: animation.draw }} />
         </g>
         <circle cx="87" cy="246" r="6" fill={green} />

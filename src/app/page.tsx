@@ -1,1289 +1,699 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useId } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  ArrowLeft,
+  ArrowUpLeft,
+  Check,
+  Code2,
+  Globe2,
+  MessageCircle,
+  MousePointer2,
+  Plus,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+  Wrench,
+  Zap,
+} from "lucide-react";
 import ConversionStory from "../components/conversion-story";
 
-// Ali's verified WhatsApp phone number
-const WA_PHONE = "9647700683686";
-const formatWAUrl = (text: string) =>
-  `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(text)}`;
+const PHONE = "9647700683686";
+const whatsapp = (message: string) =>
+  `https://wa.me/${PHONE}?text=${encodeURIComponent(message)}`;
+const SERVICES = [
+  {
+    id: "landing",
+    name: "صفحة لإعلانك",
+    tag: "لعرض واحد. وهدف واضح.",
+    icon: Zap,
+    description:
+      "إعلانك يجيب المهتم. الصفحة تشرح العرض وتسهّل عليه يطلب أو يسأل.",
+    items: [
+      "صفحة واحدة، لحد ٧ أقسام، بلغة واحدة",
+      "ترتيب نصوصك وتصميم للموبايل",
+      "واتساب أو نموذج استفسار بسيط",
+      "ربط تحليلات وبيكسل واحد عند توفير الصلاحيات",
+    ],
+    boundary:
+      "المتجر الكامل، الدفع الإلكتروني وإدارة الإعلانات إلها اتفاق منفصل.",
+  },
+  {
+    id: "website",
+    name: "موقع لشركتك أو عيادتك",
+    tag: "مكان يعرّف الناس بشغلك.",
+    icon: Globe2,
+    description:
+      "خدماتك، معلوماتك وطرق التواصل بمكان واحد، حتى الزبون يعرفك قبل ما يحچي وياك.",
+    items: [
+      "لحد ٥ صفحات، بلغة واحدة",
+      "تنظيم المحتوى والصور اللي توفّرها",
+      "واتساب، خريطة ونموذج استفسار",
+      "أساسيات السرعة وتهيئة محركات البحث",
+    ],
+    boundary:
+      "طلبات المواعيد عبر التواصل؛ نظام الحجز واللغة الثانية إضافات منفصلة.",
+  },
+  {
+    id: "repair",
+    name: "إصلاح موقعك الحالي",
+    tag: "نحدد المشكلة. ونصلحها.",
+    icon: Wrench,
+    description:
+      "مشكلة بالموبايل؟ نموذج ما يشتغل؟ نحدد الخلل ونطاق الإصلاح قبل الاتفاق.",
+    items: [
+      "فحص المشكلة وتحديد العمل كتابةً",
+      "نسخة احتياطية إذا تسمح المنصة والصلاحيات",
+      "إصلاح المشاكل المتفق عليها",
+      "اختبار الأجزاء المعدّلة وملخّص بالتغييرات",
+    ],
+    boundary: "إعادة التصميم أو البناء الكامل إلها عرض منفصل بعد الفحص.",
+  },
+] as const;
+const FAQS = [
+  [
+    "شكد يكلّف الموقع؟",
+    "السعر يعتمد على الخدمة، عدد الصفحات والوظائف المطلوبة. احچيلي عن مشروعك وأرسل لك نطاق واضح وسعر ثابت قبل البدء. الدومين والاستضافة والاشتراكات الخارجية تُحسب بشكل منفصل وتعرف تكلفتها قبل الاشتراك.",
+  ],
+  [
+    "شلون يصير الدفع والتسليم؟",
+    "٥٠٪ للبدء، و٥٠٪ بعد مراجعتك للنسخة النهائية على رابط معاينة وقبل النشر وتسليم الملفات. نثبّت السعر، العملة وموعد التسليم كتابةً. مدة التنفيذ تبدأ بعد وصول الدفعة الأولى والمحتوى والصلاحيات المطلوبة.",
+  ],
+  [
+    "كم تعديل يشمل؟ وأكو دعم بعد التسليم؟",
+    "صفحة الإعلان وموقع الشركة يشملن جولتين تعديل، والإصلاح جولة مراجعة ضمن النطاق. كل جولة قائمة ملاحظات مجمّعة. الدعم ١٤ يوم لتصحيح أخطاء التنفيذ، والرد خلال يومَي عمل. المحتوى الجديد والوظائف الإضافية تُسعّر بشكل منفصل.",
+  ],
+  [
+    "الدومين والاستضافة يبقن باسمي؟",
+    "إي، الحسابات تنفتح باسمك وبإيميلك وتبقى ملكك، وإنت تدفع تكاليفها وتجديدها. آخذ صلاحية للعمل حسب الحاجة وأساعدك بالإعداد والربط. بعد استلام كامل المبلغ، تستلم ملفات المشروع والصلاحيات المتفق عليها.",
+  ],
+  [
+    "ما عندي موقع بعد، أگدر أبدأ؟",
+    "أكيد. نبدأ بهدف الموقع والخدمة اللي تريد تعرضها، وبعدها تحدد المحتوى والصور المتوفرة عندك. تگدر تراسلني بدون رابط، ونحدد سويّة شنو تحتاج قبل أي دفعة.",
+  ],
+  [
+    "هل الموقع يضمن مبيعات أكثر؟",
+    "نشتغل على وضوح العرض، تجربة الموبايل وسهولة التواصل. النتيجة تعتمد هم على الإعلان، الجمهور، السعر والمتابعة. ما أوعدك بعدد مبيعات أو درجة سرعة قبل القياس؛ نحدد شنو نقيس حتى نعرف وين نتحسن.",
+  ],
+];
 
-const formatNumber = (num: number) => num.toLocaleString("en-US");
+type Intent = "project" | "audit";
+// Connect this event to an analytics provider before using it for campaign reports.
+// Never include the message, URL, sector or other visitor-entered values.
+function track(event: string, source: string) {
+  window.dispatchEvent(
+    new CustomEvent("codewithali:conversion", { detail: { event, source } }),
+  );
+}
 
 export default function Home() {
-  const customSpendId = useId();
-  const websiteUrlId = useId();
-
-  // Booking Services & Options
-  const SV = [
-    {
-      name: "صفحة لإعلانك",
-      duration: "2–4 أيام",
-      desc: "تروّج لمنتج أو خدمة محددة؟ صفحة توضّح عرضك وتجهّز طلب الزبون على واتساب.",
-      subTech: "Next.js سريع للموبايل · ربط Meta Pixel وCAPI",
-      hot: true,
-      iconPath: <path d="M13 2 4 14h7l-1 8 9-12h-7z" />,
-    },
-    {
-      name: "موقع لشركتك أو عيادتك",
-      duration: "5–10 أيام",
-      desc: "تحتاج موقع رسمي؟ اعرض خدماتك بالعربي والإنجليزي، مع مسار واضح للتواصل أو طلب موعد.",
-      subTech: "عربي/إنجليزي RTL/LTR · تهيئة محركات البحث SEO",
-      hot: false,
-      iconPath: (
-        <>
-          <rect x="3" y="4" width="18" height="16" rx="2" />
-          <path d="M3 9h18M9 9v11" />
-        </>
-      ),
-    },
-    {
-      name: "إصلاح موقعك الحالي",
-      duration: "48 ساعة للنطاق المتفق عليه",
-      desc: "موقعك بطيء أو الطلب بيه معقّد؟ أفحصه وأحدد الإصلاحات المطلوبة قبل ما نتفق.",
-      subTech: "ضغط صور WebP · تنظيف الكود · مراجعة التتبّع",
-      hot: false,
-      iconPath: (
-        <>
-          <path d="M4 16a8 8 0 1 1 16 0" />
-          <path d="m12 16 4-5" />
-        </>
-      ),
-    },
-  ];
-
-  const HELP_OPT = "ما حددت باقة، أريد أستشيرك رأساً بمشروعي";
-  const SE = ["عيادة", "متجر إلكتروني", "عقارات", "خدمات"];
-  const WH = ["خلال 48 ساعة", "هذا الأسبوع", "مرن"];
-  const PRESET_SPENDS = [500, 1000, 2000, 5000, 10000];
-
-  // Booking Selection State
-  const [selectedService, setSelectedService] = useState(SV[0].name);
-  const [selectedSector, setSelectedSector] = useState("");
-  const [selectedTiming, setSelectedTiming] = useState("");
-  const [currentUrl, setCurrentUrl] = useState("");
-
-  // Simulated Typing State in Chat Mockup
-  const [isTyping, setIsTyping] = useState(false);
-  const [displayedMessage, setDisplayedMessage] = useState("");
-  const [messageTime, setMessageTime] = useState("");
-
-  // Leak Calculator State
-  const [spend, setSpend] = useState(2000);
-  const [isFixed, setIsFixed] = useState(false);
-
-  // Live Performance Navigation Metrics
-  const [fcpTime, setFcpTime] = useState<number | null>(null);
-  const [loadTime, setLoadTime] = useState<number | null>(null);
-
-  // Speed Race State
-  const [raceElapsed, setRaceElapsed] = useState({ legacy: 0, ali: 0 });
-  const [raceFinished, setRaceFinished] = useState({ legacy: false, ali: false });
-  const [hideStickyBar, setHideStickyBar] = useState(true);
-  // Refs for Canvases & Observers
-  const fxCanvasRef = useRef<HTMLCanvasElement>(null);
-  const leakCanvasRef = useRef<HTMLCanvasElement>(null);
-  const headerRef = useRef<HTMLElement>(null);
-  const bookRef = useRef<HTMLElement>(null);
-  const scrollBarRef = useRef<HTMLElement>(null);
-  const raceRafRef = useRef<number | null>(null);
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Composed WhatsApp message for Booking
-  const compiledWhatsAppMessage = [
+  const [intent, setIntent] = useState<Intent>("project");
+  const [service, setService] = useState("ما محدد بعد، أحتاج مساعدتك أختار");
+  const [sector, setSector] = useState("");
+  const [website, setWebsite] = useState("");
+  const [details, setDetails] = useState("");
+  const [error, setError] = useState("");
+  const [showSticky, setShowSticky] = useState(false);
+  const hero = useRef<HTMLElement>(null);
+  const book = useRef<HTMLElement>(null);
+  const urlInput = useRef<HTMLInputElement>(null);
+  const message = [
     "السلام عليكم علي،",
-    `أريد: ${selectedService}`,
-    currentUrl.trim() && `رابط موقعي: ${currentUrl.trim()}`,
-    selectedSector && `مجال شغلي: ${selectedSector}`,
-    selectedTiming && `وقت البدء: ${selectedTiming}`,
-    "خلّينا نتفق على المطلوب والتكلفة.",
+    intent === "audit"
+      ? "أريد تدقيق موقعي المجاني: وضوح العرض، تجربة الموبايل وسهولة التواصل."
+      : `أريد: ${service}`,
+    sector && `مجال شغلي: ${sector}`,
+    website.trim() && `رابط موقعي: ${website.trim()}`,
+    details.trim() && `عن المشروع: ${details.trim()}`,
+    intent === "audit"
+      ? "شنو أهم شي يحتاج تحسين؟"
+      : "ممكن نحدد نطاق العمل والسعر وموعد التسليم؟",
   ]
     .filter(Boolean)
     .join("\n");
 
-  /* ─────────────────────────────────────────────────────────────
-     1. TYPING ANIMATION IN CHAT MOCKUP
-  ───────────────────────────────────────────────────────────── */
-  const triggerTyping = (fullText: string) => {
-    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
-    setIsTyping(true);
-
-    const nowStr = new Date().toLocaleTimeString("ar-IQ", {
-      hour: "2-digit",
-      minute: "2-digit",
+  useEffect(() => {
+    const observer = new IntersectionObserver(() => {
+      const heroBottom = hero.current?.getBoundingClientRect().bottom ?? 0;
+      const bookTop = book.current?.getBoundingClientRect().top ?? Infinity;
+      setShowSticky(heroBottom < 0 && bookTop > window.innerHeight);
     });
-    setMessageTime(nowStr);
-
-    let charIndex = 0;
-    typingTimeoutRef.current = setTimeout(() => {
-      setIsTyping(false);
-      setDisplayedMessage("");
-
-      const stepTyping = () => {
-        charIndex = Math.min(charIndex + 5, fullText.length);
-        setDisplayedMessage(fullText.slice(0, charIndex));
-        if (charIndex < fullText.length) {
-          typingTimeoutRef.current = setTimeout(stepTyping, 14);
-        }
-      };
-      stepTyping();
-    }, 220);
-  };
-
-  useEffect(() => {
-    triggerTyping(compiledWhatsAppMessage);
-    return () => {
-      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
-    };
-  }, [selectedService, selectedSector, selectedTiming, currentUrl]);
-
-  /* ─────────────────────────────────────────────────────────────
-     2. IMMEDIATE LOAD & REAL METRICS
-  ───────────────────────────────────────────────────────────── */
-  useEffect(() => {
-    document.body.classList.add("rd");
-
-    const animateMetric = (val: number, setter: (n: number) => void) => {
-      const start = performance.now();
-      const duration = 700;
-      const step = (t: number) => {
-        const q = Math.min((t - start) / duration, 1);
-        setter(Math.round(val * (1 - Math.pow(1 - q, 3))));
-        if (q < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    };
-
-    // First Contentful Paint (FCP)
-    try {
-      const observer = new PerformanceObserver((list) => {
-        list.getEntries().forEach((entry) => {
-          if (entry.name === "first-contentful-paint") {
-            animateMetric(Math.round(entry.startTime), setFcpTime);
-          }
-        });
-      });
-      observer.observe({ type: "paint", buffered: true });
-    } catch {
-      setFcpTime(140);
-    }
-
-    // Navigation timing (Load Event End)
-    const checkNavigationTiming = () => {
-      const navEntry = performance.getEntriesByType("navigation")[0] as
-        | PerformanceNavigationTiming
-        | undefined;
-      if (navEntry && navEntry.loadEventEnd > 0) {
-        animateMetric(Math.round(navEntry.loadEventEnd), setLoadTime);
-        return true;
-      }
-      return false;
-    };
-
-    if (!checkNavigationTiming()) {
-      window.addEventListener("load", () => setTimeout(checkNavigationTiming, 50), {
-        once: true,
-      });
-    }
-
-    startRace();
-
-    return () => {
-      if (raceRafRef.current) cancelAnimationFrame(raceRafRef.current);
-    };
+    if (hero.current) observer.observe(hero.current);
+    if (book.current) observer.observe(book.current);
+    return () => observer.disconnect();
   }, []);
 
-  /* ─────────────────────────────────────────────────────────────
-     3. SPEED RACE ANIMATION
-  ───────────────────────────────────────────────────────────── */
-  const startRace = () => {
-    if (raceRafRef.current) cancelAnimationFrame(raceRafRef.current);
-    const start = performance.now();
-    const legacyTarget = 5200;
-    const aliTarget = 900;
+  function chooseIntent(next: Intent, source: string) {
+    setIntent(next);
+    setError("");
+    track("enquiry_start", source);
+  }
 
-    setRaceFinished({ legacy: false, ali: false });
-
-    const tick = (now: number) => {
-      const elapsed = now - start;
-      const legEl = Math.min(elapsed, legacyTarget);
-      const aliEl = Math.min(elapsed, aliTarget);
-
-      setRaceElapsed({ legacy: legEl, ali: aliEl });
-
-      const legDone = legEl >= legacyTarget;
-      const aliDone = aliEl >= aliTarget;
-      setRaceFinished({ legacy: legDone, ali: aliDone });
-
-      if (!legDone || !aliDone) {
-        raceRafRef.current = requestAnimationFrame(tick);
-      }
-    };
-    raceRafRef.current = requestAnimationFrame(tick);
-  };
-
-  /* ─────────────────────────────────────────────────────────────
-     4. HEADER SPEED STREAKS CANVAS (#fx)
-  ───────────────────────────────────────────────────────────── */
-  useEffect(() => {
-    const canvas = fxCanvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let W = 0;
-    let H = 0;
-    let lines: Array<{ x: number; y: number; l: number; v: number }> = [];
-    let mouseX = -1000;
-    let mouseY = 0;
-    let boost = 0;
-    let col = "#14231D";
-    let goCol = "#0B9A5B";
-    let frameCount = 0;
-    let rafId: number;
-
-    const isReduced = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
-
-    const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
-      W = canvas.clientWidth;
-      H = canvas.clientHeight;
-      canvas.width = W * dpr;
-      canvas.height = H * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      lines = Array.from({ length: Math.round(W / 14) }, () => ({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        l: 30 + Math.random() * 130,
-        v: 0.6 + Math.random() * 2.2,
-      }));
-    };
-
-    const ro = new ResizeObserver(resize);
-    ro.observe(canvas);
-    resize();
-
-    const handlePointerMove = (e: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseX = e.clientX - rect.left;
-      mouseY = e.clientY - rect.top;
-      boost = Math.min(boost + 4, 30);
-    };
-
-    const handlePointerLeave = () => {
-      mouseX = -1000;
-    };
-
-    const header = headerRef.current;
-    if (header) {
-      header.addEventListener("pointermove", handlePointerMove);
-      header.addEventListener("pointerleave", handlePointerLeave);
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const raw = website.trim();
+    if (intent === "audit" && !raw) {
+      setError(
+        "أضف رابط موقعك حتى أگدر أراجعه، أو اختَر «مشروع جديد» إذا بعد ما عندك موقع.",
+      );
+      urlInput.current?.focus();
+      return;
     }
-
-    const render = () => {
-      if (frameCount++ % 90 === 0) {
-        const style = getComputedStyle(document.documentElement);
-        col = style.getPropertyValue("--ink").trim() || col;
-        goCol = style.getPropertyValue("--go").trim() || goCol;
-      }
-
-      ctx.clearRect(0, 0, W, H);
-      boost *= 0.95;
-      ctx.lineWidth = 1.5;
-
-      for (const s of lines) {
-        const isNear = Math.hypot(s.x + s.l / 2 - mouseX, s.y - mouseY) < 150;
-        if (!isReduced) {
-          s.x -= s.v * (1 + boost * 0.12) * (isNear ? 3 : 1);
-        }
-        if (s.x + s.l < 0) {
-          s.x = W + 20;
-          s.y = Math.random() * H;
-        }
-
-        ctx.globalAlpha = isNear ? 0.95 : 0.14;
-        ctx.strokeStyle = isNear ? goCol : col;
-        ctx.beginPath();
-        ctx.moveTo(s.x, s.y);
-        ctx.lineTo(s.x + s.l * (1 + boost * 0.03), s.y);
-        ctx.stroke();
-      }
-
-      if (!isReduced) {
-        rafId = requestAnimationFrame(render);
-      }
-    };
-
-    render();
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      ro.disconnect();
-      if (header) {
-        header.removeEventListener("pointermove", handlePointerMove);
-        header.removeEventListener("pointerleave", handlePointerLeave);
-      }
-    };
-  }, []);
-
-  /* ─────────────────────────────────────────────────────────────
-     5. AD LEAK PHYSICS CANVAS SIMULATION (#leak)
-  ───────────────────────────────────────────────────────────── */
-  useEffect(() => {
-    const canvas = leakCanvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const T = 9000;
-    const HOLD = 2800;
-    const isReduced = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
-    const fontMain = "'IBM Plex Sans Arabic', sans-serif";
-    const fontKufi = "'Noto Kufi Arabic', sans-serif";
-
-    let W = 0;
-    let H = 0;
-    let t0 = performance.now();
-    let coins: Array<{ x: number; y: number; vy: number; s: number; vx?: number; tx?: number }> = [];
-    let priceTags: Array<{ t: string; x: number; y: number; a: number }> = [];
-    let splashParticles: Array<{ x: number; y: number; vx: number; vy: number; a: number; c: string }> = [];
-    let shake = 0;
-    let col = { f: "#E4E8E3", i: "#14231D", g: "#0B9A5B", b: "#E8391D" };
-    let isVisible = false;
-    let lastSpawn = 0;
-    let frameCount = 0;
-    let rafId: number;
-
-    const updateColors = () => {
-      const style = getComputedStyle(document.documentElement);
-      col = {
-        f: style.getPropertyValue("--ifg").trim() || col.f,
-        i: style.getPropertyValue("--ibg").trim() || col.i,
-        g: style.getPropertyValue("--go").trim() || col.g,
-        b: style.getPropertyValue("--bad").trim() || col.b,
-      };
-    };
-
-    const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
-      W = canvas.clientWidth;
-      H = canvas.clientHeight;
-      canvas.width = W * dpr;
-      canvas.height = H * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    const ro = new ResizeObserver(resize);
-    ro.observe(canvas);
-    resize();
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        isVisible = entries[0].isIntersecting;
-      },
-      { threshold: 0.15 }
-    );
-    io.observe(canvas);
-
-    const render = (now: number) => {
-      rafId = requestAnimationFrame(render);
-      if (!isVisible || !W) return;
-
-      const p = isFixed ? 0.1 : 0.5;
-      const elapsed = isReduced ? T : now - t0;
-      const q = Math.min(elapsed / T, 1);
-
-      if (!isReduced && elapsed > T + HOLD) {
-        t0 = performance.now();
-        coins = [];
-        priceTags = [];
-        splashParticles = [];
+    if (raw) {
+      try {
+        const parsed = new URL(
+          /^https?:\/\//i.test(raw) ? raw : `https://${raw}`,
+        );
+        if (
+          !["http:", "https:"].includes(parsed.protocol) ||
+          !parsed.hostname.includes(".") ||
+          /\s/.test(raw) ||
+          parsed.username ||
+          parsed.password
+        )
+          throw new Error("invalid");
+      } catch {
+        setError(
+          "اكتب رابط موقع صحيح، مثل example.com أو https://example.com.",
+        );
+        urlInput.current?.focus();
         return;
       }
-
-      if (frameCount++ % 90 === 0) updateColors();
-
-      const isCompact = W < 380;
-      const cx = W / 2;
-      const gy = H * 0.35;
-      const end = gy + (isCompact ? 36 : 46);
-      const bb = H - (isCompact ? 44 : 52);
-      const bt = H * 0.62;
-      const bw = Math.min(W * 0.38, 170);
-      const xl = W * 0.24;
-      const xr = W * 0.76;
-      const bh = bb - bt;
-      const getFill = (bucket: number) => bh * q * (bucket === 2 ? p : 1 - p);
-      const coinVal = spend / 128;
-      const gc = isFixed ? col.g : col.b;
-
-      if (q < 1 && now - lastSpawn > 70) {
-        lastSpawn = now;
-        coins.push({
-          x: cx + (Math.random() - 0.5) * 10,
-          y: 38,
-          vy: 2.5 + Math.random(),
-          s: 0,
-        });
-      }
-
-      ctx.clearRect(0, 0, W, H);
-
-      // Subtle instrument grid lines
-      ctx.globalAlpha = 0.06;
-      ctx.strokeStyle = col.f;
-      ctx.lineWidth = 1;
-      for (let yLine = 60; yLine < H - 40; yLine += 48) {
-        ctx.beginPath();
-        ctx.moveTo(16, yLine);
-        ctx.lineTo(W - 16, yLine);
-        ctx.stroke();
-      }
-
-      // Top Ad Source Capsule ("إعلانك")
-      ctx.globalAlpha = 0.12;
-      ctx.fillStyle = col.f;
-      ctx.beginPath();
-      ctx.roundRect(cx - 44, 4, 88, 24, 12);
-      ctx.fill();
-      ctx.globalAlpha = 0.3;
-      ctx.strokeStyle = col.f;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      ctx.globalAlpha = 1;
-      ctx.textAlign = "center";
-      ctx.fillStyle = col.f;
-      ctx.font = `700 ${isCompact ? 12 : 13}px ${fontMain}`;
-      ctx.fillText("إعلانك", cx, 20);
-
-      // Day counter pill ("يوم X / 30")
-      ctx.globalAlpha = 0.75;
-      ctx.font = `600 ${isCompact ? 11 : 12}px ${fontMain}`;
-      ctx.textAlign = "left";
-      ctx.fillText(`يوم ${Math.max(1, Math.ceil(q * 30))} / 30`, 8, 20);
-
-      // Curved guide paths from valve to collection chambers
-      ctx.globalAlpha = 0.14;
-      ctx.strokeStyle = col.b;
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
-      ctx.moveTo(cx - 20, gy);
-      ctx.quadraticCurveTo(xl, gy + 10, xl, bt - 6);
-      ctx.stroke();
-
-      ctx.strokeStyle = col.g;
-      ctx.beginPath();
-      ctx.moveTo(cx, end);
-      ctx.quadraticCurveTo(xr, end + 16, xr, bt - 6);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Conduit walls
-      ctx.globalAlpha = 0.45;
-      ctx.strokeStyle = col.f;
-      ctx.lineWidth = 2.5;
-      ctx.lineCap = "round";
-      ctx.beginPath();
-      ctx.moveTo(cx - 18, 32);
-      ctx.lineTo(cx - 18, gy - 16);
-      ctx.moveTo(cx - 18, gy + 16);
-      ctx.lineTo(cx - 18, end);
-      ctx.moveTo(cx + 18, 32);
-      ctx.lineTo(cx + 18, end);
-      ctx.stroke();
-
-      // Diagnostic Gate Valve
-      ctx.globalAlpha = 1;
-      ctx.strokeStyle = gc;
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      if (isFixed) {
-        ctx.moveTo(cx - 21, gy - 16);
-        ctx.lineTo(cx - 16, gy + 16);
-      } else {
-        ctx.moveTo(cx - 18, gy - 16);
-        ctx.lineTo(cx - 26, gy - 6);
-        ctx.lineTo(cx - 14, gy + 2);
-        ctx.lineTo(cx - 25, gy + 10);
-        ctx.lineTo(cx - 18, gy + 16);
-      }
-      ctx.stroke();
-
-      // Status labels next to valve
-      ctx.fillStyle = gc;
-      ctx.font = `700 ${isCompact ? 12.5 : 14}px ${fontMain}`;
-      ctx.textAlign = "left";
-      ctx.fillText(isFixed ? "موقع سريع" : "موقع بطيء", cx + 26, gy + 4);
-      ctx.textAlign = "right";
-      ctx.fillText(`${Math.round(p * 100)}% تسرّب`, cx - 30, gy - 22);
-
-      for (const k of coins) {
-        k.y += k.vy;
-        if (!k.s && k.y > gy) {
-          k.s = Math.random() < p ? 2 : 1;
-          if (k.s === 2) {
-            k.vx = -2.4;
-            priceTags.push({
-              t: `−$${Math.round(coinVal)}`,
-              x: cx - 34,
-              y: gy + 16,
-              a: 1,
-            });
-          }
-        }
-        if (k.s === 2 && k.vx !== undefined) {
-          k.x += k.vx;
-          k.vx *= 0.96;
-          k.vy += 0.12;
-          if (k.x < cx - 26) k.x += (xl - k.x) * 0.045;
-        }
-        if (k.s === 1 && k.y > end) {
-          k.x += (xr - k.x) * 0.065;
-          k.vy += 0.05;
-        }
-      }
-
-      coins = coins.filter((k) => {
-        const yLimit = bb - getFill(k.s);
-        const hit = k.s && k.y >= yLimit;
-        if (hit) {
-          if (k.s === 2) shake = 3.5;
-          for (let i = 0; i < 5; i++) {
-            splashParticles.push({
-              x: k.x,
-              y: yLimit,
-              vx: (Math.random() - 0.5) * 2.8,
-              vy: -1 - Math.random() * 2.2,
-              a: 1,
-              c: k.s === 2 ? col.b : col.g,
-            });
-          }
-        }
-        return !hit;
-      });
-
-      for (const k of coins) {
-        const tokenColor = k.s === 2 ? col.b : k.s === 1 ? col.g : col.f;
-        ctx.globalAlpha = 0.22;
-        ctx.fillStyle = tokenColor;
-        ctx.beginPath();
-        ctx.arc(k.x, k.y, 9.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = tokenColor;
-        ctx.beginPath();
-        ctx.arc(k.x, k.y, 6.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = k.s ? "#fff" : col.i;
-        ctx.font = "700 8.5px " + fontMain;
-        ctx.textAlign = "center";
-        ctx.fillText("$", k.x, k.y + 3);
-      }
-
-      for (const o of splashParticles) {
-        o.x += o.vx;
-        o.y += o.vy;
-        o.vy += 0.18;
-        o.a -= 0.045;
-        ctx.globalAlpha = Math.max(o.a, 0);
-        ctx.fillStyle = o.c;
-        ctx.beginPath();
-        ctx.arc(o.x, o.y, 1.8, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      splashParticles = splashParticles.filter((o) => o.a > 0);
-
-      for (const o of priceTags) {
-        o.x -= 0.32;
-        o.y += 0.22;
-        o.a -= 0.016;
-        ctx.globalAlpha = Math.max(o.a, 0);
-        ctx.fillStyle = col.b;
-        ctx.font = `700 ${isCompact ? 11.5 : 12.5}px ${fontMain}`;
-        ctx.textAlign = "right";
-        ctx.fillText(o.t, o.x, o.y);
-      }
-      priceTags = priceTags.filter((o) => o.a > 0);
-      ctx.globalAlpha = 1;
-
-      shake *= 0.85;
-
-      const drawBin = (
-        bx: number,
-        fillRatio: number,
-        binColor: string,
-        label: string,
-        val: number,
-        offset: number
-      ) => {
-        const left = bx - bw / 2 + offset;
-        const yTop = bb - bh * fillRatio;
-
-        // Subtle glass background inside chamber
-        ctx.globalAlpha = 0.06;
-        ctx.fillStyle = col.f;
-        ctx.beginPath();
-        ctx.roundRect(left, bt, bw, bh, 10);
-        ctx.fill();
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.roundRect(left, bt, bw, bh, 10);
-        ctx.clip();
-
-        if (fillRatio > 0) {
-          ctx.globalAlpha = 0.88;
-          ctx.fillStyle = binColor;
-          ctx.beginPath();
-          ctx.moveTo(left, bb);
-          ctx.lineTo(left, yTop);
-          for (let i = 0; i <= bw; i += 6) {
-            ctx.lineTo(left + i, yTop + Math.sin(i / 9 + now / 260) * 2);
-          }
-          ctx.lineTo(left + bw, bb);
-          ctx.closePath();
-          ctx.fill();
-
-          // Bright meniscus highlight on liquid surface
-          ctx.globalAlpha = 1;
-          ctx.strokeStyle = "#ffffff";
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          for (let i = 0; i <= bw; i += 6) {
-            const wy = yTop + Math.sin(i / 9 + now / 260) * 2;
-            if (i === 0) ctx.moveTo(left + i, wy);
-            else ctx.lineTo(left + i, wy);
-          }
-          ctx.stroke();
-        }
-        ctx.restore();
-
-        // Chamber border & measurement ticks
-        ctx.globalAlpha = 0.26;
-        ctx.strokeStyle = col.f;
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.roundRect(left, bt, bw, bh, 10);
-        ctx.stroke();
-
-        for (let tick = 1; tick <= 3; tick++) {
-          const ty = bt + (bh * tick) / 4;
-          ctx.beginPath();
-          ctx.moveTo(left + 4, ty);
-          ctx.lineTo(left + 10, ty);
-          ctx.stroke();
-        }
-        ctx.globalAlpha = 1;
-
-        ctx.textAlign = "center";
-        ctx.fillStyle = col.f;
-        ctx.font = `600 ${isCompact ? 11.5 : 13}px ${fontMain}`;
-        ctx.fillText(label, bx, H - (isCompact ? 24 : 28));
-        ctx.fillStyle = binColor;
-        ctx.font = `800 ${isCompact ? 17 : 21}px ${fontKufi}`;
-        ctx.fillText("$" + formatNumber(Math.round(val)), bx, H - 5);
-      };
-
-      drawBin(xl, q * p, col.b, "أموال ضائعة", spend * p * q, Math.sin(now / 30) * shake);
-      drawBin(xr, q * (1 - p), col.g, "أموال تعمل", spend * (1 - p) * q, 0);
-    };
-
-    render(performance.now());
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      ro.disconnect();
-      io.disconnect();
-    };
-  }, [spend, isFixed]);
-
-  /* ─────────────────────────────────────────────────────────────
-     6. TOP SCROLL PROGRESS BAR (#sp) & MOBILE STICKY BAR GUARD
-  ───────────────────────────────────────────────────────────── */
-  useEffect(() => {
-    let rafScroll: number;
-    const handleScroll = () => {
-      if (scrollBarRef.current) {
-        const fullScroll = document.documentElement.scrollHeight - window.innerHeight;
-        const pageProgress = fullScroll > 0 ? (window.scrollY / fullScroll) * 100 : 0;
-        scrollBarRef.current.style.width = `${pageProgress}%`;
-      }
-
-      const headerRect = headerRef.current?.getBoundingClientRect();
-      const leakRect = leakCanvasRef.current?.getBoundingClientRect();
-      const bookRect = bookRef.current?.getBoundingClientRect();
-      const inHero = headerRect ? headerRect.bottom > 120 : window.scrollY < 450;
-      const inLeakCanvas = leakRect
-        ? leakRect.top < window.innerHeight - 20 && leakRect.bottom > window.innerHeight - 120
-        : false;
-      const inBookOrBelow = bookRect ? bookRect.top < window.innerHeight - 60 : false;
-      setHideStickyBar(inHero || inLeakCanvas || inBookOrBelow);
-    };
-
-    const onScroll = () => {
-      cancelAnimationFrame(rafScroll);
-      rafScroll = requestAnimationFrame(handleScroll);
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    document.body.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-
-    const stickyIo = new IntersectionObserver(onScroll, {
-      threshold: [0, 0.05, 0.15, 0.5, 1],
-    });
-    if (headerRef.current) stickyIo.observe(headerRef.current);
-    if (bookRef.current) stickyIo.observe(bookRef.current);
-
-    handleScroll();
-
-    return () => {
-      cancelAnimationFrame(rafScroll);
-      stickyIo.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      document.body.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
-  /* ─────────────────────────────────────────────────────────────
-     7. SCROLL-DRIVEN REVEAL ANIMATIONS OBSERVER
-  ───────────────────────────────────────────────────────────── */
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-          }
-        });
-      },
-      { threshold: 0.05, rootMargin: "0px 0px -20px 0px" }
-    );
-
-    const elements = document.querySelectorAll(
-      ".scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale"
-    );
-    elements.forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight - 10) {
-        el.classList.add("in-view");
-      }
-      observer.observe(el);
-    });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-
-  const leakRatio = isFixed ? 0.1 : 0.5;
-  const monthlyLoss = Math.round(spend * leakRatio);
-
-  const timingIndex = WH.indexOf(selectedTiming);
+    }
+    setError("");
+    track("whatsapp_click", intent);
+    window.location.assign(whatsapp(message));
+  }
 
   return (
     <>
-      {/* Scroll Top Progress Bar */}
-      <i id="sp" ref={scrollBarRef} />
-
-      {/* ─────────────────────────────────────────────────────────────
-          1. HEADER SECTION (EXACT LEAD & CTA TO #book)
-      ───────────────────────────────────────────────────────────── */}
-      <header ref={headerRef}>
-        <canvas id="fx" ref={fxCanvasRef} />
-        <div className="w">
-          <div>
-            <p className="brand">CodeWithAli · مهندس برمجيات</p>
-            <h1 className="in">
-              تدفع على الإعلان، وموقعك يطرد الزبون قبل أن يفتح.
+      <a className="skip-link" href="#main">
+        تخطَّ إلى المحتوى
+      </a>
+      <nav className="site-nav wrap" aria-label="التنقل الرئيسي">
+        <a className="wordmark" href="#main" aria-label="CodeWithAli، الرئيسية">
+          <span className="brand-symbol">
+            <Code2 size={22} />
+          </span>
+          <b dir="ltr">
+            CodeWithAli<span>.</span>
+          </b>
+        </a>
+        <div className="nav-links">
+          <a href="#services">الخدمات</a>
+          <a href="#work">جرّب الفكرة</a>
+          <a href="#faq">أسئلتك</a>
+        </div>
+        <a
+          className="nav-contact"
+          href="#book"
+          onClick={() => chooseIntent("project", "navigation")}
+        >
+          نحچي عن مشروعك <ArrowUpLeft size={17} />
+        </a>
+      </nav>
+      <main id="main" tabIndex={-1}>
+        <header className="hero wrap" ref={hero}>
+          <div className="hero-copy">
+            <p className="eyebrow">
+              <span className="eyebrow-line" /> من الإعلان إلى أول محادثة
+            </p>
+            <h1>
+              إعلانك يجيب الاهتمام.
+              <br />
+              <span>
+                خلّي موقعك
+                <br className="desktop-break" /> يكمّل الحچي.
+              </span>
             </h1>
-            <p className="lead">
-              أنا علي، أبني صفحات ومواقع للعيادات والمتاجر والشركات اللي تعلن.
-              أوضّح عرضك، أحسّن سرعة الموبايل، وأسهّل وصول الزبون لواتساب.
+            <p className="hero-description">
+              أنا علي، مهندس برمجيات. أبني صفحات ومواقع توضّح عرضك، تشتغل بسلاسة
+              على الموبايل، وتسهّل على الزبون يتواصل وياك.
             </p>
-            <a className="btn" id="cta" href="#book">
-              <span>أرسل موقعك للتدقيق المجاني</span>
-              <span className="btn-arr">←</span>
-            </a>
+            <div className="hero-actions">
+              <a
+                className="btn"
+                href="#book"
+                onClick={() => chooseIntent("project", "hero")}
+              >
+                احچيلي عن مشروعك <ArrowLeft size={19} />
+              </a>
+              <a className="text-link" href="#work">
+                جرّب شلون تشتغل <ArrowLeft size={16} />
+              </a>
+            </div>
+            <p className="quiet hero-reassurance">
+              <ShieldCheck size={16} /> نحدد المطلوب والسعر قبل أي دفعة.
+            </p>
           </div>
-
-          <div className="race-stage">
-            {/* Live Speed Race Component */}
-            <div className="race" id="race">
-              {/* Legacy Slow Site Card */}
-              <div
-                className={`ph ph-slow${raceFinished.legacy ? " is-done" : ""}`}
-                style={{ "--c": "var(--bad)" } as React.CSSProperties}
-              >
-                <div className="scr">
-                  <div className="scr-top" aria-hidden="true">
-                    <span className="scr-notch" />
-                    <span className="scr-url">slow-site.com</span>
-                  </div>
-                  <i
-                    className="bar"
-                    style={{ width: `${(raceElapsed.legacy / 5200) * 100}%` }}
-                  />
-                  <div className="blk">
-                    <div
-                      className="blk-nav"
-                      style={{ opacity: raceElapsed.legacy / 5200 > 0.12 ? 0.5 : 0.16 }}
-                    >
-                      <i className="blk-dot" />
-                      <b style={{ height: "7px", width: "38%", opacity: 0.45 }} />
-                    </div>
-                    <div
-                      className="blk-card"
-                      style={{ opacity: raceElapsed.legacy / 5200 > 0.4 ? 0.55 : 0.15 }}
-                    >
-                      <span className="blk-card-tag" />
-                      <div className="blk-card-row">
-                        <div className="blk-card-lines">
-                          <i />
-                          <i />
-                        </div>
-                        <span className="blk-card-graphic" />
-                      </div>
-                    </div>
-                    <b style={{ height: "8px", width: "86%", opacity: raceElapsed.legacy / 5200 > 0.6 ? 0.42 : 0.12 }} />
-                    <b style={{ height: "8px", width: "64%", opacity: raceElapsed.legacy / 5200 > 0.72 ? 0.35 : 0.12 }} />
-                    <div
-                      className="blk-pills"
-                      style={{ opacity: raceElapsed.legacy / 5200 > 0.82 ? 0.45 : 0.12 }}
-                    >
-                      <i />
-                      <i />
-                      <i />
-                    </div>
-                    <div
-                      className="cta"
-                      style={{ opacity: raceElapsed.legacy / 5200 > 0.92 ? 0.85 : 0.14 }}
-                    >
-                      تواصل واتساب
-                    </div>
-                  </div>
-                  {raceFinished.legacy && (
-                    <div className="stamp">
-                      <span className="disp">الزبون غادر</span>
-                    </div>
-                  )}
-                </div>
-                <p className="nm">موقع بطيء</p>
-                <p
-                  className="tm disp"
-                  style={{ color: raceFinished.legacy ? "var(--bad)" : undefined }}
-                >
-                  <span>{(raceElapsed.legacy / 1000).toFixed(1)}</span> ث
-                </p>
-                <p className="sc sc-bad">PageSpeed موبايل: 34/100</p>
+          <div
+            className="hero-visual"
+            aria-label="مثال توضيحي لمسار من الإعلان إلى صفحة واضحة ثم استفسار واتساب"
+          >
+            <div className="visual-label">
+              <span>طريق أقصر للتواصل</span>
+              <span dir="ltr">THE CLICK → THE CONVERSATION</span>
+            </div>
+            <div className="journey-ad">
+              <span className="ad-icon">
+                <MousePointer2 size={19} />
+              </span>
+              <div>
+                <small>٠١ / الإعلان</small>
+                <b>لفت انتباهه. هسه شنو؟</b>
               </div>
-
-              {/* Fast Site Card */}
-              <div
-                className={`ph ph-fast${raceFinished.ali ? " is-done" : ""}`}
-                style={{ "--c": "var(--go)" } as React.CSSProperties}
-              >
-                <div className="scr relative">
-                  <div className="scr-top" aria-hidden="true">
-                    <span className="scr-notch" />
-                    <span className="scr-url scr-url-fast">deal.page</span>
-                  </div>
-                  <i
-                    className="bar"
-                    style={{ width: `${(raceElapsed.ali / 900) * 100}%` }}
-                  />
-                  <div className="blk">
-                    <div
-                      className="blk-nav"
-                      style={{ opacity: raceElapsed.ali / 900 > 0.12 ? 0.95 : 0.18 }}
-                    >
-                      <i className="blk-dot blk-dot-go" />
-                      <b style={{ height: "7px", width: "42%", opacity: 0.75 }} />
-                    </div>
-                    <div
-                      className="blk-card blk-card-fast"
-                      style={{ opacity: raceElapsed.ali / 900 > 0.38 ? 1 : 0.18 }}
-                    >
-                      <span className="blk-card-tag blk-tag-go" />
-                      <div className="blk-card-row">
-                        <div className="blk-card-lines blk-lines-go">
-                          <i />
-                          <i />
-                        </div>
-                        <span className="blk-card-graphic blk-graphic-go" />
-                      </div>
-                    </div>
-                    <b style={{ height: "8px", width: "86%", opacity: raceElapsed.ali / 900 > 0.58 ? 0.72 : 0.14 }} />
-                    <b style={{ height: "8px", width: "64%", opacity: raceElapsed.ali / 900 > 0.7 ? 0.5 : 0.14 }} />
-                    <div
-                      className="blk-pills"
-                      style={{ opacity: raceElapsed.ali / 900 > 0.8 ? 0.95 : 0.14 }}
-                    >
-                      <i className="active" />
-                      <i />
-                      <i />
-                    </div>
-                    <div
-                      className="cta cta-fast"
-                      style={{ opacity: raceElapsed.ali / 900 > 0.9 ? 1 : 0.16 }}
-                    >
-                      تواصل واتساب
-                    </div>
-                  </div>
-                  {raceFinished.ali && (
-                    <div className="fast-badge">
-                      أسرع بـ 5.7 أضعاف
-                    </div>
-                  )}
-                </div>
-                <p className="nm">موقع سريع</p>
-                <p
-                  className="tm disp"
-                  style={{ color: raceFinished.ali ? "var(--go)" : undefined }}
-                >
-                  <span>{(raceElapsed.ali / 1000).toFixed(1)}</span> ث
+              <ArrowLeft size={21} />
+            </div>
+            <div className="journey-line" aria-hidden="true" />
+            <div className="mini-page">
+              <div className="mini-bar">
+                <span className="mini-logo">
+                  <Code2 size={15} /> مشروعك
+                </span>
+                <span dir="ltr">your-business.iq</span>
+                <i aria-hidden="true">•••</i>
+              </div>
+              <div className="mini-content">
+                <span className="mini-step">٠٢ / صفحة توضّح العرض</span>
+                <h2>
+                  كل اللي يحتاجه.
+                  <br />
+                  <em>حتى ياخذ الخطوة.</em>
+                </h2>
+                <p>
+                  خدمتك واضحة. التفاصيل قريبة.
+                  <br />
+                  والتواصل بضغطة واحدة.
                 </p>
-                <p className="sc sc-go">PageSpeed موبايل: 92/100</p>
+                <div className="mini-features">
+                  <span>
+                    <Check size={13} /> عرض مفهوم
+                  </span>
+                  <span>
+                    <Check size={13} /> موبايل أولاً
+                  </span>
+                </div>
+                <div className="mini-button">
+                  <MessageCircle size={17} /> اسأل عن الخدمة{" "}
+                  <ArrowLeft size={16} />
+                </div>
+              </div>
+              <div className="mini-orbit" aria-hidden="true">
+                <div>
+                  <MousePointer2 size={38} strokeWidth={1.4} />
+                </div>
+                <span>وضوح</span>
+                <span>سهولة</span>
+                <span>تواصل</span>
               </div>
             </div>
-
-            <div className="race-footer">
-              <button type="button" className="lnk" id="again" onClick={startRace}>
-                <span style={{ fontSize: "1rem", lineHeight: 1 }}>↺</span>
-                <span>أعد المقارنة</span>
-              </button>
-
-              {/* Live Navigation Readout */}
-              <p className="real" id="real">
-                قياس هذه الزيارة: أول ظهور{" "}
-                <b id="m1">{fcpTime !== null ? fcpTime : "…"}</b> ms، واكتمال التحميل{" "}
-                <b id="m2">{loadTime !== null ? loadTime : "…"}</b> ms.
-              </p>
+            <div className="journey-message">
+              <span className="message-symbol">
+                <MessageCircle size={23} />
+              </span>
+              <div>
+                <small>٠٣ / بداية محادثة</small>
+                <p>
+                  السلام عليكم، مهتم بخدمتكم.
+                  <br />
+                  ممكن أعرف التفاصيل؟
+                </p>
+              </div>
+              <Check size={18} />
             </div>
+            <p className="visual-note">
+              مثال توضيحي للمسار، مو نتيجة مبيعات مضمونة.
+            </p>
+          </div>
+        </header>
+
+        <div className="audience-bar">
+          <div className="wrap">
+            <span>مصمّم على شغلك</span>
+            <b>عيادات</b>
+            <b>متاجر</b>
+            <b>عقارات</b>
+            <b>شركات</b>
+            <span className="audience-end">
+              <Smartphone size={17} /> الموبايل أولاً
+            </span>
           </div>
         </div>
-      </header>
 
-      {/* ─────────────────────────────────────────────────────────────
-          MARQUEE BANNER
-      ───────────────────────────────────────────────────────────── */}
-      <div className="mq">
-        <div className="tk">
-          <span>صفحات هبوط للإعلانات</span>
-          <span>مصمّم للموبايل</span>
-          <span><bdi>Meta Pixel</bdi> و<bdi>Conversion API</bdi></span>
-          <span>واتساب مباشر</span>
-          <span>عربي / <bdi>English</bdi></span>
-          <span>صفحات هبوط للإعلانات</span>
-          <span>مصمّم للموبايل</span>
-          <span><bdi>Meta Pixel</bdi> و<bdi>Conversion API</bdi></span>
-          <span>واتساب مباشر</span>
-          <span>عربي / <bdi>English</bdi></span>
-        </div>
-      </div>
-
-      {/* ─────────────────────────────────────────────────────────────
-          2. AD SPEND LEAK CALCULATOR
-      ───────────────────────────────────────────────────────────── */}
-      <section className="inv">
-        <div className="w">
-          <div className="scroll-reveal-right">
-            <h2>شكد يكلّفك ضياع نقرات الإعلان؟</h2>
-            <p className="s">
-              اختر ميزانيتك الشهرية وشوف فرق الهدر لما يفتح موقعك بسرعة بدل ما يغادر الزبون.
+        <section
+          id="services"
+          className="section wrap"
+          aria-labelledby="services-title"
+        >
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">٠١ / نختار البداية المناسبة</p>
+              <h2 id="services-title">شنو يحتاج مشروعك؟</h2>
+            </div>
+            <p>
+              عرض واحد، موقع متكامل، أو إصلاح محدد.
+              <br />
+              نبدأ باحتياجك ونوضّح شنو يشمل الشغل.
             </p>
-
-            <div className="chips pre" id="pre">
-              {PRESET_SPENDS.map((val) => (
-                <button
-                  key={val}
-                  type="button"
-                  className="chip"
-                  aria-pressed={spend === val}
-                  onClick={() => setSpend(val)}
+          </div>
+          <div className="services-grid">
+            {SERVICES.map((item, index) => (
+              <article
+                className={`service-card${index === 0 ? " service-featured" : ""}`}
+                key={item.id}
+              >
+                <div className="service-top">
+                  <item.icon size={25} strokeWidth={1.6} />
+                  <span dir="ltr">0{index + 1}</span>
+                </div>
+                <p className="service-tag">{item.tag}</p>
+                <h3>{item.name}</h3>
+                <p className="service-description">{item.description}</p>
+                <ul>
+                  {item.items.map((text) => (
+                    <li key={text}>
+                      <Check size={15} />
+                      <span>{text}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="service-boundary">{item.boundary}</p>
+                <a
+                  href="#book"
+                  className="service-link"
+                  onClick={() => {
+                    setService(item.name);
+                    chooseIntent("project", item.id);
+                  }}
                 >
-                  <bdi dir="ltr">${formatNumber(val)}</bdi>
-                </button>
-              ))}
-            </div>
-
-            <label htmlFor={customSpendId} className="lab">
-              أو اكتب ميزانيتك بالدولار
-              <input
-                id={customSpendId}
-                type="number"
-                value={spend}
-                min={100}
-                step={100}
-                inputMode="numeric"
-                onChange={(e) => setSpend(Math.max(100, Number(e.target.value) || 100))}
-              />
-            </label>
-
-            <p className={`yr${isFixed ? " is-fixed" : ""}`} id="yr" aria-live="polite">
-              {isFixed ? (
-                <>
-                  بعد التسريع: توفّر{" "}
-                  <bdi dir="ltr">${formatNumber(Math.round(spend * 0.4))}</bdi> شهرياً من
-                  ميزانيتك.
-                </>
-              ) : (
-                <>
-                  مع البطء: <bdi dir="ltr">${formatNumber(monthlyLoss)}</bdi> تضيع شهرياً (
-                  <bdi dir="ltr">${formatNumber(monthlyLoss * 12)}</bdi> سنوياً).
-                </>
-              )}
-            </p>
-
-            <button
-              type="button"
-              className="fixb"
-              id="fix"
-              aria-pressed={isFixed}
-              onClick={() => setIsFixed(!isFixed)}
-            >
-              {isFixed ? "ارجع للوضع الحالي" : "شوف الوضع بعد التسريع"}
-            </button>
+                  نحچي عن {index === 2 ? "الإصلاح" : "المشروع"}{" "}
+                  <ArrowLeft size={17} />
+                </a>
+              </article>
+            ))}
           </div>
-
-          <div className="lk scroll-reveal-left delay-1">
-            <canvas
-              id="leak"
-              ref={leakCanvasRef}
-              aria-label="محاكاة لتأثير سرعة الموقع على ميزانية الإعلان"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ─────────────────────────────────────────────────────────────
-          3. COMMERCIAL FUNNELS & CRO SHOWCASE (#work)
-          Interactive Conversion Rate Optimization (CRO) & Motion Graphic Studio
-      ───────────────────────────────────────────────────────────── */}
-      <ConversionStory onChooseService={(sector) => {
-        setSelectedService(SV[0].name);
-        setSelectedSector(sector);
-      }} />
-
-      {/* ─────────────────────────────────────────────────────────────
-          4 & 5. PACKAGES & BOOKING FUNNEL (#book)
-      ───────────────────────────────────────────────────────────── */}
-      <section className="book" id="book" ref={bookRef}>
-        <div className="w two">
-          <div className="scroll-reveal-right">
-            <h2>شنو يحتاج موقعك؟ خلّينا نحدده.</h2>
-
-            {/* Step 1: Package Selection */}
-            <p className="stp">
-              <i>1</i>اختَر الباقة المناسبة
-            </p>
-            <div id="svcs" role="radiogroup" aria-label="الباقة">
-              {SV.map((pkg, idx) => {
-                const isChecked = selectedService === pkg.name;
-                return (
-                  <button
-                    key={pkg.name}
-                    type="button"
-                    className="sc2 scroll-reveal"
-                    style={{ transitionDelay: `${idx * 60}ms` }}
-                    role="radio"
-                    aria-checked={isChecked}
-                    onClick={() => setSelectedService(pkg.name)}
-                  >
-                    <span className="ic">
-                      <svg
-                        viewBox="0 0 24 24"
-                        width="22"
-                        height="22"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        {pkg.iconPath}
-                      </svg>
-                    </span>
-                    <span className="tt2">
-                      <span>
-                        {pkg.name}
-                        {pkg.hot && (
-                          <em className="hot" style={{ fontStyle: "normal" }}>
-                            الأكثر طلباً
-                          </em>
-                        )}
-                      </span>
-                      <span className="pl">{pkg.duration}</span>
-                    </span>
-                    <span className="ds">{pkg.desc}</span>
-                    <span className="sub-tech">{pkg.subTech}</span>
-                    <span className="ck">✓</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Helper Button */}
-            <button
-              type="button"
-              className="help-pick scroll-reveal"
-              id="helpPick"
-              aria-pressed={selectedService === HELP_OPT}
+          <p className="section-footnote">
+            مو متأكد شنو تختار؟{" "}
+            <a
+              href="#book"
               onClick={() => {
-                setSelectedService(HELP_OPT);
-                const el = document.getElementById("url");
-                el?.focus();
+                setService("ما محدد بعد، أحتاج مساعدتك أختار");
+                chooseIntent("project", "help");
               }}
             >
-              <span>ما تريد تختار وتدوخ؟ اضغط هنا وراسلني رأساً</span>
-              <span className="btn-arr">←</span>
-            </button>
+              احچيلي فكرتك ونحددها سويّة <ArrowLeft size={15} />
+            </a>
+          </p>
+        </section>
 
-            {/* Step 2: Website URL */}
-            <label className="stp" htmlFor={websiteUrlId} style={{ marginTop: "20px" }}>
-              <i>2</i>رابط موقعك الحالي (اختياري)
-            </label>
-            <input
-              type="url"
-              id={websiteUrlId}
-              placeholder="https://"
-              value={currentUrl}
-              onChange={(e) => setCurrentUrl(e.target.value)}
-            />
+        <ConversionStory
+          onChooseService={(selectedSector) => {
+            setService(SERVICES[0].name);
+            setSector(selectedSector);
+            chooseIntent("project", "interactive_example");
+          }}
+        />
 
-            {/* Collapsible Details */}
-            <details className="opt-box">
-              <summary>أضف تفاصيل — اختياري</summary>
-              <div className="opt-body">
-                <p className="q" style={{ marginTop: "4px" }}>
-                  مجال شغلك
-                </p>
-                <div className="chips" id="secs">
-                  {SE.map((sec) => (
-                    <button
-                      key={sec}
-                      type="button"
-                      className="chip"
-                      aria-pressed={selectedSector === sec}
-                      onClick={() =>
-                        setSelectedSector((prev) => (prev === sec ? "" : sec))
-                      }
-                    >
-                      {sec}
-                    </button>
-                  ))}
-                </div>
-
-                <p className="q">وقت البدء</p>
-                <div
-                  className="seg"
-                  id="whn"
-                  style={
-                    {
-                      "--x": Math.max(0, timingIndex),
-                      "--so": timingIndex >= 0 ? 1 : 0,
-                    } as React.CSSProperties
-                  }
-                >
-                  <i />
-                  {WH.map((tm) => (
-                    <button
-                      key={tm}
-                      type="button"
-                      aria-pressed={selectedTiming === tm}
-                      onClick={() =>
-                        setSelectedTiming((prev) => (prev === tm ? "" : tm))
-                      }
-                    >
-                      {tm}
-                    </button>
-                  ))}
-                </div>
+        <section
+          className="process-section section"
+          aria-labelledby="process-title"
+        >
+          <div className="wrap">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">٠٢ / شغل واضح من البداية</p>
+                <h2 id="process-title">
+                  تعرف شنو راح تستلم.
+                  <br />
+                  قبل ما نبدأ.
+                </h2>
               </div>
-            </details>
-          </div>
-
-          {/* Sticky WhatsApp Phone Mockup */}
-          <div className="sticky scroll-reveal-left delay-2">
-            <div className="wp">
-              <div className="wp-bezel" aria-hidden="true">
-                <span className="wp-speaker" />
-              </div>
-              <div className="wh">
-                <span className="wa">
-                  <svg viewBox="0 0 64 64" width="22" height="22">
-                    <path
-                      d="M30 12 10 32l20 20"
-                      fill="none"
-                      stroke="#E4E8E3"
-                      strokeWidth="9"
-                      strokeLinecap="square"
-                    />
-                    <path
-                      d="M40 32h20"
-                      stroke="#0B9A5B"
-                      strokeWidth="6"
-                      strokeLinecap="square"
-                    />
-                  </svg>
-                  <i className="wa-online" aria-hidden="true" />
-                </span>
-                <div>
-                  <b>علي · CodeWithAli</b>
-                  <small>معاينة رسالتك</small>
-                </div>
-              </div>
-
-              <div className="wc">
-                <p className="wd">الرسالة الجاهزة</p>
-                <div className="bub" id="msg" hidden={isTyping}>
-                  <span className="bub-txt">{displayedMessage}</span>
-                  <small className="mt" id="mt">
-                    <span>{messageTime}</span>
-                    <i className="mt-ticks" aria-hidden="true">✓✓</i>
-                  </small>
-                </div>
-                <div className="typ" id="typ" hidden={!isTyping}>
-                  <i />
-                  <i />
-                  <i />
-                </div>
-              </div>
-
-              <div className="wf">
-                <a
-                  className="send"
-                  id="send"
-                  href={formatWAUrl(compiledWhatsAppMessage)}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <span>راسلني رأساً على واتساب وخلّينا نبدأ</span>
-                  <span className="btn-arr">←</span>
-                </a>
-              </div>
+              <p>
+                تتواصل وياي مباشرة من أول رسالة
+                <br />
+                إلى مراجعة الموقع وتسليمه.
+              </p>
             </div>
+            <ol className="process-grid">
+              <li>
+                <span>01</span>
+                <h3>نحچي ونحدد</h3>
+                <p>
+                  نفهم هدفك، جمهورك والمحتوى المتوفر. تستلم نطاق عمل وسعر وموعد
+                  تسليم مكتوب.
+                </p>
+              </li>
+              <li>
+                <span>02</span>
+                <h3>تشوف وتراجع</h3>
+                <p>
+                  بعد دفعة البدء، أبني الموقع وتراجعه على رابط معاينة. نجمع
+                  الملاحظات ضمن جولات التعديل المتفق عليها.
+                </p>
+              </li>
+              <li>
+                <span>03</span>
+                <h3>ننشر ونسلّم</h3>
+                <p>
+                  بعد المراجعة والدفعة الأخيرة، ننشر الموقع. الحسابات باسمك،
+                  ودعم أخطاء التنفيذ لمدة ١٤ يوم.
+                </p>
+              </li>
+            </ol>
+          </div>
+        </section>
 
-            <p className="note" style={{ textAlign: "center" }}>
-              نتفق على المطلوب والسعر قبل أي دفعة.
+        <section className="audit-section wrap" aria-labelledby="audit-title">
+          <div className="audit-icon">
+            <Sparkles size={28} />
+          </div>
+          <div>
+            <p className="eyebrow">عندك موقع وتعلن عليه؟</p>
+            <h2 id="audit-title">خلّيني أشوف وين تصعب الخطوة.</h2>
+            <p>
+              أراجع وضوح العرض، تجربة الموبايل وطريق التواصل، وأحدد لك أهم
+              ملاحظات التحسين.
             </p>
           </div>
-        </div>
-      </section>
+          <a
+            className="btn btn-outline"
+            href="#book"
+            onClick={() => chooseIntent("audit", "free_review")}
+          >
+            اطلب تدقيق مجاني <ArrowLeft size={18} />
+          </a>
+        </section>
 
-      {/* ─────────────────────────────────────────────────────────────
-          FOOTER & MOBILE STICKY CTA
-      ───────────────────────────────────────────────────────────── */}
-      <footer className="w">© 2026 CodeWithAli. مصمَّم ومبرمج يدوياً.</footer>
-      <a className={`fix${hideStickyBar ? " is-hidden" : ""}`} href="#book">
-        <span>راسلني رأساً على واتساب وخلّينا نبدأ</span>
-        <span className="btn-arr">←</span>
+        <section
+          id="faq"
+          className="faq-section section wrap"
+          aria-labelledby="faq-title"
+        >
+          <div>
+            <p className="eyebrow">٠٣ / قبل ما تسأل</p>
+            <h2 id="faq-title">
+              اتفاق واضح.
+              <br />
+              وشغل ترتاح له.
+            </h2>
+            <p className="quiet">تفاصيل تساعدك تقرر على راحتك.</p>
+          </div>
+          <div className="faq-list">
+            {FAQS.map(([question, answer]) => (
+              <details key={question}>
+                <summary>
+                  {question}
+                  <Plus size={19} aria-hidden="true" />
+                </summary>
+                <p>{answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section
+          id="book"
+          className="booking-section section"
+          ref={book}
+          aria-labelledby="book-title"
+        >
+          <div className="wrap">
+            <div className="booking-heading">
+              <p className="eyebrow">الخطوة الجاية بسيطة</p>
+              <h2 id="book-title">خلّينا نحچي عن شغلك.</h2>
+              <p>اختَر اللي تحتاجه. راجع رسالتك. وكمّل على واتساب.</p>
+            </div>
+            <div className="booking-grid">
+              <form onSubmit={submit} noValidate>
+                <noscript>
+                  <p className="field-hint">
+                    للتواصل مباشرة:{" "}
+                    <a
+                      className="text-link"
+                      href={whatsapp(
+                        "السلام عليكم علي، أريد أحچي وياك عن موقعي.",
+                      )}
+                    >
+                      افتح واتساب مع علي
+                    </a>
+                  </p>
+                </noscript>
+                <fieldset className="intent-switch">
+                  <legend className="sr-only">نوع الاستفسار</legend>
+                  {(
+                    [
+                      ["project", "مشروع جديد أو إصلاح"],
+                      ["audit", "تدقيق مجاني لموقعي"],
+                    ] as const
+                  ).map(([value, label]) => (
+                    <label key={value}>
+                      <input
+                        type="radio"
+                        name="intent"
+                        value={value}
+                        checked={intent === value}
+                        onChange={() => chooseIntent(value, "enquiry_form")}
+                      />
+                      <span>{label}</span>
+                    </label>
+                  ))}
+                </fieldset>
+                {intent === "project" && (
+                  <div className="form-field">
+                    <label htmlFor="service">شنو تحتاج؟</label>
+                    <select
+                      id="service"
+                      name="service"
+                      value={service}
+                      onChange={(event) => setService(event.target.value)}
+                    >
+                      <option>ما محدد بعد، أحتاج مساعدتك أختار</option>
+                      {SERVICES.map((item) => (
+                        <option key={item.id}>{item.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                <div className="form-field">
+                  <label htmlFor="website">
+                    رابط موقعك{" "}
+                    {intent === "audit" ? "(مطلوب للتدقيق)" : "(اختياري)"}
+                  </label>
+                  <input
+                    ref={urlInput}
+                    id="website"
+                    name="website"
+                    type="text"
+                    inputMode="url"
+                    autoComplete="url"
+                    dir="ltr"
+                    spellCheck={false}
+                    placeholder="example.com"
+                    value={website}
+                    maxLength={500}
+                    required={intent === "audit"}
+                    aria-invalid={!!error}
+                    aria-describedby={error ? "website-error" : "website-hint"}
+                    onChange={(event) => {
+                      setWebsite(event.target.value);
+                      setError("");
+                    }}
+                  />
+                  <p id="website-hint" className="field-hint">
+                    {intent === "audit"
+                      ? "أرسل رابط الصفحة اللي تريد أراجعها."
+                      : "ما عندك موقع؟ اتركه فارغ ونبدأ من فكرتك."}
+                  </p>
+                  <p id="website-error" className="field-error" role="alert">
+                    {error}
+                  </p>
+                </div>
+                <details className="extra-details">
+                  <summary>
+                    أضف تفاصيل عن مشروعك <span>اختياري</span>
+                    <Plus size={16} />
+                  </summary>
+                  <div className="form-field">
+                    <label htmlFor="sector">مجال شغلك</label>
+                    <select
+                      id="sector"
+                      name="sector"
+                      value={sector}
+                      onChange={(event) => setSector(event.target.value)}
+                    >
+                      <option value="">اختَر المجال</option>
+                      <option>عيادة</option>
+                      <option>متجر إلكتروني</option>
+                      <option>عقارات</option>
+                      <option value="خدمات">شركة أو خدمات</option>
+                      <option>مجال آخر</option>
+                    </select>
+                  </div>
+                  <div className="form-field">
+                    <label htmlFor="project-details">
+                      شنو تريد الموقع يساعدك بيه؟
+                    </label>
+                    <textarea
+                      id="project-details"
+                      name="details"
+                      maxLength={700}
+                      rows={3}
+                      placeholder="مثلاً: أعلن على خدمة وأريد أسهّل استقبال الاستفسارات."
+                      value={details}
+                      onChange={(event) => setDetails(event.target.value)}
+                    />
+                  </div>
+                </details>
+                <button className="btn submit-enquiry" type="submit">
+                  <MessageCircle size={20} /> افتح رسالتي على واتساب{" "}
+                  <ArrowUpLeft size={18} />
+                </button>
+                <p className="field-hint">
+                  يفتح واتساب؛ تراجع الرسالة وتضغط إرسال بنفسك.
+                </p>
+              </form>
+              <aside
+                className="message-preview"
+                aria-label="معاينة رسالة واتساب"
+              >
+                <div className="preview-heading">
+                  <span className="ali-avatar">ع</span>
+                  <div>
+                    <b>علي · CodeWithAli</b>
+                    <p>تتواصل وياي مباشرة</p>
+                  </div>
+                  <MessageCircle size={22} />
+                </div>
+                <p className="preview-label">معاينة رسالتك</p>
+                <p className="message-bubble">{message}</p>
+                <div className="preview-footer">
+                  <ShieldCheck size={18} />
+                  <p>
+                    نتفق على المطلوب والتكلفة قبل أي دفعة.
+                    <br />
+                    تفاصيلك تبقى هنا إلى أن تختار تفتح واتساب.
+                  </p>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer className="site-footer wrap">
+        <a className="wordmark" href="#main" dir="ltr">
+          CodeWithAli.
+        </a>
+        <p>مواقع توضّح شغلك. وتسهّل التواصل وياك.</p>
+        <span>© 2026 CodeWithAli</span>
+      </footer>
+      <a
+        className={`mobile-contact${showSticky ? " is-visible" : ""}`}
+        href="#book"
+        tabIndex={showSticky ? 0 : -1}
+        aria-hidden={!showSticky}
+        onClick={() => chooseIntent("project", "mobile_sticky")}
+      >
+        <MessageCircle size={19} /> نحچي عن مشروعك <ArrowLeft size={18} />
       </a>
     </>
   );

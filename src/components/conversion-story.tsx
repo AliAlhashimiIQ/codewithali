@@ -13,7 +13,7 @@ import { EXAMPLES, type ExampleId } from "./conversion-examples";
 import { SectorVisual } from "./conversion-visuals";
 import "./conversion-story.css";
 
-const SIMPLE_QUERY = "(prefers-reduced-motion: reduce), (max-height: 480px)";
+const SIMPLE_QUERY = "(prefers-reduced-motion: reduce), (max-height: 700px), (max-width: 360px)";
 function subscribeSimple(callback: () => void) {
   const query = window.matchMedia(SIMPLE_QUERY);
   query.addEventListener("change", callback);
@@ -215,7 +215,7 @@ export default function ConversionStory({ onChooseService }: { onChooseService: 
                       </div>
                     </motion.div>
                     <motion.button className="cstory-order" ref={orderButton} type="button" disabled={!ready}
-                      onClick={prepareMessage} whileTap={simple ? undefined : { scale: 0.97 }}>
+                      onClick={prepareMessage} whileTap={simple ? undefined : { scale: 0.96 }}>
                       <MessageCircle size={17} /><span>{ready ? example.action : "اعرف التفاصيل"}</span><ArrowUpLeft size={16} />
                     </motion.button>
                     <p className="cstory-demoNote">{ready ? "تجربة فقط · ما تنرسل أي رسالة" : "عرضك واضح من أول نظرة"}</p>

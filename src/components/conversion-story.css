@@ -869,3 +869,25 @@ body:has([data-story-visible="true"]) .fix {
     scroll-behavior: auto !important;
   }
 }
+
+/* Keep labels legible; reduced opacity weakened contrast on both themes. */
+.cstory-eyebrow span:last-child,
+.cstory-sceneNumber,
+.cstory-timeline i { opacity: 1; }
+.cstory-track.cstory-simple { height: auto; }
+.cstory-simple .cstory-sticky { position: relative; min-height: 0; }
+.cstory-simple .cstory-stage { height: auto; min-height: 430px; }
+.cstory-simple .cstory-frame { height: auto; }
+.cstory-simple .cstory-composition { height: auto; min-height: 360px; }
+.cstory-simple .cstory-copy { min-height: 190px; }
+.cstory-simple .cstory-message { overflow-y: auto; }
+@media (prefers-color-scheme: dark) {
+  .cstory-order { color: var(--deep); }
+}
+@media (max-width: 760px) {
+  .cstory-simple .cstory-composition { grid-template-rows: minmax(190px, auto) auto; }
+  .cstory-simple .cstory-art { min-height: 190px; }
+  .cstory-simple .cstory-copy p { font-size: .8rem; }
+  .cstory-simple .cstory-exampleLabel { font-size: .7rem; }
+  .cstory-simple .cstory-copy h4 { font-size: 1.1rem; }
+}

@@ -8,7 +8,6 @@ import {
   Code2,
   Globe2,
   MessageCircle,
-  MousePointer2,
   Plus,
   ShieldCheck,
   Smartphone,
@@ -17,6 +16,8 @@ import {
   Zap,
 } from "lucide-react";
 import ConversionStory from "../components/conversion-story";
+import HeroJourney from "../components/hero-journey";
+import SectionMotion from "../components/section-motion";
 
 const PHONE = "9647700683686";
 const whatsapp = (message: string) =>
@@ -213,6 +214,7 @@ export default function Home() {
         </a>
       </nav>
       <main id="main" tabIndex={-1}>
+        <SectionMotion />
         <header className="hero wrap" ref={hero}>
           <div className="hero-copy">
             <p className="eyebrow">
@@ -246,85 +248,7 @@ export default function Home() {
               <ShieldCheck size={16} /> نحدد المطلوب والسعر قبل أي دفعة.
             </p>
           </div>
-          <div
-            className="hero-visual"
-            aria-label="مثال توضيحي لمسار من الإعلان إلى صفحة واضحة ثم استفسار واتساب"
-          >
-            <div className="visual-label">
-              <span>طريق أقصر للتواصل</span>
-              <span dir="ltr">THE CLICK → THE CONVERSATION</span>
-            </div>
-            <div className="journey-ad">
-              <span className="ad-icon">
-                <MousePointer2 size={19} />
-              </span>
-              <div>
-                <small>٠١ / الإعلان</small>
-                <b>لفت انتباهه. هسه شنو؟</b>
-              </div>
-              <ArrowLeft size={21} />
-            </div>
-            <div className="journey-line" aria-hidden="true" />
-            <div className="mini-page">
-              <div className="mini-bar">
-                <span className="mini-logo">
-                  <Code2 size={15} /> مشروعك
-                </span>
-                <span dir="ltr">your-business.iq</span>
-                <i aria-hidden="true">•••</i>
-              </div>
-              <div className="mini-content">
-                <span className="mini-step">٠٢ / صفحة توضّح العرض</span>
-                <h2>
-                  كل اللي يحتاجه.
-                  <br />
-                  <em>حتى ياخذ الخطوة.</em>
-                </h2>
-                <p>
-                  خدمتك واضحة. التفاصيل قريبة.
-                  <br />
-                  والتواصل بضغطة واحدة.
-                </p>
-                <div className="mini-features">
-                  <span>
-                    <Check size={13} /> عرض مفهوم
-                  </span>
-                  <span>
-                    <Check size={13} /> موبايل أولاً
-                  </span>
-                </div>
-                <div className="mini-button">
-                  <MessageCircle size={17} /> اسأل عن الخدمة{" "}
-                  <ArrowLeft size={16} />
-                </div>
-              </div>
-              <div className="mini-orbit" aria-hidden="true">
-                <div>
-                  <MousePointer2 size={38} strokeWidth={1.4} />
-                </div>
-                <span>وضوح</span>
-                <span>سهولة</span>
-                <span>تواصل</span>
-              </div>
-            </div>
-            <div className="journey-message">
-              <span className="message-symbol">
-                <MessageCircle size={23} />
-              </span>
-              <div>
-                <small>٠٣ / بداية محادثة</small>
-                <p>
-                  السلام عليكم، مهتم بخدمتكم.
-                  <br />
-                  ممكن أعرف التفاصيل؟
-                </p>
-              </div>
-              <Check size={18} />
-            </div>
-            <p className="visual-note">
-              مثال توضيحي للمسار، مو نتيجة مبيعات مضمونة.
-            </p>
-          </div>
+          <HeroJourney />
         </header>
 
         <div className="audience-bar">
@@ -345,7 +269,7 @@ export default function Home() {
           className="section wrap"
           aria-labelledby="services-title"
         >
-          <div className="section-heading">
+          <div className="section-heading" data-reveal>
             <div>
               <p className="eyebrow">٠١ / نختار البداية المناسبة</p>
               <h2 id="services-title">شنو يحتاج مشروعك؟</h2>
@@ -361,6 +285,7 @@ export default function Home() {
               <article
                 className={`service-card${index === 0 ? " service-featured" : ""}`}
                 key={item.id}
+                data-reveal={index}
               >
                 <div className="service-top">
                   <item.icon size={25} strokeWidth={1.6} />
@@ -419,7 +344,7 @@ export default function Home() {
           aria-labelledby="process-title"
         >
           <div className="wrap">
-            <div className="section-heading">
+            <div className="section-heading" data-reveal>
               <div>
                 <p className="eyebrow">٠٢ / شغل واضح من البداية</p>
                 <h2 id="process-title">
@@ -435,7 +360,7 @@ export default function Home() {
               </p>
             </div>
             <ol className="process-grid">
-              <li>
+              <li data-reveal>
                 <span>01</span>
                 <h3>نحچي ونحدد</h3>
                 <p>
@@ -443,7 +368,7 @@ export default function Home() {
                   تسليم مكتوب.
                 </p>
               </li>
-              <li>
+              <li data-reveal>
                 <span>02</span>
                 <h3>تشوف وتراجع</h3>
                 <p>
@@ -451,7 +376,7 @@ export default function Home() {
                   الملاحظات ضمن جولات التعديل المتفق عليها.
                 </p>
               </li>
-              <li>
+              <li data-reveal>
                 <span>03</span>
                 <h3>ننشر ونسلّم</h3>
                 <p>
@@ -463,7 +388,11 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="audit-section wrap" aria-labelledby="audit-title">
+        <section
+          className="audit-section wrap"
+          data-reveal
+          aria-labelledby="audit-title"
+        >
           <div className="audit-icon">
             <Sparkles size={28} />
           </div>
@@ -518,7 +447,7 @@ export default function Home() {
           aria-labelledby="book-title"
         >
           <div className="wrap">
-            <div className="booking-heading">
+            <div className="booking-heading" data-reveal>
               <p className="eyebrow">الخطوة الجاية بسيطة</p>
               <h2 id="book-title">خلّينا نحچي عن شغلك.</h2>
               <p>اختَر اللي تحتاجه. راجع رسالتك. وكمّل على واتساب.</p>

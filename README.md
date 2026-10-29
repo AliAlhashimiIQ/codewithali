@@ -48,3 +48,9 @@ These are integration hooks, not a deployed analytics service. Connect an approv
 A WhatsApp click is not a confirmed enquiry, booking or sale. Compare click-throughs with actual conversations and qualified leads before making conversion claims. No Meta Pixel/CAPI credentials, ad-account connection or lead-verification backend is configured.
 
 See [the conversion and interface review](docs/conversion-review.md) for changes, evidence and remaining limits.
+
+## Motion
+
+The hero plays one three-second ad → page → conversation illustration as it enters the viewport. “أعد المشهد” replays it. Service cards and section headings reveal once; button feedback and native FAQ transitions remain brief. There are no new dependencies, scroll locks or continuous decorative loops.
+
+`npm run test:motion` checks replay interruptions, completed/static states, layout stability, live reduced-motion changes, no-JavaScript fallback and keyboard FAQ behavior. Use the same `TEST_URL` and `CHROMIUM_PATH` settings as the conversion checks. See [motion review](docs/motion-review.md).

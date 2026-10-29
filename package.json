@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:conversion": "node scripts/verify-conversion.mjs"
+    "test:conversion": "node scripts/verify-conversion.mjs",
+    "test:motion": "node scripts/verify-motion.mjs"
   },
   "dependencies": {
     "framer-motion": "^14.3.0",

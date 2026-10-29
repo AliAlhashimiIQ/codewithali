@@ -1,0 +1,183 @@
+/* Motion is an enhancement: every element's resting state is fully visible. */
+.journey-line {
+  transform-origin: top;
+}
+.mini-step {
+  display: inline-block;
+}
+.mini-button {
+  position: relative;
+}
+.journey-pointer,
+.journey-click-ring {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+}
+.journey-pointer {
+  inset-inline-start: 48%;
+  bottom: -6px;
+  fill: var(--deep-text);
+  color: var(--deep);
+  filter: drop-shadow(0 2px 2px #10261d30);
+}
+.journey-click-ring {
+  width: 38px;
+  height: 38px;
+  inset-inline-start: calc(48% - 17px);
+  bottom: -4px;
+  border: 1px solid var(--deep);
+  border-radius: 50%;
+}
+.journey-caption {
+  min-height: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-block-start: 8px;
+}
+.journey-caption .visual-note {
+  margin: 0;
+  text-align: start;
+}
+.journey-replay {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  padding: 7px 0 7px 8px;
+  font: inherit;
+  font-size: 0.75rem;
+  color: var(--go);
+  flex-shrink: 0;
+  visibility: hidden;
+}
+[data-motion-enhanced] .journey-replay {
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Arabic text stays intact; entrance groups preserve its joining and reading order. */
+  .hero-copy {
+    animation: none;
+  }
+  .hero-copy > * {
+    animation: content-enter 300ms ease-out both;
+  }
+  .hero-copy > :nth-child(2) {
+    animation-delay: 100ms;
+  }
+  .hero-copy > :nth-child(3) {
+    animation-delay: 200ms;
+  }
+  .hero-copy > :nth-child(4) {
+    animation-delay: 300ms;
+  }
+  .hero-copy > :nth-child(5) {
+    animation-delay: 400ms;
+  }
+  .hero-visual {
+    animation: none;
+  }
+  @keyframes content-enter {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+  .service-card {
+    transition:
+      border-color 150ms ease-out,
+      box-shadow 150ms ease-out;
+  }
+  .service-top > svg {
+    transition: transform 150ms ease-out;
+  }
+  .btn > svg:last-child,
+  .text-link > svg,
+  .service-link > svg,
+  .nav-contact > svg {
+    transition: transform 150ms ease-out;
+  }
+  .journey-replay > svg {
+    transition: transform 150ms ease-out;
+  }
+  .faq-list summary > svg,
+  .extra-details summary > svg {
+    transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .service-link,
+  .journey-replay {
+    transition: scale 150ms ease-out;
+  }
+  .service-link:active,
+  .journey-replay:active {
+    scale: 0.96;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .service-card:hover,
+    .service-card:focus-within {
+      border-color: var(--go);
+      box-shadow: var(--shadow-lg);
+    }
+    .service-card:hover .service-top > svg {
+      transform: translateY(-3px) rotate(-6deg);
+    }
+    .btn:hover > svg:last-child,
+    .text-link:hover > svg,
+    .service-link:hover > svg {
+      transform: translateX(-4px);
+    }
+    .nav-contact:hover > svg {
+      transform: translate(-3px, -3px);
+    }
+    .journey-replay:hover > svg {
+      transform: rotate(-35deg);
+    }
+  }
+  /* Native details retain keyboard/focus behavior and never require JS to open. */
+  @supports (interpolate-size: allow-keywords) and
+    selector(details::details-content) {
+    .faq-list details {
+      interpolate-size: allow-keywords;
+    }
+    .faq-list details::details-content {
+      block-size: 0;
+      opacity: 0;
+      overflow: clip;
+      transition:
+        block-size 250ms cubic-bezier(0.2, 0, 0, 1),
+        opacity 150ms ease-out,
+        content-visibility 250ms allow-discrete;
+    }
+    .faq-list details[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .journey-replay {
+    display: none;
+  }
+  .journey-caption {
+    justify-content: center;
+  }
+}
+@media (max-width: 360px) {
+  .journey-caption {
+    gap: 8px;
+  }
+  .journey-replay {
+    font-size: 0.7rem;
+  }
+}

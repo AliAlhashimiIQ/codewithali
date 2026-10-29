@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: only light;
   --bg: #f2f3ed;
   --ink: #183c2d;
   --mut: #526658;
@@ -30,22 +31,6 @@
   --shadow-accent: 0 4px 12px #14744712;
   --duration-normal: 200ms;
   --ease-out-quart: cubic-bezier(0.2, 0, 0, 1);
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #10261d;
-    --ink: #edf3e6;
-    --mut: #b3c4b5;
-    --card: #1a3427;
-    --go: #99d9ab;
-    --bad: #ff9989;
-    --bub: #254c37;
-    --bubt: #edf3e6;
-    --border-subtle: #2c4837;
-    --border-default: #42634b;
-    --input-border: #839b86;
-    color-scheme: dark;
-  }
 }
 * {
   box-sizing: border-box;
@@ -961,15 +946,6 @@ details[open] > summary > svg {
 }
 .mobile-contact {
   display: none;
-}
-@media (prefers-color-scheme: dark) {
-  .btn,
-  .cstory-order {
-    color: var(--deep);
-  }
-  .btn-outline {
-    color: var(--ink);
-  }
 }
 @media (hover: hover) {
   .btn:hover {

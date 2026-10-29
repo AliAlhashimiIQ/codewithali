@@ -130,7 +130,6 @@
 .cstory-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px 24px; margin-block-start: 24px; }
 .cstory-footer p { color: var(--mut); font-size: 0.9rem; }
 .cstory-footer a { font-size: 0.95rem; }
-@media (prefers-color-scheme: dark) { .cstory-order { color: var(--deep); } }
 @media (hover: hover) {
   .cstory-sectorPicker button:hover, .cstory-options button:hover { border-color: var(--go); }
   .cstory-messageBottom button:hover { background: var(--bg); }

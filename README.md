@@ -4,6 +4,8 @@ Arabic, right-to-left marketing site for Ali's landing-page, business-website an
 
 The main page leads with an interactive example for four industries, followed by compact service cards with expandable scope, project terms, FAQs and a WhatsApp enquiry composer. Examples are fictional demonstrations, not client results. No message is sent automatically.
 
+The site always uses its light palette, including when the device prefers dark mode. CSS and viewport metadata declare `only light` for browser rendering and native controls.
+
 ## Development
 
 Validated with Node.js 24.19.0 and npm 11.9.0.
@@ -32,7 +34,7 @@ npm run test:conversion
 TEST_URL=http://127.0.0.1:3001 npm run test:conversion
 ```
 
-The script uses `/usr/bin/chromium` when available. Otherwise install Playwright Chromium with `npx playwright install chromium`, or set `CHROMIUM_PATH` to your browser. It verifies service selections, free-review intent, validation, WhatsApp payload, keyboard entry, four interactive sectors, narrow and short viewports, light/dark themes, reduced motion and axe accessibility checks. WhatsApp navigation is intercepted; no message or remote enquiry is sent.
+The script uses `/usr/bin/chromium` when available. Otherwise install Playwright Chromium with `npx playwright install chromium`, or set `CHROMIUM_PATH` to your browser. It verifies service selections, free-review intent, validation, WhatsApp payload, keyboard entry, four interactive sectors, narrow and short viewports, light/dark device preferences, reduced motion and axe accessibility checks. WhatsApp navigation is intercepted; no message or remote enquiry is sent.
 
 `npm run lint` still reports pre-existing issues in the unused `landing-page.tsx`, `landing-page-light.tsx` and `readme-version.tsx` prototypes. The updated live-page files and verification script pass targeted lint.
 

@@ -2,6 +2,33 @@
 .journey-line {
   transform-origin: top;
 }
+.journey-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+}
+.journey-steps li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  position: relative;
+  padding-block-end: 12px;
+  border-block-end: 2px solid var(--border-default);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.journey-step-number { color: var(--go); font-weight: 600; }
+.journey-step-track {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -2px;
+  height: 2px;
+  background: var(--go);
+  transform-origin: right;
+}
 .mini-step {
   display: inline-block;
 }
@@ -112,6 +139,7 @@
     transition: transform 150ms ease-out;
   }
   .faq-list summary > svg,
+  .service-details summary > svg,
   .extra-details summary > svg {
     transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
   }
@@ -147,10 +175,12 @@
   /* Native details retain keyboard/focus behavior and never require JS to open. */
   @supports (interpolate-size: allow-keywords) and
     selector(details::details-content) {
-    .faq-list details {
+    .faq-list details,
+    .service-details {
       interpolate-size: allow-keywords;
     }
-    .faq-list details::details-content {
+    .faq-list details::details-content,
+    .service-details::details-content {
       block-size: 0;
       opacity: 0;
       overflow: clip;
@@ -159,11 +189,20 @@
         opacity 150ms ease-out,
         content-visibility 250ms allow-discrete;
     }
-    .faq-list details[open]::details-content {
+    .faq-list details[open]::details-content,
+    .service-details[open]::details-content {
       block-size: auto;
       opacity: 1;
     }
   }
+  .process-grid [data-entered]::before {
+    transform-origin: right;
+    animation: process-line 900ms cubic-bezier(0.2, 0, 0, 1) backwards;
+    background: var(--accent);
+  }
+  .process-grid [data-entered]:nth-child(2)::before { animation-delay: 100ms; }
+  .process-grid [data-entered]:nth-child(3)::before { animation-delay: 200ms; }
+  @keyframes process-line { from { transform: scaleX(0); } }
 }
 @media (prefers-reduced-motion: reduce) {
   .journey-replay {
@@ -174,6 +213,8 @@
   }
 }
 @media (max-width: 360px) {
+  .journey-steps { gap: 8px; }
+  .journey-steps li { font-size: 0.68rem; gap: 5px; }
   .journey-caption {
     gap: 8px;
   }

@@ -201,8 +201,8 @@ export default function Home() {
           </b>
         </a>
         <div className="nav-links">
-          <a href="#services">الخدمات</a>
           <a href="#work">جرّب الفكرة</a>
+          <a href="#services">الخدمات</a>
           <a href="#faq">أسئلتك</a>
         </div>
         <a
@@ -218,19 +218,16 @@ export default function Home() {
         <header className="hero wrap" ref={hero}>
           <div className="hero-copy">
             <p className="eyebrow">
-              <span className="eyebrow-line" /> من الإعلان إلى أول محادثة
+              <span className="eyebrow-line" /> تصميم وتطوير مواقع لأصحاب المشاريع
             </p>
             <h1>
-              إعلانك يجيب الاهتمام.
+              موقع يوضّح شغلك.
               <br />
-              <span>
-                خلّي موقعك
-                <br className="desktop-break" /> يكمّل الحچي.
-              </span>
+              <span>ويسهّل التواصل وياك.</span>
             </h1>
             <p className="hero-description">
-              أنا علي، مهندس برمجيات. أبني صفحات ومواقع توضّح عرضك، تشتغل بسلاسة
-              على الموبايل، وتسهّل على الزبون يتواصل وياك.
+              أنا علي، مهندس برمجيات. أصمّم موقع يشرح عرضك بوضوح، يشتغل بسلاسة
+              على الموبايل، ويخلّي التواصل وياك أسهل.
             </p>
             <div className="hero-actions">
               <a
@@ -241,7 +238,7 @@ export default function Home() {
                 احچيلي عن مشروعك <ArrowLeft size={19} />
               </a>
               <a className="text-link" href="#work">
-                جرّب شلون تشتغل <ArrowLeft size={16} />
+                شوف مثال من مجالك <ArrowLeft size={16} />
               </a>
             </div>
             <p className="quiet hero-reassurance">
@@ -264,6 +261,14 @@ export default function Home() {
           </div>
         </div>
 
+        <ConversionStory
+          onChooseService={(selectedSector) => {
+            setService(SERVICES[0].name);
+            setSector(selectedSector);
+            chooseIntent("project", "interactive_example");
+          }}
+        />
+
         <section
           id="services"
           className="section wrap"
@@ -271,7 +276,7 @@ export default function Home() {
         >
           <div className="section-heading" data-reveal>
             <div>
-              <p className="eyebrow">٠١ / نختار البداية المناسبة</p>
+              <p className="eyebrow">٠٢ / نختار اللي تحتاجه</p>
               <h2 id="services-title">شنو يحتاج مشروعك؟</h2>
             </div>
             <p>
@@ -294,15 +299,18 @@ export default function Home() {
                 <p className="service-tag">{item.tag}</p>
                 <h3>{item.name}</h3>
                 <p className="service-description">{item.description}</p>
-                <ul>
-                  {item.items.map((text) => (
-                    <li key={text}>
-                      <Check size={15} />
-                      <span>{text}</span>
-                    </li>
-                  ))}
-                </ul>
-                <p className="service-boundary">{item.boundary}</p>
+                <p className="service-scope"><Check size={15} aria-hidden="true" />{item.items[0]}</p>
+                <details className="service-details">
+                  <summary aria-label={`شنو يشمل الشغل؟ ${item.name}`}>شنو يشمل الشغل؟ <Plus size={17} aria-hidden="true" /></summary>
+                  <div>
+                    <ul>
+                      {item.items.slice(1).map((text) => (
+                        <li key={text}><Check size={15} aria-hidden="true" /><span>{text}</span></li>
+                      ))}
+                    </ul>
+                    <p className="service-boundary">{item.boundary}</p>
+                  </div>
+                </details>
                 <a
                   href="#book"
                   className="service-link"
@@ -331,14 +339,6 @@ export default function Home() {
           </p>
         </section>
 
-        <ConversionStory
-          onChooseService={(selectedSector) => {
-            setService(SERVICES[0].name);
-            setSector(selectedSector);
-            chooseIntent("project", "interactive_example");
-          }}
-        />
-
         <section
           className="process-section section"
           aria-labelledby="process-title"
@@ -346,7 +346,7 @@ export default function Home() {
           <div className="wrap">
             <div className="section-heading" data-reveal>
               <div>
-                <p className="eyebrow">٠٢ / شغل واضح من البداية</p>
+                <p className="eyebrow">٠٣ / شغل واضح من البداية</p>
                 <h2 id="process-title">
                   تعرف شنو راح تستلم.
                   <br />
@@ -360,7 +360,7 @@ export default function Home() {
               </p>
             </div>
             <ol className="process-grid">
-              <li data-reveal>
+              <li data-reveal data-process-step>
                 <span>01</span>
                 <h3>نحچي ونحدد</h3>
                 <p>
@@ -368,7 +368,7 @@ export default function Home() {
                   تسليم مكتوب.
                 </p>
               </li>
-              <li data-reveal>
+              <li data-reveal="1" data-process-step>
                 <span>02</span>
                 <h3>تشوف وتراجع</h3>
                 <p>
@@ -376,7 +376,7 @@ export default function Home() {
                   الملاحظات ضمن جولات التعديل المتفق عليها.
                 </p>
               </li>
-              <li data-reveal>
+              <li data-reveal="2" data-process-step>
                 <span>03</span>
                 <h3>ننشر ونسلّم</h3>
                 <p>
@@ -418,8 +418,8 @@ export default function Home() {
           className="faq-section section wrap"
           aria-labelledby="faq-title"
         >
-          <div>
-            <p className="eyebrow">٠٣ / قبل ما تسأل</p>
+          <div data-reveal>
+            <p className="eyebrow">٠٤ / قبل ما تسأل</p>
             <h2 id="faq-title">
               اتفاق واضح.
               <br />

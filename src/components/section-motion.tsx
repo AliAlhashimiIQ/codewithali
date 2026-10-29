@@ -24,6 +24,7 @@ export default function SectionMotion() {
           )
             continue;
           const target = entry.target as HTMLElement;
+          target.dataset.entered = "true";
           const animation = target.animate(
             [
               {

@@ -242,10 +242,10 @@ summary {
   grid-template-columns: 1.05fr 1fr;
   align-items: center;
   gap: 65px;
-  padding-block: 65px 90px;
+  padding-block: 48px 64px;
 }
 .hero h1 {
-  font-size: clamp(2.1rem, 3.55vw, 3.25rem);
+  font-size: clamp(2rem, 3.1vw, 2.75rem);
   line-height: 1.62;
   letter-spacing: -0.035em;
 }
@@ -362,7 +362,7 @@ summary {
 .mini-content {
   position: relative;
   z-index: 1;
-  padding: 28px 25px 36px;
+  padding: 22px 25px 26px;
   width: 72%;
 }
 .mini-step {
@@ -370,9 +370,9 @@ summary {
   font-size: 0.7rem;
 }
 .mini-content h2 {
-  font-size: 1.5rem;
-  line-height: 1.8;
-  margin-block: 12px;
+  font-size: 1.35rem;
+  line-height: 1.65;
+  margin-block: 10px;
 }
 .mini-content em {
   color: var(--accent);
@@ -387,7 +387,7 @@ summary {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-block: 20px;
+  margin-block: 14px;
   font-size: 0.65rem;
 }
 .mini-features span {
@@ -457,7 +457,8 @@ summary {
   border: 1px solid var(--border-default);
   border-radius: 12px;
   padding: 16px 20px;
-  margin: -15px 25px 0 -8px;
+  margin-block: -15px 0;
+  margin-inline: 24px 0;
   box-shadow: var(--shadow-lg);
 }
 .message-symbol {
@@ -528,6 +529,7 @@ summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
+  align-items: start;
 }
 .service-card {
   display: flex;
@@ -545,7 +547,7 @@ summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-block-end: 27px;
+  margin-block-end: 20px;
 }
 .service-top span {
   font: 0.7rem var(--font-mono);
@@ -564,7 +566,30 @@ summary {
   font-size: 0.9rem;
   color: var(--mut);
   margin-block: 15px 23px;
+  min-height: 5.4em;
 }
+.service-scope {
+  display: flex;
+  gap: 8px;
+  align-items: start;
+  font-size: 0.83rem;
+  margin-block-end: 18px;
+}
+.service-scope svg { color: var(--go); margin-block-start: 6px; }
+.service-details { border-block-start: 1px solid var(--border-subtle); }
+.service-details summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  list-style: none;
+  min-height: 48px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding-block: 12px;
+}
+.service-details > div { padding-block: 8px 12px; }
+.service-details .service-boundary { border: 0; padding: 0; }
 .service-card ul {
   padding: 0;
   list-style: none;
@@ -596,7 +621,7 @@ summary {
   border: 1px solid var(--input-border);
   border-radius: 6px;
   padding: 10px 14px;
-  margin-block-start: 24px;
+  margin-block-start: 16px;
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -634,8 +659,24 @@ summary {
   list-style: none;
 }
 .process-grid li {
-  border-block-start: 1px solid #516f59;
+  position: relative;
   padding-block-start: 26px;
+}
+.process-grid li::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 1px;
+  background: #516f59;
+}
+.process-grid li > span {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #516f59;
+  border-radius: 50%;
 }
 .process-grid li > span {
   font: 0.8rem var(--font-mono);
@@ -1033,14 +1074,17 @@ details[open] > summary > svg {
     margin-block-start: 15px;
   }
   .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
     margin-block-start: 24px;
-    gap: 14px;
+    gap: 8px;
   }
   .hero-actions .btn {
     padding-inline: 18px;
   }
   .hero-actions .text-link {
     font-size: 0.9rem;
+    justify-content: center;
   }
   .hero .eyebrow {
     margin-block-end: 15px;
@@ -1100,6 +1144,7 @@ details[open] > summary > svg {
   }
   .service-description {
     margin-block: 12px 20px;
+    min-height: 0;
   }
   .service-link {
     min-height: 48px;

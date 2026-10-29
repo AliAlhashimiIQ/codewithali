@@ -16,8 +16,8 @@ const forest = "#14231D";
 const mineral = "#E4E8E3";
 const green = "var(--go)";
 
-// Everything follows the same scroll clock as the surrounding story. Decorative
-// elements resolve during the clarity scene, then settle for the interactive demo.
+// A bounded entrance assembles the illustration, then settles. Reduced motion
+// uses the complete drawing immediately; no scrolling or perpetual loop is needed.
 function useIllustrationMotion({ progress, reducedMotion }: VisualProps) {
   const spread = useTransform(progress, [0, 0.2, 0.42, 0.7], [0, 20, 20, 0]);
   const drift = useTransform(progress, [0, 0.2, 0.42, 0.7], [0, -12, -12, 0]);

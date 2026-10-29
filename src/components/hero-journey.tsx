@@ -59,6 +59,20 @@ export default function HeroJourney() {
         { opacity: 0, transform: "translateY(12px)", filter: "blur(4px)" },
         { opacity: 1, transform: "translateY(0)", filter: "blur(0px)" },
       ];
+      [0, 650, 2350].forEach((delay, index) => {
+        animate(
+          `.journey-steps li:nth-child(${index + 1}) .journey-step-track`,
+          [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }],
+          600,
+          delay,
+        );
+        animate(
+          `.journey-steps li:nth-child(${index + 1}) .journey-step-number`,
+          [{ opacity: 0.35 }, { opacity: 1 }],
+          300,
+          delay,
+        );
+      });
       animate(".journey-ad", enter, 300, 0);
       animate(
         ".ad-icon svg",
@@ -192,17 +206,22 @@ export default function HeroJourney() {
       className="hero-visual"
       aria-label="مثال توضيحي لمسار من الإعلان إلى صفحة واضحة ثم استفسار واتساب"
     >
-      <div className="visual-label">
-        <span>طريق أقصر للتواصل</span>
-        <span dir="ltr">THE CLICK → THE CONVERSATION</span>
-      </div>
+      <ol className="journey-steps" aria-label="من الإعلان إلى التواصل">
+        {["يشوف إعلانك", "يفهم عرضك", "يتواصل وياك"].map((label, index) => (
+          <li key={label}>
+            <span className="journey-step-number">{["١", "٢", "٣"][index]}</span>
+            <span>{label}</span>
+            <span className="journey-step-track" aria-hidden="true" />
+          </li>
+        ))}
+      </ol>
       <div className="journey-ad">
         <span className="ad-icon">
           <MousePointer2 size={19} />
         </span>
         <div>
           <small>٠١ / الإعلان</small>
-          <b>لفت انتباهه. هسه شنو؟</b>
+          <b>مهتم بخدمتك. يريد يعرف أكثر.</b>
         </div>
         <ArrowLeft size={21} />
       </div>
@@ -218,9 +237,9 @@ export default function HeroJourney() {
         <div className="mini-content">
           <span className="mini-step">٠٢ / صفحة توضّح العرض</span>
           <h2>
-            كل اللي يحتاجه.
+            شنو تقدّم؟
             <br />
-            <em>حتى ياخذ الخطوة.</em>
+            <em>وشلون يستفيد؟</em>
           </h2>
           <p>
             خدمتك واضحة. التفاصيل قريبة.
@@ -249,9 +268,6 @@ export default function HeroJourney() {
           <div>
             <MousePointer2 size={38} strokeWidth={1.4} />
           </div>
-          <span>وضوح</span>
-          <span>سهولة</span>
-          <span>تواصل</span>
         </div>
       </div>
       <div className="journey-message">
@@ -270,7 +286,7 @@ export default function HeroJourney() {
       </div>
       <div className="journey-caption">
         <p className="visual-note">
-          مثال توضيحي للمسار، مو نتيجة مبيعات مضمونة.
+          مثال: إعلان ← صفحة واضحة ← استفسار
         </p>
         <button
           className="journey-replay"

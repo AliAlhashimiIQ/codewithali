@@ -41,6 +41,13 @@ const baseURL = process.env.TEST_URL || "http://localhost:3000";
     // Every service must survive navigation into the enquiry and its message.
     for (const card of await page.locator(".service-card").all()) {
       const name = await card.locator("h3").innerText();
+      const scope = card.locator("details");
+      assert.equal(await scope.evaluate((el) => el.open), false);
+      await scope.locator("summary").focus();
+      await page.keyboard.press("Enter");
+      assert.equal(await scope.evaluate((el) => el.open), true);
+      await card.locator(".service-boundary").waitFor({ state: "visible" });
+      assert.equal(await card.locator(".service-boundary").isVisible(), true);
       await card.locator("a").click();
       await page.waitForFunction(
         (value) => document.querySelector("#service").value === value,
@@ -129,8 +136,6 @@ const baseURL = process.env.TEST_URL || "http://localhost:3000";
       await p.locator(".extra-details").evaluate((el) => {
         el.open = true;
       });
-      if (reducedMotion !== "reduce")
-        await p.getByRole("button", { name: "جرّب مباشرة" }).click();
       await p.locator(".cstory-order").waitFor({ state: "visible" });
       await p.waitForTimeout(500);
       for (const label of ["عيادة", "متجر", "عقارات", "شركة"]) {
@@ -139,11 +144,28 @@ const baseURL = process.env.TEST_URL || "http://localhost:3000";
           .getByRole("button", { name: new RegExp(label) })
           .click();
         await p.waitForTimeout(700);
-        await p.locator(".cstory-options button").nth(1).click();
+        const choice = p.locator(".cstory-options button").nth(1);
+        const choiceText = await choice.innerText();
+        await choice.click();
         await p.locator(".cstory-order").click();
         assert.equal(await p.locator(".cstory-message").isVisible(), true);
+        assert.ok((await p.locator(".cstory-message > p").innerText()).includes(choiceText));
+        assert.equal(await p.locator(".cstory-composition").evaluate(el => el.inert), true);
+        const edit = p.getByRole("button", { name: "عدّل الاختيار" });
+        await p.waitForFunction(() => document.activeElement === document.querySelector(".cstory-messageBottom button"));
+        assert.equal(await edit.evaluate(el => el === document.activeElement), true);
+        assert.equal(await p.locator('.cstory-steps li[data-complete="true"]').count(), 3);
+        const messageFits = await p.locator(".cstory-message").evaluate(el => {
+          const parent = el.parentElement.getBoundingClientRect();
+          const rect = el.getBoundingClientRect();
+          return rect.width <= parent.width && el.scrollWidth <= el.clientWidth;
+        });
+        assert.ok(messageFits, `Message overflow at ${width}/${label}`);
         await p.getByRole("button", { name: "عدّل الاختيار" }).click();
+        await p.waitForFunction(() => document.activeElement === document.querySelector(".cstory-order"));
+        assert.equal(await p.locator(".cstory-order").evaluate(el => el === document.activeElement), true);
       }
+      await p.locator(".service-details").first().evaluate(el => { el.open = true; });
       assert.equal(
         await p.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,

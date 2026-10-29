@@ -1,5 +1,7 @@
 # Motion polish review
 
+This records the first motion pass. The subsequent layout and demo changes are documented in [clarity-review.md](clarity-review.md).
+
 Scope: the existing homepage hero illustration, section entrances, service-card feedback, links and native FAQ disclosures. Used the installed `better-ui` animation, entrance/exit and performance references, and `better-accessibility` motion requirements. The existing layout, offer, WhatsApp logic and themes remain in place.
 
 ## Changes

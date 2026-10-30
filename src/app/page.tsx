@@ -226,8 +226,8 @@ export default function Home() {
               <span>ويسهّل التواصل وياك.</span>
             </h1>
             <p className="hero-description">
-              أنا علي، مهندس برمجيات. أصمّم موقع يشرح عرضك بوضوح، يشتغل بسلاسة
-              على الموبايل، ويخلّي التواصل وياك أسهل.
+              أنا علي، مهندس برمجيات. أبني موقع يوضّح عرضك ويسهّل على الزبون
+              يتواصل وياك.
             </p>
             <div className="hero-actions">
               <a
@@ -235,10 +235,10 @@ export default function Home() {
                 href="#book"
                 onClick={() => chooseIntent("project", "hero")}
               >
-                احچيلي عن مشروعك <ArrowLeft size={19} />
+                نحچي عن مشروعك <ArrowLeft size={19} />
               </a>
               <a className="text-link" href="#work">
-                شوف مثال من مجالك <ArrowLeft size={16} />
+                جرّب المثال <ArrowLeft size={16} />
               </a>
             </div>
             <p className="quiet hero-reassurance">
@@ -296,8 +296,10 @@ export default function Home() {
                   <item.icon size={25} strokeWidth={1.6} />
                   <span dir="ltr">0{index + 1}</span>
                 </div>
-                <p className="service-tag">{item.tag}</p>
-                <h3>{item.name}</h3>
+                <div className="service-title">
+                  <p className="service-tag">{item.tag}</p>
+                  <h3>{item.name}</h3>
+                </div>
                 <p className="service-description">{item.description}</p>
                 <p className="service-scope"><Check size={15} aria-hidden="true" />{item.items[0]}</p>
                 <details className="service-details">

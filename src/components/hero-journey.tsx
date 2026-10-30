@@ -223,7 +223,7 @@ export default function HeroJourney() {
           <small>٠١ / الإعلان</small>
           <b>مهتم بخدمتك. يريد يعرف أكثر.</b>
         </div>
-        <ArrowLeft size={21} />
+        <ArrowLeft className="journey-ad-arrow" size={21} />
       </div>
       <div className="journey-line" aria-hidden="true" />
       <div className="mini-page">

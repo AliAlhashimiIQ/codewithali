@@ -351,6 +351,7 @@ summary {
   width: 72%;
 }
 .mini-step {
+  display: inline-block;
   color: var(--accent);
   font-size: 0.7rem;
 }
@@ -1009,182 +1010,162 @@ details[open] > summary > svg {
   }
 }
 @media (max-width: 760px) {
-  .wrap {
-    width: calc(100% - 40px);
-  }
-  .section {
-    padding-block: 65px;
-  }
-  .site-nav {
-    min-height: 76px;
-    gap: 16px;
-  }
-  .nav-links {
-    display: none;
-  }
-  .nav-contact {
-    font-size: 0.8rem;
-    gap: 5px;
-  }
-  .wordmark {
-    font-size: 1.1rem;
-  }
-  .brand-symbol {
-    width: 29px;
-    height: 29px;
-  }
+  .wrap { width: calc(100% - 40px); }
+  .section { padding-block: 52px; }
+  .site-nav { min-height: 64px; flex-wrap: wrap; gap: 8px 16px; padding-block: 10px; }
+  .nav-links { display: none; }
+  .nav-contact { font-size: 0.8rem; gap: 5px; }
+  .wordmark { font-size: 1.1rem; }
+  .brand-symbol { width: 29px; height: 29px; }
+
   .hero {
-    grid-template-columns: 1fr;
-    padding-block: 38px 45px;
-    gap: 35px;
+    grid-template-columns: minmax(0, 1fr);
+    padding-block: 30px 28px;
+    gap: 26px;
   }
-  .hero h1 {
-    font-size: clamp(1.85rem, 6.9vw, 2.9rem);
-    line-height: 1.7;
-  }
-  .desktop-break {
-    display: none;
-  }
+  .hero-copy { text-align: center; }
+  .hero h1 { font-size: clamp(1.75rem, 7.4vw, 2.6rem); line-height: 1.65; }
+  .desktop-break { display: none; }
   .hero-description {
-    font-size: 1rem;
-    margin-block-start: 15px;
+    font-size: 0.95rem;
+    line-height: 1.85;
+    max-width: 32ch;
+    margin: 16px auto 0;
   }
   .hero-actions {
-    display: grid;
-    grid-template-columns: 1fr;
-    margin-block-start: 24px;
-    gap: 8px;
-  }
-  .hero-actions .btn {
-    padding-inline: 18px;
-  }
-  .hero-actions .text-link {
-    font-size: 0.9rem;
+    display: flex;
     justify-content: center;
-  }
-  .hero .eyebrow {
-    margin-block-end: 15px;
-  }
-  .hero-reassurance {
-    font-size: 0.77rem;
-  }
-  .hero-visual {
-    max-width: 500px;
-    width: 100%;
-    margin-inline: auto;
-    padding: 0;
-  }
-  .visual-label {
-    margin-block-end: 15px;
-  }
-  .visual-label span:last-child {
-    display: block;
-    font-size: 0.48rem;
-  }
-  .mini-content {
-    width: 75%;
-  }
-  .mini-orbit {
-    inset-inline-end: -92px;
-  }
-  .audience-bar .wrap {
-    justify-content: center;
-    gap: 10px 25px;
-  }
-  .audience-bar span:first-child {
-    width: 100%;
-    text-align: center;
-  }
-  .audience-end {
-    display: none;
-  }
-  .section-heading {
-    display: block;
-    margin-block-end: 28px;
-  }
-  .section-heading > p {
-    margin-block-start: 16px;
-  }
-  .section-heading .eyebrow {
-    margin-block-end: 12px;
-  }
-  .services-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  .service-card {
-    padding: 25px;
-  }
-  .service-top {
-    margin-block-end: 15px;
-  }
-  .service-description {
-    margin-block: 12px 20px;
-    min-height: 0;
-  }
-  .service-link {
-    min-height: 48px;
-  }
-  .service-card h3 {
-    font-size: 1.2rem;
-  }
-  .service-card li {
-    font-size: 0.9rem;
-  }
-  .service-boundary {
-    font-size: 0.82rem;
-  }
-  .process-grid {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    margin-block-start: 30px;
-  }
-  .process-grid h3 {
-    margin-block: 10px;
-  }
-  .audit-section {
-    display: block;
-    padding-block: 40px;
-  }
-  .audit-section .btn {
-    margin-block-start: 22px;
-  }
-  .faq-section {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  .faq-list summary {
-    padding-block: 20px;
-    font-size: 0.95rem;
-  }
-  .booking-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  .booking-heading {
-    text-align: start;
-    margin-block-end: 28px;
-  }
-  .booking-heading .eyebrow {
-    justify-content: start;
-  }
-  .message-preview {
-    padding: 22px;
-  }
-  .intent-switch label {
-    padding: 7px 5px;
-    font-size: 0.8rem;
-  }
-  .site-footer {
-    padding-block: 30px 100px;
+    flex-wrap: wrap;
+    margin-block-start: 20px;
     gap: 12px;
   }
-  .site-footer p {
-    width: 100%;
+  .hero-actions .btn { padding: 12px 16px; min-height: 50px; font-size: 0.9rem; gap: 10px; }
+  .hero-actions .text-link { font-size: 0.85rem; gap: 6px; }
+  .hero .eyebrow { justify-content: center; margin-block-end: 14px; font-size: 0.72rem; }
+  .hero .eyebrow-line { width: 18px; }
+  .hero-reassurance { justify-content: center; font-size: 0.72rem; margin-block-start: 14px; gap: 6px; }
+  .hero-reassurance svg { width: 14px; }
+  .hero-visual { max-width: 440px; width: 100%; margin-inline: auto; padding: 0; }
+
+  /* A compact, composed preview keeps the whole story in one phone screen. */
+  .journey-ad {
+    width: auto;
+    margin-inline: 22px;
+    padding: 10px 14px;
+    gap: 10px;
+    border-radius: 12px 12px 0 0;
+    border-block-end: 0;
+    background: var(--bub);
   }
-  .site-footer > span {
-    margin: 0;
+  .ad-icon { width: 30px; height: 30px; border-radius: 50%; background: var(--card); }
+  .ad-icon svg { width: 16px; }
+  .journey-ad small { font-size: 0.62rem; }
+  .journey-ad b { font-size: 0.76rem; line-height: 1.6; }
+  .journey-ad-arrow { width: 16px; }
+  .journey-line { display: none; }
+  .mini-page {
+    background: var(--card);
+    color: var(--ink);
+    border-color: var(--border-default);
+    border-radius: 16px;
+    box-shadow: 0 4px 8px #183c2d05, 0 18px 35px #183c2d10;
   }
+  .mini-bar { padding: 9px 16px; border-color: var(--border-subtle); color: var(--mut); font-size: 0.6rem; }
+  .mini-logo { color: var(--ink); }
+  .mini-logo svg { width: 13px; }
+  .mini-content { padding: 18px 20px 30px; width: 76%; }
+  .mini-step { display: none; }
+  .mini-content h2 { font-size: 1.2rem; line-height: 1.65; margin-block: 0 9px; }
+  .mini-content em { color: var(--go); }
+  .mini-content p { font-size: 0.74rem; line-height: 1.8; color: var(--mut); }
+  .mini-features { display: none; }
+  .mini-button { margin-block-start: 14px; padding: 9px 10px; font-size: 0.75rem; border-radius: 7px; background: var(--deep); color: var(--deep-text); }
+  .mini-button > svg { width: 14px; }
+  .mini-orbit { width: 130px; height: 130px; inset-inline-end: -56px; top: 80px; border-color: var(--border-default); }
+  .mini-orbit div { width: 84px; height: 84px; background: var(--bub); border-color: #cbd8ba; color: var(--ink); }
+  .mini-orbit svg { width: 30px; }
+  .journey-message {
+    margin-block: -18px 0;
+    margin-inline: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    gap: 10px;
+    background: var(--deep);
+    color: var(--deep-text);
+    border-color: var(--deep);
+    box-shadow: 0 4px 12px #183c2d12;
+  }
+  .journey-message small { color: #bacbb9; font-size: 0.6rem; }
+  .journey-message p { font-size: 0.76rem; line-height: 1.7; }
+  .journey-message p br { display: none; }
+  .message-symbol { width: 32px; height: 32px; background: #34583b; color: var(--accent); }
+  .message-symbol svg { width: 18px; }
+  .journey-check { color: var(--accent); width: 16px; }
+
+  .audience-bar { border-color: var(--border-subtle); }
+  .audience-bar .wrap { justify-content: space-between; gap: 12px; padding-block: 18px; }
+  .audience-bar span:first-child, .audience-end { display: none; }
+  .audience-bar b { font-size: 0.85rem; }
+  .section-heading { display: block; margin-block-end: 26px; }
+  .section-heading h2, .faq-section h2, .booking-heading h2 { font-size: 1.55rem; line-height: 1.65; }
+  .section-heading > p { font-size: 0.9rem; margin-block-start: 12px; }
+  .section-heading .eyebrow { margin-block-end: 10px; }
+  .section-heading > p br { display: none; }
+
+  /* Service rows share an edge and icon rail instead of repeating large cards. */
+  .services-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .service-card {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 0 14px;
+    padding: 24px 0;
+    border: 0;
+    border-block-end: 1px solid var(--border-default);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .service-card:first-child { padding-block-start: 0; }
+  .service-card > :not(.service-top) { grid-column: 2; }
+  .service-top { align-self: start; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--card); color: var(--go); margin: 0; }
+  .service-top > svg { width: 21px; }
+  .service-top > span { display: none; }
+  .service-tag { font-size: 0.72rem; margin-block-end: 4px; }
+  .service-card h3 { font-size: 1.05rem; line-height: 1.8; }
+  .service-description { font-size: 0.88rem; margin-block: 10px 14px; min-height: 0; }
+  .service-scope { font-size: 0.77rem; margin-block-end: 12px; }
+  .service-details summary { font-size: 0.82rem; }
+  .service-link { min-height: 46px; margin-block-start: 10px; padding-inline: 12px; background: var(--card); }
+  .service-card li { font-size: 0.85rem; }
+  .service-boundary { font-size: 0.78rem; }
+  .section-footnote { font-size: 0.82rem; margin-block-start: 18px; }
+
+  .process-section { background: var(--card); color: var(--ink); }
+  .process-section .eyebrow { color: var(--go); }
+  .process-section .section-heading > p { color: var(--mut); }
+  .process-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-block-start: 28px; }
+  .process-grid li { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 6px 16px; padding: 0; }
+  .process-grid li > span { grid-row: 1 / 3; width: 36px; height: 36px; color: var(--go); border-color: var(--border-default); font-size: 0.72rem; background: var(--card); position: relative; z-index: 1; }
+  .process-grid li::before { inset-inline-start: 17px; inset-inline-end: auto; inset-block: 36px -24px; width: 1px; height: auto; background: var(--border-default); }
+  .process-grid li:last-child::before { display: none; }
+  .process-grid h3 { grid-column: 2; font-size: 1rem; margin: 0; }
+  .process-grid p { grid-column: 2; color: var(--mut); font-size: 0.87rem; line-height: 1.9; }
+  .audit-section { display: block; padding-block: 36px; }
+  .audit-section h2 { font-size: 1.15rem; }
+  .audit-section .btn { margin-block-start: 18px; }
+  .faq-section { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .faq-section .quiet { margin-block-start: 12px; }
+  .faq-list summary { padding-block: 18px; font-size: 0.9rem; }
+  .faq-list details > p { font-size: 0.9rem; }
+  .booking-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .booking-heading { text-align: start; margin-block-end: 24px; }
+  .booking-heading .eyebrow { justify-content: start; }
+  .booking-heading > p:last-child { font-size: 0.9rem; }
+  .message-preview { padding: 20px; }
+  .intent-switch label { padding: 7px 5px; font-size: 0.8rem; }
+  .site-footer { padding-block: 28px 96px; gap: 10px; }
+  .site-footer p { width: 100%; }
+  .site-footer > span { margin: 0; }
   .mobile-contact {
     display: none;
     position: fixed;
@@ -1202,49 +1183,24 @@ details[open] > summary > svg {
     border-radius: 10px;
     box-shadow: var(--shadow-xl);
   }
-  .mobile-contact.is-visible {
-    display: flex;
-  }
-  body:has([data-story-visible="true"]) .mobile-contact {
-    display: none;
-  }
+  .mobile-contact.is-visible { display: flex; }
+  body:has([data-story-visible="true"]) .mobile-contact { display: none; }
 }
 @media (max-width: 360px) {
-  .wrap {
-    width: calc(100% - 32px);
-  }
-  .brand-symbol {
-    display: none;
-  }
-  .hero-actions {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .hero-actions .text-link {
-    justify-content: center;
-  }
-  .mini-content {
-    padding-inline: 18px;
-    width: 85%;
-  }
-  .mini-orbit {
-    inset-inline-end: -145px;
-  }
-  .mini-content h2 {
-    font-size: 1.3rem;
-  }
-  .journey-message {
-    margin-inline: 0;
-    padding: 13px;
-  }
-  .journey-message p {
-    font-size: 0.82rem;
-  }
-  .intent-switch {
-    flex-direction: column;
-  }
-  .visual-label span:last-child {
-    font-size: 0.4rem;
-  }
+  .wrap { width: calc(100% - 32px); }
+  .brand-symbol { display: none; }
+  .hero h1 { font-size: 1.55rem; }
+  .hero .eyebrow { font-size: 0.66rem; }
+  .hero-actions { gap: 8px; }
+  .hero-actions .btn { padding-inline: 12px; font-size: 0.82rem; }
+  .hero-actions .text-link { font-size: 0.8rem; }
+  .mini-content { padding-inline: 16px; width: 80%; }
+  .mini-content h2 { font-size: 1.1rem; }
+  .mini-orbit { inset-inline-end: -76px; }
+  .journey-ad { margin-inline: 14px; padding-inline: 10px; }
+  .journey-ad b { font-size: 0.7rem; }
+  .journey-message { margin-inline: 8px; padding-inline: 10px; }
+  .service-card { gap: 0 10px; grid-template-columns: 32px minmax(0, 1fr); }
+  .service-top { width: 32px; height: 36px; }
+  .intent-switch { flex-direction: column; }
 }

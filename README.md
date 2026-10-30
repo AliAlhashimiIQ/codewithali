@@ -56,3 +56,7 @@ See [the conversion and interface review](docs/conversion-review.md) for changes
 The hero plays one three-second ad → page → conversation illustration as it enters the viewport. “أعد المشهد” replays it. Numbered steps follow the hero sequence. The industry example is ready immediately, assembles once on arrival, and animates the selected request into a message preview. It has no pinned scroll sequence. Service cards and section headings reveal once; process lines draw in order; native service and FAQ disclosures open smoothly where supported. There are no new dependencies, scroll locks or continuous decorative loops.
 
 `npm run test:motion` checks replay interruptions, completed/static states, layout stability, live reduced-motion changes, no-JavaScript fallback and keyboard FAQ behavior. Use the same `TEST_URL` and `CHROMIUM_PATH` settings as the conversion checks. See [motion review](docs/motion-review.md) and the latest [clarity and layout review](docs/clarity-review.md).
+
+## Phone layout
+
+Phone widths use a compact light hero illustration, a larger industry preview, service rows and a vertical process timeline. Navigation and industry choices wrap when text grows. See [the phone layout review](docs/mobile-review.md) for scope and verification.

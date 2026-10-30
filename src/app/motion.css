@@ -29,9 +29,6 @@
   background: var(--go);
   transform-origin: right;
 }
-.mini-step {
-  display: inline-block;
-}
 .mini-button {
   position: relative;
 }
@@ -210,6 +207,22 @@
   }
   .journey-caption {
     justify-content: center;
+  }
+}
+@media (max-width: 760px) {
+  .journey-steps { gap: 10px; margin-block-end: 14px; }
+  .journey-steps li { font-size: 0.66rem; gap: 5px; padding-block-end: 8px; }
+  .journey-caption { min-height: 44px; margin-block-start: 4px; }
+  .journey-caption .visual-note { font-size: 0.6rem; }
+  .journey-replay { font-size: 0.7rem; }
+  .journey-click-ring { border-color: var(--accent); }
+  @media (prefers-reduced-motion: no-preference) {
+    .process-grid [data-entered]::before {
+      animation-name: process-line-vertical;
+      transform-origin: top;
+      background: var(--border-default);
+    }
+    @keyframes process-line-vertical { from { transform: scaleY(0); } }
   }
 }
 @media (max-width: 360px) {

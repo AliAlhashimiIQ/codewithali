@@ -166,6 +166,14 @@ const baseURL = process.env.TEST_URL || "http://localhost:3000";
         assert.equal(await p.locator(".cstory-order").evaluate(el => el === document.activeElement), true);
       }
       await p.locator(".service-details").first().evaluate(el => { el.open = true; });
+      // Measure the resting design, after any newly visible section or native
+      // disclosure finishes. Sampling an entrance fade yields transient colors.
+      await p.evaluate(async () => {
+        await new Promise(requestAnimationFrame);
+        await Promise.all(
+          document.getAnimations().map(animation => animation.finished.catch(() => {})),
+        );
+      });
       assert.equal(
         await p.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,

@@ -39,6 +39,7 @@ const baseURL = process.env.TEST_URL || "http://localhost:3000";
       true,
     );
     // Every service must survive navigation into the enquiry and its message.
+    assert.equal(await page.locator(".service-card").count(), 4);
     for (const card of await page.locator(".service-card").all()) {
       const name = await card.locator("h3").innerText();
       const scope = card.locator("details");
@@ -105,7 +106,7 @@ const baseURL = process.env.TEST_URL || "http://localhost:3000";
     assert.equal(url.searchParams.get("text"), expected);
     assert.ok(expected.includes("تدقيق موقعي المجاني"));
     console.log(
-      "PASS: three services, audit intent, required/invalid URL, focus recovery, exact WhatsApp message and destination.",
+      "PASS: four services, audit intent, required/invalid URL, focus recovery, exact WhatsApp message and destination.",
     );
 
     for (const [width, height, colorScheme, reducedMotion] of [

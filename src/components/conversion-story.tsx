@@ -72,10 +72,10 @@ export default function ConversionStory({ onChooseService }: { onChooseService: 
       <div className="wrap">
         <div className="section-heading" data-reveal>
           <div>
-            <p className="eyebrow">٠١ / جرّب الفكرة بنفسك</p>
-            <h2 id="cstory-title">شوفها بعين <span>زبونك.</span></h2>
+            <p className="eyebrow">٠١ / شوف الفكرة ضمن شغلك</p>
+            <h2 id="cstory-title">استفسار واضح. <span>متابعة أرتب.</span></h2>
           </div>
-          <p>اختَر مجال، جرّب الخيارات، وشوف الرسالة تتجهّز.<br />هيچ يصير الانتقال من الاهتمام إلى التواصل أوضح.</p>
+          <p>اختَر مجالك وشوف شلون يتجهّز الطلب للمتابعة.<br />محاكاة توضيحية، مو نظام ذكاء اصطناعي متصل.</p>
         </div>
         <div className="cstory-sectorPicker" role="group" aria-label="اختَر مجال المثال">
           {SECTORS.map((id) => {
@@ -90,12 +90,12 @@ export default function ConversionStory({ onChooseService }: { onChooseService: 
         <div ref={studio} className="cstory-studio">
           <div className="cstory-toolbar">
             <span><span className="cstory-browserDots" aria-hidden="true">•••</span> {example.brand}</span>
-            <span>مثال تفاعلي</span>
+            <span>محاكاة توضيحية</span>
           </div>
           <div className="cstory-frame">
             <div className="cstory-composition" inert={message}>
               <div className="cstory-copy">
-                <span className="cstory-exampleLabel">{example.label} · صفحة توضّح العرض</span>
+                <span className="cstory-exampleLabel">{example.label} · تنظيم الطلبات</span>
                 <h3>{example.title[0]}<br />{example.title[1]}</h3>
                 <p>{example.description}</p>
               </div>
@@ -126,7 +126,7 @@ export default function ConversionStory({ onChooseService }: { onChooseService: 
                 <button className="cstory-order" ref={orderButton} type="button" onClick={prepareMessage}>
                   <MessageCircle size={18} aria-hidden="true" /><span>{example.action}</span><ArrowLeft size={17} aria-hidden="true" />
                 </button>
-                <p className="cstory-demoNote">جرّب الزر · ما تنرسل أي رسالة</p>
+                <p className="cstory-demoNote">جرّب الملخّص · ما ينرسل أي طلب</p>
               </div>
             </div>
             {message && <motion.div className="cstory-message"
@@ -135,7 +135,7 @@ export default function ConversionStory({ onChooseService }: { onChooseService: 
               transition={{ duration: reduced ? 0 : 0.3, ease: "easeOut" }}>
               <div className="cstory-messageHead">
                 <span><MessageCircle size={24} aria-hidden="true" /></span>
-                <div><b>{example.messageTitle}</b><small>الاختيار صار ضمن الرسالة</small></div>
+                <div><b>{example.messageTitle}</b><small>الاحتياج والخطوة التالية بمكان واحد</small></div>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <motion.path d="m5 12 4 4L19 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                     initial={{ pathLength: reduced ? 1 : 0 }} animate={{ pathLength: 1 }}
@@ -145,22 +145,22 @@ export default function ConversionStory({ onChooseService }: { onChooseService: 
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 transition={{ duration: reduced ? 0 : 0.3, delay: reduced ? 0 : 0.1 }}>{example.message(selection)}</motion.p>
               <div className="cstory-messageBottom">
-                <span>معاينة فقط · لم يتم إرسال أي رسالة</span>
+                <span>محاكاة فقط · لم يُرسل أي طلب</span>
                 <button ref={editButton} type="button" onClick={editMessage}><RotateCcw size={15} aria-hidden="true" />عدّل الاختيار</button>
               </div>
             </motion.div>}
           </div>
           <ol className="cstory-steps" aria-label="خطوات التجربة">
             <li data-complete="true"><span>١</span>اختَر مجالك</li>
-            <li data-complete={chosen || message}><span>٢</span>حدّد طلبك</li>
-            <li data-complete={message}><span>{message ? <Check size={14} aria-hidden="true" /> : "٣"}</span>شوف رسالتك</li>
+            <li data-complete={chosen || message}><span>٢</span>حدّد الطلب</li>
+            <li data-complete={message}><span>{message ? <Check size={14} aria-hidden="true" /> : "٣"}</span>شوف الملخّص</li>
           </ol>
         </div>
         <div className="cstory-footer">
-          <p>نفس الفكرة، بتصميم ومحتوى يناسب شغلك.</p>
-          <a className="text-link" href="#book" onClick={() => onChooseService(example.sectorForBooking)}>أريد هيچ صفحة لمشروعي<ArrowLeft size={17} /></a>
+          <p>نكيّف سير العمل حسب أدواتك وطريقة متابعة فريقك.</p>
+          <a className="text-link" href="#book" onClick={() => onChooseService(example.sectorForBooking)}>ناقش تنظيم طلبات شغلك<ArrowLeft size={17} /></a>
         </div>
-        <div className="sr-only" role="status">{message ? `${example.message(selection)} هذه معاينة فقط، لم يتم الإرسال.` : ""}</div>
+        <div className="sr-only" role="status">{message ? `${example.message(selection)} هذه محاكاة توضيحية، لم يتم إرسال أي طلب.` : ""}</div>
       </div>
     </section>
   );

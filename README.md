@@ -1,8 +1,10 @@
 # CodeWithAli
 
-Arabic, right-to-left marketing site for Ali's landing-page, business-website and website-repair services. Built with Next.js 16.4.2, React 19.3, TypeScript and Framer Motion.
+Arabic, right-to-left marketing site for CodeWithAli's business automation and AI solutions in Iraq: AI agents and receptionists, workflow automation, custom business systems, and supporting websites and landing pages. Built with Next.js 16.4.2, React 19.3, TypeScript and Framer Motion.
 
-The main page leads with an interactive example for four industries, followed by compact service cards with expandable scope, project terms, FAQs and a WhatsApp enquiry composer. Examples are fictional demonstrations, not client results. No message is sent automatically.
+The main page explains business problems and illustrates enquiry handling for clinics, retailers, real estate agencies and service businesses. It then presents four service cards with expandable scope, implementation steps, FAQs and a WhatsApp enquiry composer. Examples use fixed text for fictional businesses; they are not live AI, deployed integrations, client work or results. No message is sent automatically. The existing free website review remains a supporting entry point for improving enquiry intake.
+
+See [the positioning audit](docs/positioning-review.md) for the content changes and verification. The existing layout, light palette, typography, illustrations, responsive rules and motion are preserved.
 
 The site always uses its light palette, including when the device prefers dark mode. CSS and viewport metadata declare `only light` for browser rendering and native controls.
 
@@ -53,7 +55,7 @@ See [the conversion and interface review](docs/conversion-review.md) for changes
 
 ## Motion
 
-The hero plays one three-second ad → page → conversation illustration as it enters the viewport. “أعد المشهد” replays it. Numbered steps follow the hero sequence. The industry example is ready immediately, assembles once on arrival, and animates the selected request into a message preview. It has no pinned scroll sequence. Service cards and section headings reveal once; process lines draw in order; native service and FAQ disclosures open smoothly where supported. There are no new dependencies, scroll locks or continuous decorative loops.
+The hero plays one three-second enquiry → organized request → human follow-up illustration as it enters the viewport. “أعد المشهد” replays it. Numbered steps follow the hero sequence. The industry example is ready immediately, assembles once on arrival, and animates the selected request into a fixed follow-up summary. It has no pinned scroll sequence. Service cards and section headings reveal once; process lines draw in order; native service and FAQ disclosures open smoothly where supported. There are no new dependencies, scroll locks or continuous decorative loops.
 
 `npm run test:motion` checks replay interruptions, completed/static states, layout stability, live reduced-motion changes, no-JavaScript fallback and keyboard FAQ behavior. Use the same `TEST_URL` and `CHROMIUM_PATH` settings as the conversion checks. See [motion review](docs/motion-review.md) and the latest [clarity and layout review](docs/clarity-review.md).
 

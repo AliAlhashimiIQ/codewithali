@@ -204,10 +204,10 @@ export default function HeroJourney() {
     <div
       ref={root}
       className="hero-visual"
-      aria-label="مثال توضيحي لمسار من الإعلان إلى صفحة واضحة ثم استفسار واتساب"
+      aria-label="محاكاة توضيحية: استفسار زبون، تنظيم الطلب بمساعد ذكي، ثم متابعة الموظف"
     >
-      <ol className="journey-steps" aria-label="من الإعلان إلى التواصل">
-        {["يشوف إعلانك", "يفهم عرضك", "يتواصل وياك"].map((label, index) => (
+      <ol className="journey-steps" aria-label="من الاستفسار إلى المتابعة">
+        {["استفسار زبون", "تنظيم الطلب", "متابعة الموظف"].map((label, index) => (
           <li key={label}>
             <span className="journey-step-number">{["١", "٢", "٣"][index]}</span>
             <span>{label}</span>
@@ -220,8 +220,8 @@ export default function HeroJourney() {
           <MousePointer2 size={19} />
         </span>
         <div>
-          <small>٠١ / الإعلان</small>
-          <b>مهتم بخدمتك. يريد يعرف أكثر.</b>
+          <small>٠١ / استفسار الزبون</small>
+          <b>أحتاج موعد. شنو المتوفر؟</b>
         </div>
         <ArrowLeft className="journey-ad-arrow" size={21} />
       </div>
@@ -235,27 +235,27 @@ export default function HeroJourney() {
           <i aria-hidden="true">•••</i>
         </div>
         <div className="mini-content">
-          <span className="mini-step">٠٢ / صفحة توضّح العرض</span>
+          <span className="mini-step">٠٢ / مساعد استقبال ذكي</span>
           <h2>
-            شنو تقدّم؟
+            يجمع الطلب.
             <br />
-            <em>وشلون يستفيد؟</em>
+            <em>ويوضّح الخطوة.</em>
           </h2>
           <p>
-            خدمتك واضحة. التفاصيل قريبة.
+            يسأل عن الخدمة والوقت المناسب.
             <br />
-            والتواصل بضغطة واحدة.
+            ويجهّز الطلب لمتابعة الموظف.
           </p>
           <div className="mini-features">
             <span>
-              <Check size={13} /> عرض مفهوم
+              <Check size={13} /> طلب منظّم
             </span>
             <span>
-              <Check size={13} /> موبايل أولاً
+              <Check size={13} /> مراجعة بشرية
             </span>
           </div>
           <div className="mini-button">
-            <MessageCircle size={17} /> اسأل عن الخدمة <ArrowLeft size={16} />
+            <MessageCircle size={17} /> جهّز المتابعة <ArrowLeft size={16} />
             <span className="journey-click-ring" aria-hidden="true" />
             <MousePointer2
               className="journey-pointer"
@@ -275,18 +275,18 @@ export default function HeroJourney() {
           <MessageCircle size={23} />
         </span>
         <div>
-          <small>٠٣ / بداية محادثة</small>
+          <small>٠٣ / متابعة الموظف</small>
           <p>
-            السلام عليكم، مهتم بخدمتكم.
+            طلب موعد ينتظر التأكيد.
             <br />
-            ممكن أعرف التفاصيل؟
+            الموظف يراجع الجدول ويتواصل.
           </p>
         </div>
         <Check className="journey-check" size={18} />
       </div>
       <div className="journey-caption">
         <p className="visual-note">
-          مثال: إعلان ← صفحة واضحة ← استفسار
+          محاكاة: استفسار ← تنظيم ← متابعة
         </p>
         <button
           className="journey-replay"

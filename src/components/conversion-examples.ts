@@ -3,7 +3,7 @@ export type ExampleId = "clinic" | "store" | "property" | "company";
 type ConversionExample = {
   id: ExampleId;
   label: string;
-  sectorForBooking: "عيادة" | "متجر إلكتروني" | "عقارات" | "خدمات";
+  sectorForBooking: "عيادة" | "متجر" | "عقارات" | "خدمات";
   eyebrow: string;
   brand: string;
   title: readonly [string, string];
@@ -16,77 +16,78 @@ type ConversionExample = {
   message: (selection: string) => string;
 };
 
-// Fictional businesses for the interactive demo; no message is sent from this data.
+// Fixed illustrative workflows for fictional businesses, not live AI or deployed systems.
+// No message is sent, no appointment is booked and no external system is contacted.
 export const EXAMPLES: Record<ExampleId, ConversionExample> = {
   clinic: {
     id: "clinic",
     label: "عيادة",
     sectorForBooking: "عيادة",
-    eyebrow: "DENTAL / CARE",
+    eyebrow: "APPOINTMENTS / HANDOFF",
     brand: "بسمة · عيادة توضيحية",
-    title: ["خطوتك الأولى.", "موعد يناسبك."],
-    description: "اختَر الخدمة واسأل العيادة عن التفاصيل والمواعيد.",
+    title: ["طلبات مواعيد أوضح.", "متابعة أسهل."],
+    description: "تصوّر مساعد يجمع طلب الموعد، حتى يكمل موظف الاستقبال التفاصيل ويؤكد الحجز.",
     optionLabel: "شنو الخدمة؟",
     options: ["فحص", "تنظيف", "تبييض"],
-    action: "جهّز طلب الموعد",
-    outcome: "طلب موعد",
-    messageTitle: "استفسار الموعد صار واضح.",
+    action: "شوف ملخّص الطلب",
+    outcome: "تنظيم المواعيد",
+    messageTitle: "ملخّص لموظف الاستقبال.",
     message: (selection) =>
-      `السلام عليكم، مهتم بخدمة ${selection} الأسنان. ممكن أعرف تفاصيل الزيارة وتكلفتها والمواعيد المتوفرة؟`,
+      `طلب موعد لخدمة ${selection} الأسنان. الخطوة التالية: يجمع موظف الاستقبال الوقت المناسب ويؤكد الموعد حسب جدول العيادة. هذا مثال لتنظيم الطلب؛ لم يتم حجز موعد.`,
   },
   store: {
     id: "store",
     label: "متجر",
-    sectorForBooking: "متجر إلكتروني",
-    eyebrow: "AUDIO / WIRELESS",
+    sectorForBooking: "متجر",
+    eyebrow: "ENQUIRIES / FOLLOW-UP",
     brand: "نغمة · متجر توضيحي",
-    title: ["سماعتك الجديدة.", "بلون تختاره."],
-    description: "سماعات لاسلكية بتصميم أنيق. اختَر اللون واسأل عن الطلب.",
-    optionLabel: "أي لون يعجبك؟",
+    title: ["استفسارات مرتّبة.", "بدل رسائل متفرقة."],
+    description: "تصوّر مساعد يجمع تفاصيل المنتج المطلوب، ويجهّز الاستفسار حتى يتابعه موظف المبيعات.",
+    optionLabel: "شنو اللون المطلوب؟",
     options: ["أسود", "فضي", "رملي"],
-    action: "جهّز طلب السماعة",
-    outcome: "طلب منتج",
-    messageTitle: "المنتج واللون صاروا واضحين.",
+    action: "شوف ملخّص الطلب",
+    outcome: "متابعة الطلبات",
+    messageTitle: "ملخّص لموظف المبيعات.",
     message: (selection) =>
-      `السلام عليكم، مهتم بالسماعة اللاسلكية باللون ${selection}. متوفرة؟ وشكد سعرها ويا التوصيل وشروط الضمان؟`,
+      `استفسار عن سماعة لاسلكية باللون ${selection}. الخطوة التالية: يتحقق موظف المبيعات من التوفر والسعر والتوصيل قبل الرد. هذا مثال لتحويل الاستفسار إلى متابعة؛ لم يتم إنشاء طلب شراء.`,
   },
   property: {
     id: "property",
     label: "عقارات",
     sectorForBooking: "عقارات",
-    eyebrow: "SPACES / LIVING",
+    eyebrow: "LEADS / QUALIFICATION",
     brand: "مدى · عقارات توضيحية",
-    title: ["مساحة تناسبك.", "تفاصيل تهمّك."],
-    description: "حدّد عدد الغرف واطلب تفاصيل الشقق المتوفرة.",
+    title: ["احتياج الزبون واضح.", "قبل أول اتصال."],
+    description: "تصوّر مساعد يجمع احتياج الباحث عن عقار، حتى يبدأ موظف المبيعات بمعلومات أوضح.",
     optionLabel: "كم غرفة تحتاج؟",
     options: ["غرفتين", "٣ غرف", "٤ غرف"],
-    action: "جهّز طلب التفاصيل",
-    outcome: "طلب تفاصيل",
-    messageTitle: "متطلبات السكن صارت واضحة.",
+    action: "شوف ملخّص الطلب",
+    outcome: "تأهيل الاستفسارات",
+    messageTitle: "ملخّص لمتابعة العقار.",
     message: (selection) =>
-      `السلام عليكم، أدور على شقة بيها ${selection}. ممكن تفاصيل الوحدات المتوفرة، الموقع والمساحة والسعر، وشلون أرتّب زيارة؟`,
+      `طلب شقة بيها ${selection}. الخطوة التالية: يستكمل الموظف الميزانية والمنطقة المطلوبة، ويقترح العقارات المناسبة قبل ترتيب زيارة. هذا مثال أولي لتأهيل الاستفسار؛ لم يتم تأكيد زيارة.`,
   },
   company: {
     id: "company",
     label: "شركة",
     sectorForBooking: "خدمات",
-    eyebrow: "BUSINESS / SERVICES",
+    eyebrow: "REQUESTS / ROUTING",
     brand: "وصلة · شركة توضيحية",
-    title: ["خطوة تطوّر شغلك.", "تبدأ بمحادثة."],
-    description: "اختَر احتياج مشروعك وجهّز استفسار للفريق.",
-    optionLabel: "شنو يحتاج مشروعك؟",
-    options: ["موقع", "أتمتة", "استشارة"],
-    action: "جهّز طلب الاستشارة",
-    outcome: "طلب استشارة",
-    messageTitle: "احتياج المشروع صار واضح.",
+    title: ["كل طلب بمتابعته.", "وخطوته واضحة."],
+    description: "تصوّر نظام يصنّف طلبات الزبائن ويجهّزها للموظف المسؤول، بدل ما تضيع بين المحادثات.",
+    optionLabel: "شنو نوع الطلب؟",
+    options: ["حجز", "متابعة", "استفسار"],
+    action: "شوف ملخّص الطلب",
+    outcome: "توزيع الطلبات",
+    messageTitle: "طلب مصنّف للفريق.",
     message: (selection) => {
-      const request =
-        selection === "موقع"
-          ? "تصميم موقع لمشروعي"
-          : selection === "أتمتة"
-            ? "أتمتة بعض خطوات العمل بمشروعي"
-            : "استشارة بخصوص تطوير مشروعي";
-      return `السلام عليكم، أحتاج ${request}. ممكن نحچي عن المتطلبات وطريقة العمل والتكلفة المتوقعة؟`;
+      const nextStep =
+        selection === "حجز"
+          ? "يراجع موظف الحجوزات الخدمة والوقت المناسب قبل التأكيد"
+          : selection === "متابعة"
+            ? "يراجع الموظف المسؤول آخر تحديث للطلب ويرد على الزبون"
+            : "يراجع فريق خدمة الزبائن السؤال والمعلومات المطلوبة للرد";
+      return `نوع الطلب: ${selection}. الخطوة التالية: ${nextStep}. هذا مثال لتوزيع الطلبات؛ لم يُرسل الطلب إلى أي فريق.`;
     },
   },
 };

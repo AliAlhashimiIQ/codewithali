@@ -11,10 +11,24 @@ export const viewport: Viewport = {
   themeColor: "#f2f3ed",
 };
 
+const title = "CodeWithAli | أتمتة الأعمال وحلول الذكاء الاصطناعي في العراق";
+const description =
+  "نبني وكلاء ذكاء اصطناعي، حلول أتمتة وأنظمة أعمال مخصصة للعيادات والعقارات والمتاجر وشركات الخدمات في العراق، لتنظيم العمليات ومتابعة الزبائن وتقليل العمل المتكرر.";
+
 export const metadata: Metadata = {
-  title: "CodeWithAli | موقع يوضّح عرضك ويسهّل التواصل",
-  description:
-    "أنا علي، أبني صفحات ومواقع للعيادات والمتاجر والشركات اللي تعلن. أوضّح عرضك، أحسّن سرعة الموبايل، وأسهّل وصول الزبون لواتساب.",
+  metadataBase: new URL("https://codewithali.tech"),
+  title,
+  description,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "ar_IQ",
+    url: "/",
+    siteName: "CodeWithAli",
+    title,
+    description,
+  },
+  twitter: { card: "summary", title, description },
 };
 
 export default function RootLayout({

@@ -867,6 +867,10 @@ details[open] > summary > svg {
 .submit-enquiry {
   width: 100%;
 }
+.submit-enquiry[aria-busy="true"] {
+  cursor: progress;
+  filter: brightness(0.94);
+}
 .message-preview {
   background: var(--card);
   border: 1px solid var(--border-default);

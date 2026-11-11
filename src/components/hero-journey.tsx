@@ -59,7 +59,7 @@ export default function HeroJourney() {
         { opacity: 0, transform: "translateY(12px)", filter: "blur(4px)" },
         { opacity: 1, transform: "translateY(0)", filter: "blur(0px)" },
       ];
-      [0, 650, 2350].forEach((delay, index) => {
+      [0, 650, 2900].forEach((delay, index) => {
         animate(
           `.journey-steps li:nth-child(${index + 1}) .journey-step-track`,
           [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }],
@@ -93,14 +93,40 @@ export default function HeroJourney() {
         350,
       );
       animate(".mini-page", enter, 300, 650);
+      animate(".mini-step", enter, 300, 850);
+      // The assistant "types" before its reply appears, like a real chat.
+      animate(
+        ".journey-typing",
+        [
+          { opacity: 0, transform: "translateY(6px)" },
+          { opacity: 1, transform: "translateY(0)", offset: 0.2 },
+          { opacity: 1, transform: "translateY(0)", offset: 0.85 },
+          { opacity: 0, transform: "translateY(0)" },
+        ],
+        750,
+        950,
+      );
+      [0, 1, 2].forEach((dot) =>
+        animate(
+          `.journey-typing i:nth-child(${dot + 1})`,
+          [
+            { opacity: 0.35, transform: "translateY(0)" },
+            { opacity: 1, transform: "translateY(-3px)", offset: 0.25 },
+            { opacity: 0.35, transform: "translateY(0)", offset: 0.5 },
+            { opacity: 1, transform: "translateY(-3px)", offset: 0.75 },
+            { opacity: 0.35, transform: "translateY(0)" },
+          ],
+          600,
+          1000 + dot * 110,
+        ),
+      );
       [
-        ".mini-step",
         ".mini-content h2",
         ".mini-content p",
         ".mini-features",
         ".mini-button",
       ].forEach((selector, index) =>
-        animate(selector, enter, 300, 850 + index * 100),
+        animate(selector, enter, 300, 1600 + index * 100),
       );
       animate(
         ".mini-orbit",
@@ -120,13 +146,13 @@ export default function HeroJourney() {
           { opacity: 0, transform: "translate(0, 0)" },
         ],
         800,
-        1550,
+        2100,
       );
       animate(
         ".mini-button",
         [{ scale: "1" }, { scale: ".96", offset: 0.5 }, { scale: "1" }],
         300,
-        1950,
+        2500,
       );
       animate(
         ".journey-click-ring",
@@ -135,14 +161,14 @@ export default function HeroJourney() {
           { opacity: 0, transform: "scale(1.5)" },
         ],
         450,
-        2000,
+        2550,
       );
-      animate(".journey-message", enter, 300, 2350);
+      animate(".journey-message", enter, 300, 2900);
       animate(
         ".journey-message p",
         [{ opacity: 0 }, { opacity: 1 }],
         300,
-        2450,
+        3000,
       );
       const path = element.querySelector<SVGPathElement>(".journey-check path");
       if (path) {
@@ -154,7 +180,7 @@ export default function HeroJourney() {
             { strokeDasharray: `${length}`, strokeDashoffset: "0" },
           ],
           350,
-          2700,
+          3250,
         );
       }
       void Promise.all(animations.map((animation) => animation.finished))
@@ -236,11 +262,18 @@ export default function HeroJourney() {
         </div>
         <div className="mini-content">
           <span className="mini-step">٠٢ / مساعد استقبال ذكي</span>
-          <h2>
-            يجمع الطلب.
-            <br />
-            <em>ويوضّح الخطوة.</em>
-          </h2>
+          <div className="mini-reply">
+            <span className="journey-typing" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </span>
+            <h2>
+              يجمع الطلب.
+              <br />
+              <em>ويوضّح الخطوة.</em>
+            </h2>
+          </div>
           <p>
             يسأل عن الخدمة والوقت المناسب.
             <br />

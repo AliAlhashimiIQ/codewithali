@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Fragment, useEffect, useRef, useState, type FormEvent } from "react";
 import {
   ArrowLeft,
   ArrowUpLeft,
   Check,
   Code2,
   Globe2,
+  LoaderCircle,
   MessageCircle,
   Plus,
   ShieldCheck,
@@ -15,6 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 import ConversionStory from "../components/conversion-story";
+import DetailsMotion from "../components/details-motion";
 import HeroJourney from "../components/hero-journey";
 import SectionMotion from "../components/section-motion";
 
@@ -131,25 +133,45 @@ export default function Home() {
   const [details, setDetails] = useState("");
   const [error, setError] = useState("");
   const [showSticky, setShowSticky] = useState(false);
+  const [opening, setOpening] = useState(false);
   const hero = useRef<HTMLElement>(null);
   const book = useRef<HTMLElement>(null);
   const urlInput = useRef<HTMLInputElement>(null);
-  const message = [
-    "السلام عليكم علي،",
-    intent === "audit"
-      ? "أريد تدقيق موقعي المجاني: استقبال الاستفسارات ووضوح طلب الخدمة أو الحجز."
-      : `أريد: ${service}`,
-    sector && `مجال شغلي: ${sector}`,
-    website.trim() && `رابط موقعي: ${website.trim()}`,
-    details.trim() && `عن شغلي: ${details.trim()}`,
-    intent === "audit"
-      ? "وين تتعطل خطوة الاستفسار، وشنو يحتاج تحسين؟"
-      : "ممكن نناقش خطوات العمل الحالية ونحدد الحل المناسب ونطاقه وتكلفته؟",
-  ]
-    .filter(Boolean)
-    .join("\n");
+  const lines = (
+    [
+      ["greeting", "السلام عليكم علي،"],
+      [
+        "request",
+        intent === "audit"
+          ? "أريد تدقيق موقعي المجاني: استقبال الاستفسارات ووضوح طلب الخدمة أو الحجز."
+          : `أريد: ${service}`,
+      ],
+      ["sector", sector && `مجال شغلي: ${sector}`],
+      ["website", website.trim() && `رابط موقعي: ${website.trim()}`],
+      ["details", details.trim() && `عن شغلي: ${details.trim()}`],
+      [
+        "question",
+        intent === "audit"
+          ? "وين تتعطل خطوة الاستفسار، وشنو يحتاج تحسين؟"
+          : "ممكن نناقش خطوات العمل الحالية ونحدد الحل المناسب ونطاقه وتكلفته؟",
+      ],
+    ] as const
+  ).filter(([, text]) => text);
+  const message = lines.map(([, text]) => text).join("\n");
+  // Only lines that differ from the previous render are highlighted in the preview,
+  // so the first render stays still and one edit flashes one line.
+  const lineKeys = lines.map(([id, text]) => `${id}:${text}`);
+  const [preview, setPreview] = useState({ keys: lineKeys, fresh: [] as string[] });
+  if (preview.keys.join("\n") !== lineKeys.join("\n"))
+    setPreview({
+      keys: lineKeys,
+      fresh: lineKeys.filter((key) => !preview.keys.includes(key)),
+    });
 
   useEffect(() => {
+    // Returning from WhatsApp (including the back/forward cache) restores the button.
+    const restore = () => setOpening(false);
+    window.addEventListener("pageshow", restore);
     const observer = new IntersectionObserver(() => {
       const heroBottom = hero.current?.getBoundingClientRect().bottom ?? 0;
       const bookTop = book.current?.getBoundingClientRect().top ?? Infinity;
@@ -157,7 +179,10 @@ export default function Home() {
     });
     if (hero.current) observer.observe(hero.current);
     if (book.current) observer.observe(book.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("pageshow", restore);
+    };
   }, []);
 
   function chooseIntent(next: Intent, source: string) {
@@ -168,6 +193,7 @@ export default function Home() {
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (opening) return;
     const raw = website.trim();
     if (intent === "audit" && !raw) {
       setError(
@@ -199,7 +225,12 @@ export default function Home() {
     }
     setError("");
     track("whatsapp_click", intent);
-    window.location.assign(whatsapp(message));
+    const destination = whatsapp(message);
+    // A short acknowledged state so the tap feels registered before the app switch.
+    setOpening(true);
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.setTimeout(() => window.location.assign(destination), calm ? 0 : 450);
+    window.setTimeout(() => setOpening(false), 4000);
   }
 
   return (
@@ -231,6 +262,7 @@ export default function Home() {
       </nav>
       <main id="main" tabIndex={-1}>
         <SectionMotion />
+        <DetailsMotion />
         <header className="hero wrap" ref={hero}>
           <div className="hero-copy">
             <p className="eyebrow">
@@ -592,9 +624,22 @@ export default function Home() {
                     />
                   </div>
                 </details>
-                <button className="btn submit-enquiry" type="submit">
-                  <MessageCircle size={20} /> افتح رسالتي على واتساب{" "}
-                  <ArrowUpLeft size={18} />
+                <button
+                  className="btn submit-enquiry"
+                  type="submit"
+                  aria-busy={opening}
+                >
+                  {opening ? (
+                    <>
+                      <LoaderCircle className="submit-spinner" size={20} />{" "}
+                      نفتح واتساب…
+                    </>
+                  ) : (
+                    <>
+                      <MessageCircle size={20} /> افتح رسالتي على واتساب{" "}
+                      <ArrowUpLeft size={18} />
+                    </>
+                  )}
                 </button>
                 <p className="field-hint">
                   يفتح واتساب؛ تراجع الرسالة وتضغط إرسال بنفسك.
@@ -613,7 +658,23 @@ export default function Home() {
                   <MessageCircle size={22} />
                 </div>
                 <p className="preview-label">معاينة رسالتك</p>
-                <p className="message-bubble">{message}</p>
+                <p className="message-bubble">
+                  {lines.map(([id, text], index) => (
+                    // Keying by text remounts a changed line, replaying its highlight.
+                    <Fragment key={`${id}:${text}`}>
+                      {index > 0 && "\n"}
+                      <span
+                        className={
+                          preview.fresh.includes(`${id}:${text}`)
+                            ? "message-line is-fresh"
+                            : "message-line"
+                        }
+                      >
+                        {text}
+                      </span>
+                    </Fragment>
+                  ))}
+                </p>
                 <div className="preview-footer">
                   <ShieldCheck size={18} />
                   <p>

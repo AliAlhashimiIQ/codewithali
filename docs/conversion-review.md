@@ -15,7 +15,7 @@ The strategy comes from the conversation **تجهيز خدمات وأسعار ا
 | Colors | Light/dark rendered axe scans, including demo selections and opened disclosures | Contrast failures in demo labels corrected. |
 | UI | Hero, service selection, example state changes, reduced motion, enquiry and message preview | Updated visual hierarchy; native form controls; immediate feedback without artificial typing. |
 
-Boundary: legacy `index.html`, `public/index.html`, `landing-page.tsx`, `landing-page-light.tsx` and `readme-version.tsx` are not the active App Router homepage and were not redesigned. External WhatsApp behavior after navigation, real ad traffic, actual enquiries and paid conversions were not tested.
+Boundary: the legacy `index.html`, `public/index.html`, `landing-page.tsx`, `landing-page-light.tsx` and `readme-version.tsx` prototypes were not part of this review and have since been removed. External WhatsApp behavior after navigation, real ad traffic, actual enquiries and paid conversions were not tested.
 
 ## Findings and implemented fixes
 

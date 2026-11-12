@@ -75,6 +75,18 @@
   border: 1px solid var(--deep);
   border-radius: 50%;
 }
+/* The WhatsApp preview types out the line the visitor just changed. The untyped
+   remainder keeps its space, so the bubble never resizes while it types. */
+.message-rest {
+  opacity: 0;
+}
+.message-caret {
+  display: inline-block;
+  width: 0;
+  height: 1.15em;
+  vertical-align: -0.2em;
+  box-shadow: 0 0 0 1px var(--go);
+}
 .journey-caption {
   min-height: 48px;
   display: flex;
@@ -157,22 +169,12 @@
   .journey-replay > svg {
     transition: transform 150ms ease-out;
   }
-  /* The line the visitor just changed flashes once in the WhatsApp preview. */
-  .message-line.is-fresh {
-    border-radius: 4px;
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-    animation: line-changed 1400ms ease-out;
+  .message-caret {
+    animation: caret-blink 700ms steps(2, jump-none) infinite;
   }
-  @keyframes line-changed {
-    0%,
-    35% {
-      background: var(--card);
-      box-shadow: 0 0 0 3px var(--card);
-    }
-    100% {
-      background: transparent;
-      box-shadow: 0 0 0 3px transparent;
+  @keyframes caret-blink {
+    to {
+      opacity: 0.2;
     }
   }
   .submit-enquiry[aria-busy="true"] .submit-spinner {
@@ -253,6 +255,12 @@
   @keyframes process-line { from { transform: scaleX(0); } }
 }
 @media (prefers-reduced-motion: reduce) {
+  .message-rest {
+    opacity: 1;
+  }
+  .message-caret {
+    display: none;
+  }
   .journey-replay {
     display: none;
   }

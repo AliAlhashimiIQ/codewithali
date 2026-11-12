@@ -117,6 +117,39 @@ const FAQS = [
 ];
 
 type Intent = "project" | "audit";
+
+// The full line is always in the page (and in what assistive tech and the WhatsApp
+// link read). Typing only reveals it, word by word, so Arabic joining stays intact.
+function TypedLine({ text, from }: { text: string; from?: number }) {
+  // Captured once: a later edit to another line must not cut this one short.
+  const [start] = useState(from);
+  const [shown, setShown] = useState(start ?? text.length);
+  useEffect(() => {
+    if (start === undefined) return;
+    // Short lines type slower per word so the motion is still noticeable.
+    const words = text.slice(start).trim().split(/\s+/).length;
+    const pace = Math.min(180, Math.max(50, 750 / words));
+    const timer = window.setInterval(() => {
+      setShown((current) => {
+        if (current >= text.length) {
+          window.clearInterval(timer);
+          return current;
+        }
+        const next = text.indexOf(" ", current + 1);
+        return next === -1 ? text.length : next;
+      });
+    }, pace);
+    return () => window.clearInterval(timer);
+  }, [start, text]);
+  if (shown >= text.length) return <span className="message-line">{text}</span>;
+  return (
+    <span className="message-line">
+      {text.slice(0, shown)}
+      <span className="message-caret" aria-hidden="true" />
+      <span className="message-rest">{text.slice(shown)}</span>
+    </span>
+  );
+}
 // Connect this event to an analytics provider before using it for campaign reports.
 // Never include the message, URL, sector or other visitor-entered values.
 function track(event: string, source: string) {
@@ -158,15 +191,28 @@ export default function Home() {
     ] as const
   ).filter(([, text]) => text);
   const message = lines.map(([, text]) => text).join("\n");
-  // Only lines that differ from the previous render are highlighted in the preview,
-  // so the first render stays still and one edit flashes one line.
-  const lineKeys = lines.map(([id, text]) => `${id}:${text}`);
-  const [preview, setPreview] = useState({ keys: lineKeys, fresh: [] as string[] });
-  if (preview.keys.join("\n") !== lineKeys.join("\n"))
-    setPreview({
-      keys: lineKeys,
-      fresh: lineKeys.filter((key) => !preview.keys.includes(key)),
-    });
+  // The preview types out only what changed since the previous render: the first
+  // render stays still, and the visitor's own keystrokes appear immediately.
+  const [preview, setPreview] = useState(() => ({
+    texts: Object.fromEntries(lines) as Record<string, string>,
+    from: {} as Record<string, number>,
+  }));
+  if (
+    lines.length !== Object.keys(preview.texts).length ||
+    lines.some(([id, text]) => preview.texts[id] !== text)
+  ) {
+    const from: Record<string, number> = {};
+    for (const [id, text] of lines) {
+      const previous = preview.texts[id];
+      if (previous === text) continue;
+      let shared = 0;
+      if (previous)
+        while (shared < previous.length && previous[shared] === text[shared])
+          shared++;
+      if (text.length - shared >= 8) from[id] = shared;
+    }
+    setPreview({ texts: Object.fromEntries(lines), from });
+  }
 
   useEffect(() => {
     // Returning from WhatsApp (including the back/forward cache) restores the button.
@@ -660,18 +706,10 @@ export default function Home() {
                 <p className="preview-label">معاينة رسالتك</p>
                 <p className="message-bubble">
                   {lines.map(([id, text], index) => (
-                    // Keying by text remounts a changed line, replaying its highlight.
+                    // Keying by text restarts typing when a line is replaced.
                     <Fragment key={`${id}:${text}`}>
                       {index > 0 && "\n"}
-                      <span
-                        className={
-                          preview.fresh.includes(`${id}:${text}`)
-                            ? "message-line is-fresh"
-                            : "message-line"
-                        }
-                      >
-                        {text}
-                      </span>
+                      <TypedLine text={text} from={preview.from[id]} />
                     </Fragment>
                   ))}
                 </p>

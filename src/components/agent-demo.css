@@ -1,0 +1,301 @@
+/* Live assistant demo. Built from the same tokens as the enquiry preview card. */
+.agent-section {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 24px 64px;
+  align-items: center;
+}
+.agent-intro h2 {
+  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+  line-height: 1.7;
+}
+.agent-intro h2 span {
+  color: var(--go);
+}
+.agent-intro > p:not(.eyebrow) {
+  color: var(--mut);
+  font-size: 0.95rem;
+  margin-block: 14px 22px;
+  max-width: 44ch;
+}
+.agent-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+.agent-points li {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+}
+.agent-points svg {
+  color: var(--go);
+  margin-block-start: 7px;
+}
+.agent-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.agent-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 22px;
+  border-block-end: 1px solid var(--border-default);
+}
+.agent-head b {
+  font-size: 0.95rem;
+}
+.agent-head p {
+  font-size: 0.8rem;
+  color: var(--mut);
+}
+.agent-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-inline-start: auto;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--go);
+}
+.agent-live i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--go);
+}
+.agent-log {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 320px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 22px;
+  background: color-mix(in srgb, var(--ink) 3%, var(--bg));
+}
+.agent-log:focus-visible {
+  outline-offset: -3px;
+}
+.agent-bubble {
+  max-width: 85%;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.agent-bubble[data-role="assistant"] {
+  align-self: flex-start;
+  background: var(--card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px 12px 12px 12px;
+}
+.agent-bubble[data-role="user"] {
+  align-self: flex-end;
+  background: var(--bub);
+  color: var(--bubt);
+  border-radius: 12px 3px 12px 12px;
+}
+.agent-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 46px;
+  color: var(--go);
+}
+.agent-typing i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+}
+.agent-error {
+  align-self: center;
+  font-size: 0.85rem;
+  color: var(--bad);
+  text-align: center;
+}
+.agent-error button,
+.agent-foot button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  min-height: 44px;
+  font: inherit;
+  color: var(--go);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.agent-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 22px 0;
+}
+.agent-suggestions button {
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 0.85rem;
+}
+.agent-form {
+  display: flex;
+  gap: 10px;
+  padding: 14px 22px;
+}
+.agent-form input {
+  flex: 1;
+  min-width: 0;
+  min-height: 50px;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--ink);
+  padding: 10px 14px;
+  font-size: 1rem;
+}
+.agent-form button {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  min-height: 50px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--go);
+  color: #fff;
+}
+.agent-form button:disabled {
+  background: var(--border-default);
+  color: var(--mut);
+}
+.agent-finished {
+  display: grid;
+  gap: 12px;
+  padding: 18px 22px;
+  font-size: 0.9rem;
+}
+.agent-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 22px 12px;
+  font-size: 0.75rem;
+  color: var(--mut);
+}
+.agent-foot button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+.agent-cta {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 10px;
+  font-size: 0.9rem;
+  color: var(--mut);
+}
+@media (hover: hover) {
+  .agent-suggestions button:hover {
+    border-color: var(--go);
+    color: var(--go);
+  }
+  .agent-form button:not(:disabled):hover {
+    filter: brightness(0.94);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .agent-bubble {
+    animation: agent-enter 250ms ease-out;
+  }
+  .agent-typing i {
+    animation: agent-dot 900ms ease-in-out infinite;
+  }
+  .agent-typing i:nth-of-type(2) {
+    animation-delay: 150ms;
+  }
+  .agent-typing i:nth-of-type(3) {
+    animation-delay: 300ms;
+  }
+  .agent-suggestions button,
+  .agent-form button {
+    transition:
+      scale 150ms ease-out,
+      border-color 150ms ease-out,
+      color 150ms ease-out,
+      background-color 150ms ease-out;
+  }
+  .agent-suggestions button:active,
+  .agent-form button:not(:disabled):active {
+    scale: 0.96;
+  }
+  @keyframes agent-enter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  @keyframes agent-dot {
+    0%,
+    60%,
+    100% {
+      opacity: 0.35;
+      transform: translateY(0);
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+  }
+}
+@media (max-width: 900px) {
+  .agent-section {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .agent-head,
+  .agent-form {
+    padding-inline: 16px;
+  }
+  .agent-log {
+    height: 300px;
+    padding: 16px;
+  }
+  .agent-suggestions {
+    padding-inline: 16px;
+  }
+  .agent-foot {
+    padding-inline: 16px;
+    flex-wrap: wrap;
+    padding-block-end: 12px;
+  }
+  .agent-bubble {
+    max-width: 92%;
+    font-size: 0.9rem;
+  }
+}
+/* The phone's sticky contact bar steps aside while the visitor is typing here. */
+body:has(.agent-card:focus-within) .mobile-contact {
+  visibility: hidden;
+}

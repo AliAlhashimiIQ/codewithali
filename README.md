@@ -62,3 +62,17 @@ The hero plays one three-second enquiry → organized request → human follow-u
 ## Phone layout
 
 Phone widths use a compact light hero illustration, a larger industry preview, service rows and a vertical process timeline. Navigation and industry choices wrap when text grows. See [the phone layout review](docs/mobile-review.md) for scope and verification.
+
+## Live assistant demo
+
+The "اسأل المساعد" section is a real assistant answering as the receptionist of a fictional clinic. It calls `POST /api/agent` (`src/app/api/agent/route.ts`), which streams a reply from the Claude API.
+
+- Set `ANTHROPIC_API_KEY` in the host's environment variables (see `.env.example`) and redeploy. Without it the section is not rendered. The key is read at build time for the section and at request time for the endpoint.
+- `AGENT_DEMO_MODEL` optionally overrides the model (default `claude-opus-5-5`).
+- The endpoint needs a host that runs server functions; a static export cannot serve it.
+- Limits: 8 questions per conversation, 300 characters per question, same-origin requests only, and a best-effort per-IP rate limit held in server memory. Set a spend limit on the API key as the real ceiling.
+- The clinic's facts and the assistant's rules live in the `SYSTEM` prompt in the route file.
+
+## Search and sharing
+
+`src/app/robots.ts`, `src/app/sitemap.ts`, `src/app/opengraph-image.png` (1200×630 share image) and the JSON-LD block in `src/app/layout.tsx` are generated from `src/lib/site.ts`. Update `SITE_URL` there if the domain changes.

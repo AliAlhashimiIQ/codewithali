@@ -513,14 +513,21 @@ summary {
 }
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
   align-items: start;
+}
+/* Four services read as one row, or as an even 2×2; never three plus an orphan. */
+@media (max-width: 1180px) {
+  .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
 }
 .service-card {
   display: flex;
   flex-direction: column;
-  padding: 28px;
+  padding: 24px;
   border: 1px solid var(--border-default);
   border-radius: 12px;
   background: var(--card);
@@ -833,6 +840,92 @@ details[open] > summary > svg {
 .form-field textarea {
   resize: vertical;
 }
+/* Styled dropdown where the browser supports it; elsewhere the native select and
+   the phone's own picker remain. The control stays a real <select> either way. */
+@supports (appearance: base-select) {
+  .form-field select,
+  .form-field select::picker(select) {
+    appearance: base-select;
+  }
+  .form-field select {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+  }
+  .form-field select:open {
+    border-color: var(--go);
+  }
+  .form-field select::picker-icon {
+    content: "";
+    width: 9px;
+    height: 9px;
+    margin-inline-end: 4px;
+    border: solid var(--ink);
+    border-width: 0 1.5px 1.5px 0;
+    rotate: 45deg;
+    translate: 0 -2px;
+    transition: rotate 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .form-field select:open::picker-icon {
+    rotate: 225deg;
+    translate: 0 3px;
+  }
+  .form-field select::picker(select) {
+    margin-block: 6px;
+    padding: 6px;
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    background: var(--card);
+    color: var(--ink);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    translate: 0 -6px;
+    transition:
+      opacity 150ms ease-out,
+      translate 150ms ease-out,
+      overlay 150ms allow-discrete,
+      display 150ms allow-discrete;
+  }
+  .form-field select:open::picker(select) {
+    opacity: 1;
+    translate: 0 0;
+  }
+  @starting-style {
+    .form-field select:open::picker(select) {
+      opacity: 0;
+      translate: 0 -6px;
+    }
+  }
+  .form-field option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .form-field option:hover,
+  .form-field option:focus-visible {
+    background: var(--bg);
+    outline: none;
+  }
+  .form-field option:checked {
+    background: color-mix(in srgb, var(--go) 9%, var(--card));
+    color: var(--go);
+    font-weight: 600;
+  }
+  /* The check sits at the end of the row, after the label. */
+  .form-field option::checkmark {
+    order: 1;
+    content: "✓";
+    color: var(--go);
+  }
+}
 .form-field [aria-invalid="true"] {
   border-color: var(--bad);
 }
@@ -866,6 +959,10 @@ details[open] > summary > svg {
 }
 .submit-enquiry {
   width: 100%;
+}
+.submit-enquiry[aria-busy="true"] {
+  cursor: progress;
+  filter: brightness(0.94);
 }
 .message-preview {
   background: var(--card);

@@ -33,10 +33,32 @@
   position: relative;
 }
 .journey-pointer,
-.journey-click-ring {
+.journey-click-ring,
+.journey-typing {
   position: absolute;
   pointer-events: none;
   opacity: 0;
+}
+/* Typing indicator sits where the reply will appear, so nothing shifts. */
+.mini-reply {
+  position: relative;
+}
+.journey-typing {
+  inset-block-start: 6px;
+  inset-inline-start: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 11px 14px;
+  border-radius: 14px 14px 14px 4px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  color: var(--accent);
+}
+.journey-typing i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
 }
 .journey-pointer {
   inset-inline-start: 48%;
@@ -52,6 +74,18 @@
   bottom: -4px;
   border: 1px solid var(--deep);
   border-radius: 50%;
+}
+/* The WhatsApp preview types out the line the visitor just changed. The untyped
+   remainder keeps its space, so the bubble never resizes while it types. */
+.message-rest {
+  opacity: 0;
+}
+.message-caret {
+  display: inline-block;
+  width: 0;
+  height: 1.15em;
+  vertical-align: -0.2em;
+  box-shadow: 0 0 0 1px var(--go);
 }
 .journey-caption {
   min-height: 48px;
@@ -135,6 +169,22 @@
   .journey-replay > svg {
     transition: transform 150ms ease-out;
   }
+  .message-caret {
+    animation: caret-blink 700ms steps(2, jump-none) infinite;
+  }
+  @keyframes caret-blink {
+    to {
+      opacity: 0.2;
+    }
+  }
+  .submit-enquiry[aria-busy="true"] .submit-spinner {
+    animation: submit-spin 700ms linear infinite;
+  }
+  @keyframes submit-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
   .faq-list summary > svg,
   .service-details summary > svg,
   .extra-details summary > svg {
@@ -173,11 +223,13 @@
   @supports (interpolate-size: allow-keywords) and
     selector(details::details-content) {
     .faq-list details,
-    .service-details {
+    .service-details,
+    .extra-details {
       interpolate-size: allow-keywords;
     }
     .faq-list details::details-content,
-    .service-details::details-content {
+    .service-details::details-content,
+    .extra-details::details-content {
       block-size: 0;
       opacity: 0;
       overflow: clip;
@@ -187,7 +239,8 @@
         content-visibility 250ms allow-discrete;
     }
     .faq-list details[open]::details-content,
-    .service-details[open]::details-content {
+    .service-details[open]::details-content,
+    .extra-details[open]::details-content {
       block-size: auto;
       opacity: 1;
     }
@@ -202,6 +255,12 @@
   @keyframes process-line { from { transform: scaleX(0); } }
 }
 @media (prefers-reduced-motion: reduce) {
+  .message-rest {
+    opacity: 1;
+  }
+  .message-caret {
+    display: none;
+  }
   .journey-replay {
     display: none;
   }
@@ -216,6 +275,7 @@
   .journey-caption .visual-note { font-size: 0.6rem; }
   .journey-replay { font-size: 0.7rem; }
   .journey-click-ring { border-color: var(--accent); }
+  .journey-typing { color: var(--go); }
   @media (prefers-reduced-motion: no-preference) {
     .process-grid [data-entered]::before {
       animation-name: process-line-vertical;

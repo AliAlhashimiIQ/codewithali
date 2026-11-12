@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Fragment, useEffect, useRef, useState, type FormEvent } from "react";
 import {
   ArrowLeft,
   ArrowUpLeft,
   Check,
   Code2,
   Globe2,
+  LoaderCircle,
   MessageCircle,
   Plus,
   ShieldCheck,
@@ -15,6 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 import ConversionStory from "../components/conversion-story";
+import DetailsMotion from "../components/details-motion";
 import HeroJourney from "../components/hero-journey";
 import SectionMotion from "../components/section-motion";
 
@@ -115,6 +117,39 @@ const FAQS = [
 ];
 
 type Intent = "project" | "audit";
+
+// The full line is always in the page (and in what assistive tech and the WhatsApp
+// link read). Typing only reveals it, word by word, so Arabic joining stays intact.
+function TypedLine({ text, from }: { text: string; from?: number }) {
+  // Captured once: a later edit to another line must not cut this one short.
+  const [start] = useState(from);
+  const [shown, setShown] = useState(start ?? text.length);
+  useEffect(() => {
+    if (start === undefined) return;
+    // Short lines type slower per word so the motion is still noticeable.
+    const words = text.slice(start).trim().split(/\s+/).length;
+    const pace = Math.min(180, Math.max(50, 750 / words));
+    const timer = window.setInterval(() => {
+      setShown((current) => {
+        if (current >= text.length) {
+          window.clearInterval(timer);
+          return current;
+        }
+        const next = text.indexOf(" ", current + 1);
+        return next === -1 ? text.length : next;
+      });
+    }, pace);
+    return () => window.clearInterval(timer);
+  }, [start, text]);
+  if (shown >= text.length) return <span className="message-line">{text}</span>;
+  return (
+    <span className="message-line">
+      {text.slice(0, shown)}
+      <span className="message-caret" aria-hidden="true" />
+      <span className="message-rest">{text.slice(shown)}</span>
+    </span>
+  );
+}
 // Connect this event to an analytics provider before using it for campaign reports.
 // Never include the message, URL, sector or other visitor-entered values.
 function track(event: string, source: string) {
@@ -131,25 +166,58 @@ export default function Home() {
   const [details, setDetails] = useState("");
   const [error, setError] = useState("");
   const [showSticky, setShowSticky] = useState(false);
+  const [opening, setOpening] = useState(false);
   const hero = useRef<HTMLElement>(null);
   const book = useRef<HTMLElement>(null);
   const urlInput = useRef<HTMLInputElement>(null);
-  const message = [
-    "السلام عليكم علي،",
-    intent === "audit"
-      ? "أريد تدقيق موقعي المجاني: استقبال الاستفسارات ووضوح طلب الخدمة أو الحجز."
-      : `أريد: ${service}`,
-    sector && `مجال شغلي: ${sector}`,
-    website.trim() && `رابط موقعي: ${website.trim()}`,
-    details.trim() && `عن شغلي: ${details.trim()}`,
-    intent === "audit"
-      ? "وين تتعطل خطوة الاستفسار، وشنو يحتاج تحسين؟"
-      : "ممكن نناقش خطوات العمل الحالية ونحدد الحل المناسب ونطاقه وتكلفته؟",
-  ]
-    .filter(Boolean)
-    .join("\n");
+  const lines = (
+    [
+      ["greeting", "السلام عليكم علي،"],
+      [
+        "request",
+        intent === "audit"
+          ? "أريد تدقيق موقعي المجاني: استقبال الاستفسارات ووضوح طلب الخدمة أو الحجز."
+          : `أريد: ${service}`,
+      ],
+      ["sector", sector && `مجال شغلي: ${sector}`],
+      ["website", website.trim() && `رابط موقعي: ${website.trim()}`],
+      ["details", details.trim() && `عن شغلي: ${details.trim()}`],
+      [
+        "question",
+        intent === "audit"
+          ? "وين تتعطل خطوة الاستفسار، وشنو يحتاج تحسين؟"
+          : "ممكن نناقش خطوات العمل الحالية ونحدد الحل المناسب ونطاقه وتكلفته؟",
+      ],
+    ] as const
+  ).filter(([, text]) => text);
+  const message = lines.map(([, text]) => text).join("\n");
+  // The preview types out only what changed since the previous render: the first
+  // render stays still, and the visitor's own keystrokes appear immediately.
+  const [preview, setPreview] = useState(() => ({
+    texts: Object.fromEntries(lines) as Record<string, string>,
+    from: {} as Record<string, number>,
+  }));
+  if (
+    lines.length !== Object.keys(preview.texts).length ||
+    lines.some(([id, text]) => preview.texts[id] !== text)
+  ) {
+    const from: Record<string, number> = {};
+    for (const [id, text] of lines) {
+      const previous = preview.texts[id];
+      if (previous === text) continue;
+      let shared = 0;
+      if (previous)
+        while (shared < previous.length && previous[shared] === text[shared])
+          shared++;
+      if (text.length - shared >= 8) from[id] = shared;
+    }
+    setPreview({ texts: Object.fromEntries(lines), from });
+  }
 
   useEffect(() => {
+    // Returning from WhatsApp (including the back/forward cache) restores the button.
+    const restore = () => setOpening(false);
+    window.addEventListener("pageshow", restore);
     const observer = new IntersectionObserver(() => {
       const heroBottom = hero.current?.getBoundingClientRect().bottom ?? 0;
       const bookTop = book.current?.getBoundingClientRect().top ?? Infinity;
@@ -157,7 +225,10 @@ export default function Home() {
     });
     if (hero.current) observer.observe(hero.current);
     if (book.current) observer.observe(book.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("pageshow", restore);
+    };
   }, []);
 
   function chooseIntent(next: Intent, source: string) {
@@ -168,6 +239,7 @@ export default function Home() {
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (opening) return;
     const raw = website.trim();
     if (intent === "audit" && !raw) {
       setError(
@@ -199,7 +271,12 @@ export default function Home() {
     }
     setError("");
     track("whatsapp_click", intent);
-    window.location.assign(whatsapp(message));
+    const destination = whatsapp(message);
+    // A short acknowledged state so the tap feels registered before the app switch.
+    setOpening(true);
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.setTimeout(() => window.location.assign(destination), calm ? 0 : 450);
+    window.setTimeout(() => setOpening(false), 4000);
   }
 
   return (
@@ -231,6 +308,7 @@ export default function Home() {
       </nav>
       <main id="main" tabIndex={-1}>
         <SectionMotion />
+        <DetailsMotion />
         <header className="hero wrap" ref={hero}>
           <div className="hero-copy">
             <p className="eyebrow">
@@ -592,9 +670,22 @@ export default function Home() {
                     />
                   </div>
                 </details>
-                <button className="btn submit-enquiry" type="submit">
-                  <MessageCircle size={20} /> افتح رسالتي على واتساب{" "}
-                  <ArrowUpLeft size={18} />
+                <button
+                  className="btn submit-enquiry"
+                  type="submit"
+                  aria-busy={opening}
+                >
+                  {opening ? (
+                    <>
+                      <LoaderCircle className="submit-spinner" size={20} />{" "}
+                      نفتح واتساب…
+                    </>
+                  ) : (
+                    <>
+                      <MessageCircle size={20} /> افتح رسالتي على واتساب{" "}
+                      <ArrowUpLeft size={18} />
+                    </>
+                  )}
                 </button>
                 <p className="field-hint">
                   يفتح واتساب؛ تراجع الرسالة وتضغط إرسال بنفسك.
@@ -613,7 +704,15 @@ export default function Home() {
                   <MessageCircle size={22} />
                 </div>
                 <p className="preview-label">معاينة رسالتك</p>
-                <p className="message-bubble">{message}</p>
+                <p className="message-bubble">
+                  {lines.map(([id, text], index) => (
+                    // Keying by text restarts typing when a line is replaced.
+                    <Fragment key={`${id}:${text}`}>
+                      {index > 0 && "\n"}
+                      <TypedLine text={text} from={preview.from[id]} />
+                    </Fragment>
+                  ))}
+                </p>
                 <div className="preview-footer">
                   <ShieldCheck size={18} />
                   <p>
